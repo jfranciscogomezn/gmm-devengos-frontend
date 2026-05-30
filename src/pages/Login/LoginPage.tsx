@@ -5,19 +5,25 @@ import { Alert, Button, Card, Form, Spinner } from 'react-bootstrap';
 import { authService } from '../../api/auth.service';
 import { useAuth } from '../../context/AuthContext';
 
+const LAST_TENANT_KEY = 'stepcore_last_tenant';
+
 export function LoginPage() {
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
 
+  const [tenantSlug, setTenantSlug] = useState(() => localStorage.getItem(LAST_TENANT_KEY) ?? '');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const mutation = useMutation({
-    mutationFn: () => authService.login({ email, password }),
+    mutationFn: () => authService.login({ tenantSlug: tenantSlug.trim().toLowerCase(), email, password }),
     onSuccess: (response) => {
+      localStorage.setItem(LAST_TENANT_KEY, response.tenantSlug);
       login(response);
       if (response.mustChangePassword) {
         navigate('/my/profile', { state: { forceChangePassword: true } });
+      } else if (response.roleName === 'PLATFORM_ADMIN') {
+        navigate('/platform/tenants');
       } else {
         navigate('/dashboard');
       }
@@ -42,7 +48,7 @@ export function LoginPage() {
       <Card style={{ width: 400 }} className="shadow-sm">
         <Card.Body className="p-4">
           <div className="text-center mb-4">
-            <h4 className="fw-bold text-primary">GMM Devengos</h4>
+            <h4 className="fw-bold text-primary">StepCore</h4>
             <p className="text-muted small">Sign in to your account</p>
           </div>
 
@@ -54,6 +60,21 @@ export function LoginPage() {
           )}
 
           <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Company</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="your-company"
+                value={tenantSlug}
+                onChange={(e) => setTenantSlug(e.target.value)}
+                required
+                autoCapitalize="none"
+                autoCorrect="off"
+                disabled={mutation.isPending}
+              />
+              <Form.Text className="text-muted">Your workspace identifier (e.g. acme).</Form.Text>
+            </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Label>Email address</Form.Label>
               <Form.Control

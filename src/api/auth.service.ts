@@ -2,6 +2,7 @@ import { apiClient } from './client';
 import type { LoginResponse, UserProfile } from '../types';
 
 export interface LoginRequest {
+  tenantSlug: string;
   email: string;
   password: string;
 }

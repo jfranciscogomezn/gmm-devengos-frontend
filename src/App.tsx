@@ -11,6 +11,8 @@ import { MenuOptionAssignPage } from './pages/roles/MenuOptionAssignPage';
 import { UserListPage } from './pages/users/UserListPage';
 import { UserFormPage } from './pages/users/UserFormPage';
 import { ProfilePage } from './pages/profile/ProfilePage';
+import { TenantListPage } from './pages/platform/TenantListPage';
+import { TenantFormPage } from './pages/platform/TenantFormPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,7 +24,7 @@ function DashboardPlaceholder() {
   return (
     <div>
       <h4>Dashboard</h4>
-      <p className="text-muted">Welcome to GMM Devengos.</p>
+      <p className="text-muted">Welcome to StepCore.</p>
     </div>
   );
 }
@@ -97,6 +99,30 @@ export default function App() {
                 element={
                   <ProtectedRoute requireAdmin>
                     <UserFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="platform/tenants"
+                element={
+                  <ProtectedRoute requirePlatformAdmin>
+                    <TenantListPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="platform/tenants/new"
+                element={
+                  <ProtectedRoute requirePlatformAdmin>
+                    <TenantFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="platform/tenants/:id"
+                element={
+                  <ProtectedRoute requirePlatformAdmin>
+                    <TenantFormPage />
                   </ProtectedRoute>
                 }
               />

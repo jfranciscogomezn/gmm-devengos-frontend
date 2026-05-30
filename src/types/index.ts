@@ -31,6 +31,53 @@ export interface LoginResponse {
   roleName: string;
   menuOptions: MenuOption[];
   mustChangePassword: boolean;
+  tenantSlug: string;
+  tenantName: string;
+  tenantPlan: string;
+}
+
+export type TenantPlan = 'STANDARD' | 'PREMIUM';
+export type TenantStatus = 'PROVISIONING' | 'ACTIVE' | 'SUSPENDED';
+
+export interface TenantSummary {
+  slug: string;
+  name: string;
+  plan: string;
+}
+
+export interface Tenant {
+  id: number;
+  name: string;
+  slug: string;
+  plan: TenantPlan;
+  maxUsers: number;
+  currentUsers: number;
+  status: TenantStatus;
+  platform: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateTenantRequest {
+  name: string;
+  slug: string;
+  plan: TenantPlan;
+  maxUsers?: number;
+  adminEmail: string;
+  adminFirstName: string;
+  adminLastName: string;
+}
+
+export interface UpdateTenantRequest {
+  plan?: TenantPlan;
+  maxUsers?: number;
+  status?: TenantStatus;
+}
+
+export interface ProvisionTenantResponse {
+  tenant: Tenant;
+  adminEmail: string;
+  temporaryPassword: string;
 }
 
 export interface ApiResponse<T> {

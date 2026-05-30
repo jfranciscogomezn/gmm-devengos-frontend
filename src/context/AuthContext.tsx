@@ -1,12 +1,30 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import type { LoginResponse, MenuOption, UserProfile } from '../types';
-import { clearToken, getToken, setToken } from '../api/client';
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import type { LoginResponse, MenuOption, TenantSummary, UserProfile } from '../types';
+import {
+  clearSession,
+  clearToken,
+  getSession,
+  getToken,
+  setSession,
+  setToken,
+} from '../api/client';
+
+const PLATFORM_ADMIN_ROLE = 'PLATFORM_ADMIN';
+
+interface PersistedSession {
+  currentUser: UserProfile;
+  menuOptions: MenuOption[];
+  tenant: TenantSummary | null;
+  mustChangePassword: boolean;
+}
 
 interface AuthContextValue {
   isAuthenticated: boolean;
   token: string | null;
   currentUser: UserProfile | null;
   menuOptions: MenuOption[];
+  tenant: TenantSummary | null;
+  isPlatformAdmin: boolean;
   mustChangePassword: boolean;
   login: (response: LoginResponse) => void;
   logout: () => void;
@@ -31,23 +49,23 @@ function isTokenExpired(token: string): boolean {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const storedToken = getToken();
-  const isValidToken = storedToken && !isTokenExpired(storedToken);
+  const isValidToken = Boolean(storedToken) && !isTokenExpired(storedToken as string);
+
+  if (!isValidToken && storedToken) {
+    clearToken();
+    clearSession();
+  }
+
+  const restored = isValidToken ? getSession<PersistedSession>() : null;
 
   const [token, setTokenState] = useState<string | null>(isValidToken ? storedToken : null);
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
-  const [menuOptions, setMenuOptions] = useState<MenuOption[]>([]);
-  const [mustChangePassword, setMustChangePassword] = useState(false);
-
-  useEffect(() => {
-    if (!isValidToken && storedToken) {
-      clearToken();
-    }
-  }, [isValidToken, storedToken]);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(restored?.currentUser ?? null);
+  const [menuOptions, setMenuOptions] = useState<MenuOption[]>(restored?.menuOptions ?? []);
+  const [tenant, setTenant] = useState<TenantSummary | null>(restored?.tenant ?? null);
+  const [mustChangePassword, setMustChangePassword] = useState(restored?.mustChangePassword ?? false);
 
   const login = useCallback((response: LoginResponse) => {
-    setToken(response.token);
-    setTokenState(response.token);
-    setCurrentUser({
+    const user: UserProfile = {
       id: 0,
       firstName: response.fullName.split(' ')[0],
       lastName: response.fullName.split(' ').slice(1).join(' '),
@@ -56,16 +74,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       roleName: response.roleName,
       enabled: true,
       mustChangePassword: response.mustChangePassword,
+    };
+    const tenantSummary: TenantSummary = {
+      slug: response.tenantSlug,
+      name: response.tenantName,
+      plan: response.tenantPlan,
+    };
+
+    setToken(response.token);
+    setSession<PersistedSession>({
+      currentUser: user,
+      menuOptions: response.menuOptions,
+      tenant: tenantSummary,
+      mustChangePassword: response.mustChangePassword,
     });
+
+    setTokenState(response.token);
+    setCurrentUser(user);
     setMenuOptions(response.menuOptions);
+    setTenant(tenantSummary);
     setMustChangePassword(response.mustChangePassword);
   }, []);
 
   const logout = useCallback(() => {
     clearToken();
+    clearSession();
     setTokenState(null);
     setCurrentUser(null);
     setMenuOptions([]);
+    setTenant(null);
     setMustChangePassword(false);
   }, []);
 
@@ -74,10 +111,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     token,
     currentUser,
     menuOptions,
+    tenant,
+    isPlatformAdmin: currentUser?.roleName === PLATFORM_ADMIN_ROLE,
     mustChangePassword,
     login,
     logout,
-  }), [token, currentUser, menuOptions, mustChangePassword, login, logout]);
+  }), [token, currentUser, menuOptions, tenant, mustChangePassword, login, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

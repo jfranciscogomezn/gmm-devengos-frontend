@@ -68,7 +68,15 @@ export function UserFormPage() {
       navigate('/admin/users');
     },
     onError: (err: { response?: { data?: { message?: string } } }) => {
-      setServerError(err.response?.data?.message ?? 'Failed to save user.');
+      const message = err.response?.data?.message ?? 'Failed to save user.';
+      if (message.includes('USER_LIMIT_REACHED')) {
+        setServerError(
+          "You've reached your plan's user limit. Contact your provider to upgrade the plan or "
+          + 'free up a seat by disabling an existing user.',
+        );
+        return;
+      }
+      setServerError(message);
     },
   });
 

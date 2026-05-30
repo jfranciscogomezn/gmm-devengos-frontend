@@ -1,7 +1,7 @@
-# GMM Devengos — Frontend
+# StepCore — Frontend
 
-Web client for the GMM Devengos payroll and time-tracking application.  
-Built with **React 18 + TypeScript + Vite**, communicating with the [gmm-devengos-backend](https://github.com/jfranciscogomezn/gmm-devengos-backend) REST API.
+Web client for the StepCore multi-tenant payroll and time-tracking SaaS.  
+Built with **React 18 + TypeScript + Vite**, communicating with the [stepcore-security-backend](https://github.com/jfranciscogomezn/stepcore-security-backend) REST API.
 
 ---
 
@@ -63,7 +63,7 @@ frontend/
 
 - **Node.js** 20 LTS or later
 - **npm** 10 or later
-- Backend API running on `http://localhost:8080` (see [gmm-devengos-backend](https://github.com/jfranciscogomezn/gmm-devengos-backend))
+- Backend API running on `http://localhost:8080` (see [stepcore-security-backend](https://github.com/jfranciscogomezn/stepcore-security-backend))
 
 ---
 
@@ -115,22 +115,33 @@ The app is available at **http://localhost:3000**.
 
 ## Authentication Flow
 
-1. User submits credentials on `/login`.
+1. User submits the **company (tenant slug)**, email, and password on `/login`.
 2. `AuthService.login()` calls `POST /api/v1/auth/login`.
-3. On success the JWT token, profile, and menu options are stored in `AuthContext`.
+3. On success the JWT token, profile, tenant info (name/slug/plan), and menu options are stored in `AuthContext` (persisted so they survive a page refresh).
 4. Axios request interceptor attaches `Authorization: Bearer <token>` to every subsequent request.
-5. A 401 response interceptor clears the token and redirects to `/login`.
+5. A 401 response interceptor clears the session and redirects to `/login`.
 
 ---
 
 ## Default Credentials
 
+Tenant administrator (legacy workspace):
+
 | Field | Value |
 |---|---|
-| Email | `admin@gmm.com` |
+| Company | `legacy` |
+| Email | `admin@stepcore.com` |
 | Password | `Admin@2026!` |
 
-> The admin account is seeded automatically by the backend on first startup.
+Platform administrator (SaaS provider plane — manages tenants):
+
+| Field | Value |
+|---|---|
+| Company | `platform` |
+| Email | `platform@stepcore.com` |
+| Password | `Platform@2026!` |
+
+> Both accounts are seeded automatically by the backend on first startup. Change the passwords immediately.
 
 ---
 
@@ -138,6 +149,7 @@ The app is available at **http://localhost:3000**.
 
 | Role | Accessible Sections |
 |---|---|
+| `PLATFORM_ADMIN` | Platform tenant administration (list/create/suspend tenants, change plan/cap) |
 | `ADMIN` | Role management, user management, payroll config, employee config, time records (admin), reports, profile |
 | `EMPLOYEE` | My time records, my profile |
 
@@ -155,4 +167,4 @@ Routes and sidebar items are rendered dynamically from the `menuOptions` returne
 
 ## Related Repositories
 
-- **Backend:** [gmm-devengos-backend](https://github.com/jfranciscogomezn/gmm-devengos-backend)
+- **Backend:** [stepcore-security-backend](https://github.com/jfranciscogomezn/stepcore-security-backend)
