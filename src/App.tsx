@@ -13,6 +13,8 @@ import { UserFormPage } from './pages/users/UserFormPage';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { TenantListPage } from './pages/platform/TenantListPage';
 import { TenantFormPage } from './pages/platform/TenantFormPage';
+import { EmployeeListPage } from './pages/employees/EmployeeListPage';
+import { EmployeeFormPage } from './pages/employees/EmployeeFormPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,6 +101,30 @@ export default function App() {
                 element={
                   <ProtectedRoute requireAdmin>
                     <UserFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/employees"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <EmployeeListPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/employees/new"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <EmployeeFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/employees/:id"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <EmployeeFormPage />
                   </ProtectedRoute>
                 }
               />

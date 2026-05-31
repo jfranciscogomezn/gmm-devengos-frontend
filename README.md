@@ -1,7 +1,7 @@
 # StepCore — Frontend
 
 Web client for the StepCore multi-tenant payroll and time-tracking SaaS.  
-Built with **React 18 + TypeScript + Vite**, communicating with the [stepcore-security-backend](https://github.com/jfranciscogomezn/stepcore-security-backend) REST API.
+Built with **React 18 + TypeScript + Vite**, communicating with the [stepcore-security-backend](https://github.com/jfranciscogomezn/stepcore-security-backend) and [stepcore-business-backend](https://github.com/jfranciscogomezn/stepcore-business-backend) REST APIs.
 
 ---
 
@@ -161,10 +161,12 @@ Routes and sidebar items are rendered dynamically from the `menuOptions` returne
 
 | Variable | Default | Description |
 |---|---|---|
-| `VITE_API_URL` | `/api/v1` | Base path for API calls (relative = goes through Vite proxy) |
+| `VITE_API_URL` | `/api/v1` | Security service API (Vite proxy → `:8080` in dev) |
+| `VITE_BUSINESS_API_URL` | `http://localhost:8081/api/v1` | Business service API (payroll config, employees) |
 
 ---
 
 ## Related Repositories
 
-- **Backend:** [stepcore-security-backend](https://github.com/jfranciscogomezn/stepcore-security-backend)
+- **Security backend:** [stepcore-security-backend](https://github.com/jfranciscogomezn/stepcore-security-backend)
+- **Business backend:** [stepcore-business-backend](https://github.com/jfranciscogomezn/stepcore-business-backend)

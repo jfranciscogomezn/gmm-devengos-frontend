@@ -119,3 +119,39 @@ export interface UpdateRoleRequest {
   name: string;
   description?: string;
 }
+
+export type IdType = 'CC' | 'CE' | 'TI' | 'PASSPORT' | 'NIT';
+
+export interface Employee {
+  id: number;
+  firstName: string;
+  lastName: string;
+  idType: IdType;
+  idNumber: string;
+  email: string;
+  phone: string | null;
+  monthlySalary: number;
+  userId: number | null;
+}
+
+export interface CreateEmployeeRequest {
+  firstName: string;
+  lastName: string;
+  idType: IdType;
+  idNumber: string;
+  email: string;
+  phone?: string;
+  monthlySalary: number;
+  userId?: number | null;
+}
+
+export interface UpdateEmployeeRequest {
+  firstName: string;
+  lastName: string;
+  idType: IdType;
+  idNumber: string;
+  email: string;
+  phone?: string;
+  monthlySalary: number;
+  userId?: number | null;
+}
