@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Badge, Button, Modal, Spinner, Table } from 'react-bootstrap';
 import { usersService } from '../../api/users.service';
+import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 import type { UserProfile } from '../../types';
 
 export function UserListPage() {
@@ -10,7 +11,7 @@ export function UserListPage() {
   const [deleteTarget, setDeleteTarget] = useState<UserProfile | null>(null);
   const [actionError, setActionError] = useState('');
 
-  const { data: users = [], isLoading, isError } = useQuery({
+  const { data: users = [], isLoading, isError, error } = useQuery({
     queryKey: ['users'],
     queryFn: usersService.findAll,
   });
@@ -39,7 +40,7 @@ export function UserListPage() {
   });
 
   if (isLoading) return <div className="text-center py-5"><Spinner /></div>;
-  if (isError) return <Alert variant="danger">Failed to load users.</Alert>;
+  if (isError) return <ApiErrorAlert error={error} resourceLabel="users" />;
 
   return (
     <div>

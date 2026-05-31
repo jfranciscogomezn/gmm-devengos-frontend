@@ -107,7 +107,7 @@ export default function App() {
               <Route
                 path="admin/employees"
                 element={
-                  <ProtectedRoute requireAdmin>
+                  <ProtectedRoute requirePermission="EMPLOYEE_CONFIG">
                     <EmployeeListPage />
                   </ProtectedRoute>
                 }
@@ -115,7 +115,7 @@ export default function App() {
               <Route
                 path="admin/employees/new"
                 element={
-                  <ProtectedRoute requireAdmin>
+                  <ProtectedRoute requirePermission="EMPLOYEE_CONFIG">
                     <EmployeeFormPage />
                   </ProtectedRoute>
                 }
@@ -123,7 +123,7 @@ export default function App() {
               <Route
                 path="admin/employees/:id"
                 element={
-                  <ProtectedRoute requireAdmin>
+                  <ProtectedRoute requirePermission="EMPLOYEE_CONFIG">
                     <EmployeeFormPage />
                   </ProtectedRoute>
                 }

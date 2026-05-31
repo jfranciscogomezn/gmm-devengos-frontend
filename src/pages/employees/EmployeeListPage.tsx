@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Alert, Badge, Spinner, Table } from 'react-bootstrap';
+import { Badge, Spinner, Table } from 'react-bootstrap';
 import { employeesService } from '../../api/employees.service';
+import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
+import { useAuth } from '../../context/AuthContext';
 import type { IdType } from '../../types';
 
 const ID_TYPE_LABELS: Record<IdType, string> = {
@@ -21,7 +23,8 @@ function formatSalary(value: number): string {
 }
 
 export function EmployeeListPage() {
-  const { data: employees = [], isLoading, isError } = useQuery({
+  const { currentUser } = useAuth();
+  const { data: employees = [], isLoading, isError, error } = useQuery({
     queryKey: ['employees'],
     queryFn: employeesService.findAll,
   });
@@ -35,7 +38,13 @@ export function EmployeeListPage() {
   }
 
   if (isError) {
-    return <Alert variant="danger">Failed to load employees. Is the business service running on port 8081?</Alert>;
+    return (
+      <ApiErrorAlert
+        error={error}
+        resourceLabel="employees"
+        roleName={currentUser?.roleName}
+      />
+    );
   }
 
   return (

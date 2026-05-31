@@ -8,6 +8,7 @@ import {
   setSession,
   setToken,
 } from '../api/client';
+import { isSessionTokenValid, markStaleSession } from '../utils/jwt';
 
 const PLATFORM_ADMIN_ROLE = 'PLATFORM_ADMIN';
 
@@ -28,32 +29,23 @@ interface AuthContextValue {
   mustChangePassword: boolean;
   login: (response: LoginResponse) => void;
   logout: () => void;
+  hasPermission: (code: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-function parseJwtPayload(token: string): { exp?: number } | null {
-  try {
-    const payload = token.split('.')[1];
-    return JSON.parse(atob(payload)) as { exp?: number };
-  } catch {
-    return null;
-  }
-}
-
-function isTokenExpired(token: string): boolean {
-  const payload = parseJwtPayload(token);
-  if (!payload?.exp) return true;
-  return payload.exp * 1000 < Date.now();
+function invalidateStoredSession(): void {
+  clearToken();
+  clearSession();
+  markStaleSession();
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const storedToken = getToken();
-  const isValidToken = Boolean(storedToken) && !isTokenExpired(storedToken as string);
+  const isValidToken = Boolean(storedToken) && isSessionTokenValid(storedToken as string);
 
-  if (!isValidToken && storedToken) {
-    clearToken();
-    clearSession();
+  if (storedToken && !isValidToken) {
+    invalidateStoredSession();
   }
 
   const restored = isValidToken ? getSession<PersistedSession>() : null;
@@ -106,6 +98,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setMustChangePassword(false);
   }, []);
 
+  const hasPermission = useCallback(
+    (code: string) => menuOptions.some((option) => option.code === code),
+    [menuOptions],
+  );
+
   const value = useMemo<AuthContextValue>(() => ({
     isAuthenticated: token !== null,
     token,
@@ -116,7 +113,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     mustChangePassword,
     login,
     logout,
-  }), [token, currentUser, menuOptions, tenant, mustChangePassword, login, logout]);
+    hasPermission,
+  }), [token, currentUser, menuOptions, tenant, mustChangePassword, login, logout, hasPermission]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
