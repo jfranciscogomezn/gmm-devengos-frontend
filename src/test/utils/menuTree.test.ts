@@ -10,6 +10,7 @@ const sampleTree: MenuTreeNode[] = [
     type: 'MODULE',
     route: null,
     icon: null,
+    enabled: true,
     children: [
       {
         id: 2,
@@ -18,6 +19,7 @@ const sampleTree: MenuTreeNode[] = [
         type: 'GROUP',
         route: null,
         icon: null,
+        enabled: true,
         children: [
           {
             id: 3,
@@ -26,6 +28,7 @@ const sampleTree: MenuTreeNode[] = [
             type: 'ITEM',
             route: '/admin/employees',
             icon: null,
+            enabled: true,
             children: [],
           },
         ],

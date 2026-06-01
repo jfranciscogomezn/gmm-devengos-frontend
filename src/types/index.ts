@@ -7,6 +7,7 @@ export interface MenuTreeNode {
   type: MenuNodeType;
   route: string | null;
   icon: string | null;
+  enabled: boolean;
   children: MenuTreeNode[];
 }
 
@@ -132,6 +133,37 @@ export interface CreateRoleRequest {
 export interface UpdateRoleRequest {
   name: string;
   description?: string;
+}
+
+export interface CreateMenuNodeRequest {
+  code: string;
+  label: string;
+  nodeType: MenuNodeType;
+  route?: string;
+  icon?: string;
+  parentId?: number | null;
+  sortOrder: number;
+  enabled: boolean;
+}
+
+export interface UpdateMenuNodeRequest {
+  label: string;
+  route?: string;
+  icon?: string;
+  sortOrder: number;
+  enabled: boolean;
+}
+
+export interface MenuNodeAdminResponse {
+  id: number;
+  code: string;
+  label: string;
+  nodeType: MenuNodeType;
+  route: string | null;
+  icon: string | null;
+  parentId: number | null;
+  sortOrder: number;
+  enabled: boolean;
 }
 
 export type IdType = 'CC' | 'CE' | 'TI' | 'PASSPORT' | 'NIT';

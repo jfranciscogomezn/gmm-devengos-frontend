@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Form, Spinner } from 'react-bootstrap';
+import { menuService } from '../../api/menu.service';
 import { rolesService } from '../../api/roles.service';
 import { MenuTreeAssign } from '../../components/MenuTreeAssign/MenuTreeAssign';
 import { getApiErrorMessage } from '../../utils/apiError';
@@ -30,7 +31,7 @@ export function RoleMenuPermissionsPanel({ roleId, roleName, onSaved }: RoleMenu
 
   const { data: catalogue = [], isLoading: catalogueLoading } = useQuery({
     queryKey: ['menu-catalogue'],
-    queryFn: rolesService.getMenuCatalogue,
+    queryFn: menuService.getCatalogue,
   });
 
   const { data: assignedNodes = [], isLoading: assignedLoading } = useQuery({

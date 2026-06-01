@@ -10,6 +10,7 @@ const tree: MenuTreeNode[] = [
     type: 'MODULE',
     route: null,
     icon: null,
+    enabled: true,
     children: [
       {
         id: 2,
@@ -18,6 +19,7 @@ const tree: MenuTreeNode[] = [
         type: 'GROUP',
         route: null,
         icon: null,
+        enabled: true,
         children: [
           {
             id: 3,
@@ -26,6 +28,7 @@ const tree: MenuTreeNode[] = [
             type: 'ITEM',
             route: '/admin/access/roles',
             icon: null,
+            enabled: true,
             children: [],
           },
         ],
