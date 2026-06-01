@@ -31,6 +31,7 @@ export interface UserProfile {
   lastName: string;
   email: string;
   phone: string | null;
+  roleId?: number;
   roleName: string;
   enabled: boolean;
   mustChangePassword: boolean;

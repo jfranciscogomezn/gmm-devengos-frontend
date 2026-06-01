@@ -44,9 +44,10 @@ export function UserListPage() {
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="mb-0">User Management</h4>
-        <Link to="/admin/users/new" className="btn btn-primary btn-sm">+ New User</Link>
+      <Link to="/admin/access" className="text-decoration-none small">&larr; Access Control</Link>
+      <div className="d-flex justify-content-between align-items-center mb-4 mt-2">
+        <h4 className="mb-0">Users &amp; Roles</h4>
+        <Link to="/admin/access/users/new" className="btn btn-primary btn-sm">+ New User</Link>
       </div>
 
       {actionError && <Alert variant="danger" dismissible onClose={() => setActionError('')}>{actionError}</Alert>}
@@ -78,7 +79,7 @@ export function UserListPage() {
                 )}
               </td>
               <td>
-                <Link to={`/admin/users/${user.id}`} className="btn btn-outline-primary btn-sm me-1">Edit</Link>
+                <Link to={`/admin/access/users/${user.id}`} className="btn btn-outline-primary btn-sm me-1">Edit</Link>
                 <Button
                   size="sm"
                   variant={user.enabled ? 'outline-warning' : 'outline-success'}

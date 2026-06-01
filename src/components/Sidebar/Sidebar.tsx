@@ -1,43 +1,40 @@
-import { Nav } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
-import { MenuTreeNav } from './MenuTreeNav';
+import { CollapsibleSidebarNav } from './CollapsibleSidebarNav';
+import styles from './Sidebar.module.css';
 
 export function Sidebar() {
   const { menu, currentUser, tenant, isPlatformAdmin, logout } = useAuth();
 
+  const initials = (tenant?.name ?? 'SC')
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
+
   return (
-    <div
-      className="d-flex flex-column bg-dark text-white"
-      style={{ width: 240, minHeight: '100vh', padding: '1rem 0' }}
-    >
-      <div className="px-3 mb-4">
-        <div className="fw-bold fs-5 text-primary text-truncate">
-          {isPlatformAdmin ? 'Platform Console' : tenant?.name ?? 'Workspace'}
+    <aside className={styles.sidebar}>
+      <div className={styles.brand}>
+        <div className={styles.brandLogo}>{initials || 'SC'}</div>
+        <div className={styles.brandTitle}>
+          {isPlatformAdmin ? 'Platform Console' : tenant?.name ?? 'StepCore'}
         </div>
         {tenant && !isPlatformAdmin && (
-          <div className="text-uppercase text-white-50" style={{ fontSize: '0.65rem', letterSpacing: '0.05em' }}>
-            {tenant.plan} plan
-          </div>
+          <div className={styles.brandMeta}>{tenant.plan} plan</div>
         )}
         {currentUser && (
-          <div className="text-muted small mt-1">
-            {currentUser.firstName} · {currentUser.roleName}
+          <div className={styles.brandUser}>
+            {currentUser.firstName} {currentUser.lastName} · {currentUser.roleName}
           </div>
         )}
       </div>
 
-      <Nav className="flex-column px-2 flex-grow-1">
-        <MenuTreeNav nodes={menu} />
-      </Nav>
+      <CollapsibleSidebarNav nodes={menu} />
 
-      <div className="px-3 mt-auto border-top border-secondary pt-3">
-        <button
-          className="btn btn-outline-danger btn-sm w-100"
-          onClick={logout}
-        >
+      <div className={styles.footer}>
+        <button type="button" className="btn btn-outline-danger btn-sm w-100" onClick={logout}>
           Sign out
         </button>
       </div>
-    </div>
+    </aside>
   );
 }

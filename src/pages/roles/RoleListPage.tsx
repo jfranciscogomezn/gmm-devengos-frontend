@@ -33,9 +33,10 @@ export function RoleListPage() {
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="mb-0">Role Management</h4>
-        <Link to="/admin/roles/new" className="btn btn-primary btn-sm">+ New Role</Link>
+      <Link to="/admin/access" className="text-decoration-none small">&larr; Access Control</Link>
+      <div className="d-flex justify-content-between align-items-center mb-4 mt-2">
+        <h4 className="mb-0">Roles &amp; Permissions</h4>
+        <Link to="/admin/access/roles/new" className="btn btn-primary btn-sm">+ New Role</Link>
       </div>
 
       <Table striped hover responsive>
@@ -56,8 +57,8 @@ export function RoleListPage() {
               <td className="text-muted">{role.description ?? '—'}</td>
               <td>{role.menuNodes?.length ?? 0}</td>
               <td>
-                <Link to={`/admin/roles/${role.id}`} className="btn btn-outline-primary btn-sm me-1">Edit</Link>
-                <Link to={`/admin/roles/${role.id}/menu`} className="btn btn-outline-secondary btn-sm me-1">Menu</Link>
+                <Link to={`/admin/access/roles/${role.id}`} className="btn btn-outline-primary btn-sm me-1">Edit</Link>
+                <Link to={`/admin/access/roles/${role.id}?tab=permissions`} className="btn btn-outline-secondary btn-sm me-1">Permissions</Link>
                 <Button size="sm" variant="outline-danger" onClick={() => { setDeleteTarget(role); setDeleteError(''); }}>
                   Delete
                 </Button>
