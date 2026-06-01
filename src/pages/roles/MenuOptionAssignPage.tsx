@@ -1,9 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Card, Form, Spinner } from 'react-bootstrap';
 import { rolesService } from '../../api/roles.service';
-import type { MenuOption } from '../../types';
+import { MenuTreeAssign } from '../../components/MenuTreeAssign/MenuTreeAssign';
+import { getApiErrorMessage } from '../../utils/apiError';
+import { walkMenuTree } from '../../utils/menuTree';
+import type { MenuTreeNode } from '../../types';
+
+function buildIdByCode(nodes: MenuTreeNode[]): Map<string, number> {
+  const map = new Map<string, number>();
+  walkMenuTree(nodes, (node) => {
+    if (node.type === 'ITEM' && node.id != null) {
+      map.set(node.code, node.id);
+    }
+  });
+  return map;
+}
 
 export function MenuOptionAssignPage() {
   const { id } = useParams<{ id: string }>();
@@ -19,68 +32,78 @@ export function MenuOptionAssignPage() {
     queryFn: () => rolesService.findById(roleId),
   });
 
-  const { data: allOptions = [], isLoading: optLoading } = useQuery({
-    queryKey: ['menu-options'],
-    queryFn: async (): Promise<MenuOption[]> => {
-      const allRoles = await rolesService.findAll();
-      const seen = new Map<number, MenuOption>();
-      for (const r of allRoles) {
-        for (const opt of r.menuOptions ?? []) seen.set(opt.id, opt);
-      }
-      return [...seen.values()].sort((a, b) => a.sortOrder - b.sortOrder);
-    },
+  const { data: catalogue = [], isLoading: catalogueLoading } = useQuery({
+    queryKey: ['menu-catalogue'],
+    queryFn: rolesService.getMenuCatalogue,
   });
 
+  const { data: assignedNodes = [], isLoading: assignedLoading } = useQuery({
+    queryKey: ['roles', id, 'menu-nodes'],
+    queryFn: () => rolesService.getAssignedMenuNodes(roleId),
+  });
+
+  const idByCode = useMemo(() => buildIdByCode(catalogue), [catalogue]);
+
   useEffect(() => {
-    if (role?.menuOptions) {
-      setSelected(new Set(role.menuOptions.map((o) => o.id)));
+    if (assignedNodes.length > 0) {
+      setSelected(new Set(assignedNodes.map((node) => node.id)));
     }
-  }, [role]);
+  }, [assignedNodes]);
 
   const mutation = useMutation({
-    mutationFn: () => rolesService.assignMenuOptions(roleId, [...selected]),
+    mutationFn: () => rolesService.assignMenuNodes(roleId, [...selected]),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles'] });
       navigate('/admin/roles');
     },
-    onError: (err: { response?: { data?: { message?: string } } }) => {
-      setServerError(err.response?.data?.message ?? 'Failed to assign menu options.');
+    onError: (err: unknown) => {
+      setServerError(getApiErrorMessage(err, 'menu assignment'));
     },
   });
 
-  const toggle = (optId: number) => {
+  const toggle = (nodeId: number) => {
     setSelected((prev) => {
       const next = new Set(prev);
-      if (next.has(optId)) next.delete(optId); else next.add(optId);
+      if (next.has(nodeId)) next.delete(nodeId);
+      else next.add(nodeId);
       return next;
     });
   };
 
-  if (roleLoading || optLoading) return <div className="text-center py-5"><Spinner /></div>;
+  const toggleModule = (itemIds: number[], select: boolean) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      for (const itemId of itemIds) {
+        if (select) next.add(itemId);
+        else next.delete(itemId);
+      }
+      return next;
+    });
+  };
+
+  if (roleLoading || catalogueLoading || assignedLoading) {
+    return <div className="text-center py-5"><Spinner /></div>;
+  }
 
   return (
-    <div style={{ maxWidth: 540 }}>
-      <h4 className="mb-4">Menu Options — {role?.name}</h4>
+    <div style={{ maxWidth: 640 }}>
+      <h4 className="mb-4">Menu Permissions — {role?.name}</h4>
       <Card>
         <Card.Body>
           {serverError && <Alert variant="danger" className="py-2">{serverError}</Alert>}
           <p className="text-muted small mb-3">
-            Select which menu items this role can access.
+            Select which screens this role can access. Only leaf items grant permissions.
           </p>
           <Form onSubmit={(e) => { e.preventDefault(); setServerError(''); mutation.mutate(); }}>
-            {allOptions.map((opt) => (
-              <Form.Check
-                key={opt.id}
-                type="checkbox"
-                id={`opt-${opt.id}`}
-                label={`${opt.label} (${opt.route})`}
-                checked={selected.has(opt.id)}
-                onChange={() => toggle(opt.id)}
-                className="mb-2"
-              />
-            ))}
-            {allOptions.length === 0 && (
-              <p className="text-muted">No menu options available.</p>
+            <MenuTreeAssign
+              nodes={catalogue}
+              selected={selected}
+              idByCode={idByCode}
+              onToggle={toggle}
+              onToggleModule={toggleModule}
+            />
+            {catalogue.length === 0 && (
+              <p className="text-muted">No menu catalogue available.</p>
             )}
             <div className="d-flex gap-2 mt-3">
               <Button type="submit" variant="primary" disabled={mutation.isPending}>

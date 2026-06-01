@@ -44,7 +44,7 @@ export function RoleListPage() {
             <th>#</th>
             <th>Name</th>
             <th>Description</th>
-            <th>Menu Options</th>
+            <th>Menu Items</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -54,7 +54,7 @@ export function RoleListPage() {
               <td>{role.id}</td>
               <td><Badge bg="secondary">{role.name}</Badge></td>
               <td className="text-muted">{role.description ?? '—'}</td>
-              <td>{role.menuOptions?.length ?? 0}</td>
+              <td>{role.menuNodes?.length ?? 0}</td>
               <td>
                 <Link to={`/admin/roles/${role.id}`} className="btn btn-outline-primary btn-sm me-1">Edit</Link>
                 <Link to={`/admin/roles/${role.id}/menu`} className="btn btn-outline-secondary btn-sm me-1">Menu</Link>

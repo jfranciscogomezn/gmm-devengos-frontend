@@ -1,4 +1,16 @@
-export interface MenuOption {
+export type MenuNodeType = 'MODULE' | 'GROUP' | 'ITEM';
+
+export interface MenuTreeNode {
+  id: number | null;
+  code: string;
+  label: string;
+  type: MenuNodeType;
+  route: string | null;
+  icon: string | null;
+  children: MenuTreeNode[];
+}
+
+export interface MenuNode {
   id: number;
   code: string;
   label: string;
@@ -10,7 +22,7 @@ export interface Role {
   id: number;
   name: string;
   description: string | null;
-  menuOptions?: MenuOption[];
+  menuNodes?: MenuNode[];
 }
 
 export interface UserProfile {
@@ -29,7 +41,8 @@ export interface LoginResponse {
   email: string;
   fullName: string;
   roleName: string;
-  menuOptions: MenuOption[];
+  menu: MenuTreeNode[];
+  permissions: string[];
   mustChangePassword: boolean;
   tenantSlug: string;
   tenantName: string;
