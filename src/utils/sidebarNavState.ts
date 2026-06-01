@@ -38,3 +38,19 @@ export function loadExpandedModules(storageKey: string): Set<string> | null {
 export function saveExpandedModules(storageKey: string, expanded: Set<string>): void {
   localStorage.setItem(storageKey, JSON.stringify([...expanded]));
 }
+
+const SIDEBAR_VISIBLE_KEY = 'stepcore.sidebar.visible';
+
+export function loadSidebarVisible(): boolean {
+  try {
+    const raw = localStorage.getItem(SIDEBAR_VISIBLE_KEY);
+    if (raw === null) return true;
+    return raw === 'true';
+  } catch {
+    return true;
+  }
+}
+
+export function saveSidebarVisible(visible: boolean): void {
+  localStorage.setItem(SIDEBAR_VISIBLE_KEY, String(visible));
+}

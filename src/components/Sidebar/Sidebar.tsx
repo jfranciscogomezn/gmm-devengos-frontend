@@ -1,8 +1,14 @@
+import { List } from 'react-bootstrap-icons';
 import { useAuth } from '../../context/AuthContext';
 import { CollapsibleSidebarNav } from './CollapsibleSidebarNav';
 import styles from './Sidebar.module.css';
 
-export function Sidebar() {
+interface SidebarProps {
+  open: boolean;
+  onToggle: () => void;
+}
+
+export function Sidebar({ open, onToggle }: SidebarProps) {
   const { menu, currentUser, tenant, isPlatformAdmin, logout } = useAuth();
 
   const initials = (tenant?.name ?? 'SC')
@@ -12,20 +18,32 @@ export function Sidebar() {
     .join('');
 
   return (
-    <aside className={styles.sidebar}>
+    <aside className={`${styles.sidebar} ${open ? '' : styles.sidebarClosed}`} aria-hidden={!open}>
       <div className={styles.brand}>
-        <div className={styles.brandLogo}>{initials || 'SC'}</div>
-        <div className={styles.brandTitle}>
-          {isPlatformAdmin ? 'Platform Console' : tenant?.name ?? 'StepCore'}
-        </div>
-        {tenant && !isPlatformAdmin && (
-          <div className={styles.brandMeta}>{tenant.plan} plan</div>
-        )}
-        {currentUser && (
-          <div className={styles.brandUser}>
-            {currentUser.firstName} {currentUser.lastName} · {currentUser.roleName}
+        <div className={styles.brandHeader}>
+          <div className={styles.brandContent}>
+            <div className={styles.brandLogo}>{initials || 'SC'}</div>
+            <div className={styles.brandTitle}>
+              {isPlatformAdmin ? 'Platform Console' : tenant?.name ?? 'StepCore'}
+            </div>
+            {tenant && !isPlatformAdmin && (
+              <div className={styles.brandMeta}>{tenant.plan} plan</div>
+            )}
+            {currentUser && (
+              <div className={styles.brandUser}>
+                {currentUser.firstName} {currentUser.lastName} · {currentUser.roleName}
+              </div>
+            )}
           </div>
-        )}
+          <button
+            type="button"
+            className={styles.menuToggle}
+            onClick={onToggle}
+            aria-label="Hide navigation menu"
+          >
+            <List size={18} />
+          </button>
+        </div>
       </div>
 
       <CollapsibleSidebarNav nodes={menu} />

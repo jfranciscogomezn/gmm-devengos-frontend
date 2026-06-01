@@ -74,16 +74,17 @@ interface SidebarNavNodeProps {
 function SidebarNavNode({ node, depth, expanded, onToggle }: SidebarNavNodeProps) {
   if (node.type === 'ITEM' && node.route) {
     return (
-      <NavLink
-        to={node.route}
-        className={({ isActive }) =>
-          `${styles.link} ${isActive ? styles.linkActive : ''}`
-        }
-        style={{ marginLeft: depth * 12 }}
-      >
-        <span className={styles.icon}>{menuNodeIcon(node.code, 'ITEM')}</span>
-        <span>{node.label}</span>
-      </NavLink>
+      <div className={styles.navNode}>
+        <NavLink
+          to={node.route}
+          className={({ isActive }) =>
+            `${styles.link} ${isActive ? styles.linkActive : ''}`
+          }
+        >
+          <span className={styles.icon}>{menuNodeIcon(node.code, 'ITEM')}</span>
+          <span className={styles.linkLabel}>{node.label}</span>
+        </NavLink>
+      </div>
     );
   }
 
@@ -91,12 +92,11 @@ function SidebarNavNode({ node, depth, expanded, onToggle }: SidebarNavNodeProps
   const hasChildren = node.children.length > 0;
 
   return (
-    <div style={{ marginBottom: 4 }}>
+    <div className={styles.navNode} style={{ marginBottom: 4 }}>
       {hasChildren && (
         <button
           type="button"
           className={styles.parentButton}
-          style={{ marginLeft: depth * 12 }}
           onClick={() => onToggle(node.code)}
           aria-expanded={isOpen}
         >
