@@ -4,12 +4,14 @@ import { useMutation } from '@tanstack/react-query';
 import { Alert, Button, Card, Form, Spinner } from 'react-bootstrap';
 import { authService } from '../../api/auth.service';
 import { useAuth } from '../../context/AuthContext';
+import { consumeStaleSessionFlag } from '../../utils/jwt';
 
 const LAST_TENANT_KEY = 'stepcore_last_tenant';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
+  const [staleSession] = useState(() => consumeStaleSessionFlag());
 
   const [tenantSlug, setTenantSlug] = useState(() => localStorage.getItem(LAST_TENANT_KEY) ?? '');
   const [email, setEmail] = useState('');
@@ -51,6 +53,12 @@ export function LoginPage() {
             <h4 className="fw-bold text-primary">StepCore</h4>
             <p className="text-muted small">Sign in to your account</p>
           </div>
+
+          {staleSession && (
+            <Alert variant="warning" className="py-2">
+              Your session is outdated or incomplete. Please sign in again to refresh your permissions.
+            </Alert>
+          )}
 
           {mutation.isError && (
             <Alert variant="danger" className="py-2">

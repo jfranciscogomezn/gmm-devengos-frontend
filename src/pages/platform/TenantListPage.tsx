@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Badge, Button, Card, Spinner, Table } from 'react-bootstrap';
 import { platformService } from '../../api/platform.service';
+import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 import type { Tenant, TenantStatus } from '../../types';
 
 const STATUS_VARIANT: Record<TenantStatus, string> = {
@@ -14,7 +15,7 @@ export function TenantListPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: tenants = [], isLoading, isError } = useQuery({
+  const { data: tenants = [], isLoading, isError, error } = useQuery({
     queryKey: ['platform-tenants'],
     queryFn: platformService.findAll,
   });
@@ -26,7 +27,7 @@ export function TenantListPage() {
   });
 
   if (isLoading) return <div className="text-center py-5"><Spinner /></div>;
-  if (isError) return <Alert variant="danger">Failed to load tenants.</Alert>;
+  if (isError) return <ApiErrorAlert error={error} resourceLabel="tenants" />;
 
   const toggleStatus = (tenant: Tenant) => {
     const next: TenantStatus = tenant.status === 'SUSPENDED' ? 'ACTIVE' : 'SUSPENDED';

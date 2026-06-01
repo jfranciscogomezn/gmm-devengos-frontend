@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Card, Col, Form, Row, Spinner } from 'react-bootstrap';
 import { employeesService } from '../../api/employees.service';
+import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
+import { getApiErrorMessage } from '../../utils/apiError';
 import type { CreateEmployeeRequest, IdType, UpdateEmployeeRequest } from '../../types';
 
 const ID_TYPES: IdType[] = ['CC', 'CE', 'TI', 'PASSPORT', 'NIT'];
@@ -23,7 +25,7 @@ export function EmployeeFormPage() {
   const [userId, setUserId] = useState('');
   const [serverError, setServerError] = useState('');
 
-  const { data: employee, isLoading: employeeLoading } = useQuery({
+  const { data: employee, isLoading: employeeLoading, isError: loadError, error: loadQueryError } = useQuery({
     queryKey: ['employees', id],
     queryFn: () => employeesService.findById(Number(id)),
     enabled: isEdit,
@@ -77,10 +79,14 @@ export function EmployeeFormPage() {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
       navigate('/admin/employees');
     },
-    onError: (err: { response?: { data?: { message?: string } } }) => {
-      setServerError(err.response?.data?.message ?? 'Failed to save employee.');
+    onError: (err: unknown) => {
+      setServerError(getApiErrorMessage(err, 'employee'));
     },
   });
+
+  if (isEdit && loadError) {
+    return <ApiErrorAlert error={loadQueryError} resourceLabel="employee" />;
+  }
 
   if (isEdit && employeeLoading) {
     return (

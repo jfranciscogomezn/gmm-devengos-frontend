@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Badge, Button, Modal, Spinner, Table } from 'react-bootstrap';
 import { rolesService } from '../../api/roles.service';
+import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 import type { Role } from '../../types';
 
 export function RoleListPage() {
@@ -10,7 +11,7 @@ export function RoleListPage() {
   const [deleteTarget, setDeleteTarget] = useState<Role | null>(null);
   const [deleteError, setDeleteError] = useState('');
 
-  const { data: roles = [], isLoading, isError } = useQuery({
+  const { data: roles = [], isLoading, isError, error } = useQuery({
     queryKey: ['roles'],
     queryFn: rolesService.findAll,
   });
@@ -28,7 +29,7 @@ export function RoleListPage() {
   });
 
   if (isLoading) return <div className="text-center py-5"><Spinner /></div>;
-  if (isError) return <Alert variant="danger">Failed to load roles.</Alert>;
+  if (isError) return <ApiErrorAlert error={error} resourceLabel="roles" />;
 
   return (
     <div>

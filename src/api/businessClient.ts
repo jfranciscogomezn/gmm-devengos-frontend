@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { clearSession, clearToken, getToken } from './client';
-
 export const businessClient = axios.create({
   baseURL: import.meta.env.VITE_BUSINESS_API_URL ?? 'http://localhost:8081/api/v1',
   headers: { 'Content-Type': 'application/json' },
