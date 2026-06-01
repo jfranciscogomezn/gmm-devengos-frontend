@@ -1,4 +1,17 @@
-export interface MenuOption {
+export type MenuNodeType = 'MODULE' | 'GROUP' | 'ITEM';
+
+export interface MenuTreeNode {
+  id: number | null;
+  code: string;
+  label: string;
+  type: MenuNodeType;
+  route: string | null;
+  icon: string | null;
+  enabled: boolean;
+  children: MenuTreeNode[];
+}
+
+export interface MenuNode {
   id: number;
   code: string;
   label: string;
@@ -10,7 +23,7 @@ export interface Role {
   id: number;
   name: string;
   description: string | null;
-  menuOptions?: MenuOption[];
+  menuNodes?: MenuNode[];
 }
 
 export interface UserProfile {
@@ -19,6 +32,7 @@ export interface UserProfile {
   lastName: string;
   email: string;
   phone: string | null;
+  roleId?: number;
   roleName: string;
   enabled: boolean;
   mustChangePassword: boolean;
@@ -29,7 +43,8 @@ export interface LoginResponse {
   email: string;
   fullName: string;
   roleName: string;
-  menuOptions: MenuOption[];
+  menu: MenuTreeNode[];
+  permissions: string[];
   mustChangePassword: boolean;
   tenantSlug: string;
   tenantName: string;
@@ -118,6 +133,37 @@ export interface CreateRoleRequest {
 export interface UpdateRoleRequest {
   name: string;
   description?: string;
+}
+
+export interface CreateMenuNodeRequest {
+  code: string;
+  label: string;
+  nodeType: MenuNodeType;
+  route?: string;
+  icon?: string;
+  parentId?: number | null;
+  sortOrder: number;
+  enabled: boolean;
+}
+
+export interface UpdateMenuNodeRequest {
+  label: string;
+  route?: string;
+  icon?: string;
+  sortOrder: number;
+  enabled: boolean;
+}
+
+export interface MenuNodeAdminResponse {
+  id: number;
+  code: string;
+  label: string;
+  nodeType: MenuNodeType;
+  route: string | null;
+  icon: string | null;
+  parentId: number | null;
+  sortOrder: number;
+  enabled: boolean;
 }
 
 export type IdType = 'CC' | 'CE' | 'TI' | 'PASSPORT' | 'NIT';

@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import type { Role, MenuOption, CreateRoleRequest, UpdateRoleRequest } from '../types';
+import type { CreateRoleRequest, MenuNode, MenuTreeNode, Role, UpdateRoleRequest } from '../types';
 
 interface ApiListResponse<T> {
   success: boolean;
@@ -36,18 +36,18 @@ export const rolesService = {
     await apiClient.delete(`/roles/${id}`);
   },
 
-  async getMenuOptions(id: number): Promise<MenuOption[]> {
-    const { data } = await apiClient.get<ApiListResponse<MenuOption>>(`/roles/${id}/menu-options`);
+  async getMenuCatalogue(): Promise<MenuTreeNode[]> {
+    const { data } = await apiClient.get<ApiListResponse<MenuTreeNode>>('/menu/catalogue');
     return data.data;
   },
 
-  async assignMenuOptions(id: number, menuOptionIds: number[]): Promise<Role> {
-    const { data } = await apiClient.put<ApiSingleResponse<Role>>(`/roles/${id}/menu-options`, { menuOptionIds });
+  async getAssignedMenuNodes(id: number): Promise<MenuNode[]> {
+    const { data } = await apiClient.get<ApiListResponse<MenuNode>>(`/roles/${id}/menu-nodes`);
     return data.data;
   },
 
-  async getAllMenuOptions(): Promise<MenuOption[]> {
-    const { data } = await apiClient.get<ApiListResponse<MenuOption>>('/roles/menu-options/all');
+  async assignMenuNodes(id: number, menuNodeIds: number[]): Promise<Role> {
+    const { data } = await apiClient.put<ApiSingleResponse<Role>>(`/roles/${id}/menu-nodes`, { menuNodeIds });
     return data.data;
   },
 };

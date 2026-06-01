@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import type { LoginResponse, MenuOption, TenantSummary, UserProfile } from '../types';
+import type { LoginResponse, MenuTreeNode, TenantSummary, UserProfile } from '../types';
 import {
   clearSession,
   clearToken,
@@ -14,7 +14,8 @@ const PLATFORM_ADMIN_ROLE = 'PLATFORM_ADMIN';
 
 interface PersistedSession {
   currentUser: UserProfile;
-  menuOptions: MenuOption[];
+  menu: MenuTreeNode[];
+  permissions: string[];
   tenant: TenantSummary | null;
   mustChangePassword: boolean;
 }
@@ -23,7 +24,8 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   token: string | null;
   currentUser: UserProfile | null;
-  menuOptions: MenuOption[];
+  menu: MenuTreeNode[];
+  permissions: string[];
   tenant: TenantSummary | null;
   isPlatformAdmin: boolean;
   mustChangePassword: boolean;
@@ -52,7 +54,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const [token, setTokenState] = useState<string | null>(isValidToken ? storedToken : null);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(restored?.currentUser ?? null);
-  const [menuOptions, setMenuOptions] = useState<MenuOption[]>(restored?.menuOptions ?? []);
+  const [menu, setMenu] = useState<MenuTreeNode[]>(restored?.menu ?? []);
+  const [permissions, setPermissions] = useState<string[]>(restored?.permissions ?? []);
   const [tenant, setTenant] = useState<TenantSummary | null>(restored?.tenant ?? null);
   const [mustChangePassword, setMustChangePassword] = useState(restored?.mustChangePassword ?? false);
 
@@ -76,14 +79,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(response.token);
     setSession<PersistedSession>({
       currentUser: user,
-      menuOptions: response.menuOptions,
+      menu: response.menu,
+      permissions: response.permissions,
       tenant: tenantSummary,
       mustChangePassword: response.mustChangePassword,
     });
 
     setTokenState(response.token);
     setCurrentUser(user);
-    setMenuOptions(response.menuOptions);
+    setMenu(response.menu);
+    setPermissions(response.permissions);
     setTenant(tenantSummary);
     setMustChangePassword(response.mustChangePassword);
   }, []);
@@ -93,28 +98,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clearSession();
     setTokenState(null);
     setCurrentUser(null);
-    setMenuOptions([]);
+    setMenu([]);
+    setPermissions([]);
     setTenant(null);
     setMustChangePassword(false);
   }, []);
 
   const hasPermission = useCallback(
-    (code: string) => menuOptions.some((option) => option.code === code),
-    [menuOptions],
+    (code: string) => permissions.includes(code),
+    [permissions],
   );
 
   const value = useMemo<AuthContextValue>(() => ({
     isAuthenticated: token !== null,
     token,
     currentUser,
-    menuOptions,
+    menu,
+    permissions,
     tenant,
     isPlatformAdmin: currentUser?.roleName === PLATFORM_ADMIN_ROLE,
     mustChangePassword,
     login,
     logout,
     hasPermission,
-  }), [token, currentUser, menuOptions, tenant, mustChangePassword, login, logout, hasPermission]);
+  }), [token, currentUser, menu, permissions, tenant, mustChangePassword, login, logout, hasPermission]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

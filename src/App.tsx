@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthProvider } from './context/AuthContext';
@@ -6,15 +6,16 @@ import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { AppLayout } from './components/Layout/AppLayout';
 import { LoginPage } from './pages/Login/LoginPage';
 import { RoleListPage } from './pages/roles/RoleListPage';
-import { RoleFormPage } from './pages/roles/RoleFormPage';
-import { MenuOptionAssignPage } from './pages/roles/MenuOptionAssignPage';
 import { UserListPage } from './pages/users/UserListPage';
-import { UserFormPage } from './pages/users/UserFormPage';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { TenantListPage } from './pages/platform/TenantListPage';
 import { TenantFormPage } from './pages/platform/TenantFormPage';
 import { EmployeeListPage } from './pages/employees/EmployeeListPage';
 import { EmployeeFormPage } from './pages/employees/EmployeeFormPage';
+import { AccessControlHubPage } from './pages/access/AccessControlHubPage';
+import { MenuCataloguePage } from './pages/access/MenuCataloguePage';
+import { RoleDetailPage } from './pages/access/RoleDetailPage';
+import { UserDetailPage } from './pages/access/UserDetailPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,21 @@ function DashboardPlaceholder() {
       <p className="text-muted">Welcome to StepCore.</p>
     </div>
   );
+}
+
+function LegacyRoleRedirect() {
+  const { id } = useParams<{ id: string }>();
+  return <Navigate to={`/admin/access/roles/${id}`} replace />;
+}
+
+function LegacyRoleMenuRedirect() {
+  const { id } = useParams<{ id: string }>();
+  return <Navigate to={`/admin/access/roles/${id}?tab=permissions`} replace />;
+}
+
+function LegacyUserRedirect() {
+  const { id } = useParams<{ id: string }>();
+  return <Navigate to={`/admin/access/users/${id}`} replace />;
 }
 
 export default function App() {
@@ -48,8 +64,25 @@ export default function App() {
             >
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<DashboardPlaceholder />} />
+
               <Route
-                path="admin/roles"
+                path="admin/access"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AccessControlHubPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/access/menu"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <MenuCataloguePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/access/roles"
                 element={
                   <ProtectedRoute requireAdmin>
                     <RoleListPage />
@@ -57,31 +90,23 @@ export default function App() {
                 }
               />
               <Route
-                path="admin/roles/new"
+                path="admin/access/roles/new"
                 element={
                   <ProtectedRoute requireAdmin>
-                    <RoleFormPage />
+                    <RoleDetailPage />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="admin/roles/:id"
+                path="admin/access/roles/:id"
                 element={
                   <ProtectedRoute requireAdmin>
-                    <RoleFormPage />
+                    <RoleDetailPage />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="admin/roles/:id/menu"
-                element={
-                  <ProtectedRoute requireAdmin>
-                    <MenuOptionAssignPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="admin/users"
+                path="admin/access/users"
                 element={
                   <ProtectedRoute requireAdmin>
                     <UserListPage />
@@ -89,21 +114,30 @@ export default function App() {
                 }
               />
               <Route
-                path="admin/users/new"
+                path="admin/access/users/new"
                 element={
                   <ProtectedRoute requireAdmin>
-                    <UserFormPage />
+                    <UserDetailPage />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="admin/users/:id"
+                path="admin/access/users/:id"
                 element={
                   <ProtectedRoute requireAdmin>
-                    <UserFormPage />
+                    <UserDetailPage />
                   </ProtectedRoute>
                 }
               />
+
+              <Route path="admin/roles" element={<Navigate to="/admin/access/roles" replace />} />
+              <Route path="admin/roles/new" element={<Navigate to="/admin/access/roles/new" replace />} />
+              <Route path="admin/roles/:id/menu" element={<LegacyRoleMenuRedirect />} />
+              <Route path="admin/roles/:id" element={<LegacyRoleRedirect />} />
+              <Route path="admin/users" element={<Navigate to="/admin/access/users" replace />} />
+              <Route path="admin/users/new" element={<Navigate to="/admin/access/users/new" replace />} />
+              <Route path="admin/users/:id" element={<LegacyUserRedirect />} />
+
               <Route
                 path="admin/employees"
                 element={
