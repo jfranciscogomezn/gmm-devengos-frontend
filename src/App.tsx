@@ -16,6 +16,10 @@ import { AccessControlHubPage } from './pages/access/AccessControlHubPage';
 import { MenuCataloguePage } from './pages/access/MenuCataloguePage';
 import { RoleDetailPage } from './pages/access/RoleDetailPage';
 import { UserDetailPage } from './pages/access/UserDetailPage';
+import { MyTimePage } from './pages/time/MyTimePage';
+import { AdminTimeRecordsPage } from './pages/time/AdminTimeRecordsPage';
+import { IncompleteTimeRecordsBanner } from './components/time/IncompleteTimeRecordsBanner';
+import { useAuth } from './context/AuthContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,10 +28,13 @@ const queryClient = new QueryClient({
 });
 
 function DashboardPlaceholder() {
+  const { hasPermission } = useAuth();
+
   return (
     <div>
       <h4>Dashboard</h4>
       <p className="text-muted">Welcome to StepCore.</p>
+      {hasPermission('MY_TIME') && <IncompleteTimeRecordsBanner />}
     </div>
   );
 }
@@ -187,6 +194,22 @@ export default function App() {
                 }
               />
               <Route path="my/profile" element={<ProfilePage />} />
+              <Route
+                path="my/time"
+                element={
+                  <ProtectedRoute requirePermission="MY_TIME">
+                    <MyTimePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/time"
+                element={
+                  <ProtectedRoute requirePermission="TIME_RECORDS_ADMIN">
+                    <AdminTimeRecordsPage />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
