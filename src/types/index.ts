@@ -201,3 +201,15 @@ export interface UpdateEmployeeRequest {
   monthlySalary: number;
   userId?: number | null;
 }
+
+export type TimeRecordStatus = 'OPEN' | 'CLOSED' | 'INCOMPLETE';
+
+export interface TimeRecord {
+  id: number;
+  employeeId: number;
+  workDate: string;
+  clockIn: string;
+  clockOut: string | null;
+  status: TimeRecordStatus;
+  corrected: boolean;
+}

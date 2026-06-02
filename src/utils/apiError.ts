@@ -59,9 +59,12 @@ export function getApiErrorDetails(error: unknown, resourceLabel = 'data'): ApiE
     }
 
     if (status !== undefined && status >= 500) {
+      const genericServerMessage = apiMessage === 'An unexpected error occurred';
       return {
         status,
-        message: apiMessage ?? 'A server error occurred. Please try again later.',
+        message: genericServerMessage
+          ? 'The business API returned an unexpected error. If you recently updated the frontend, restart the business backend on branch feat/time-tracking (port 8081) so time-records endpoints are available.'
+          : (apiMessage ?? 'A server error occurred. Please try again later.'),
         isNetworkError: false,
         isForbidden: false,
         isUnauthorized: false,
