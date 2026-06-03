@@ -15,6 +15,15 @@ export function addDays(date: Date, days: number): Date {
   return next;
 }
 
+/** ISO week start (Monday) for the given date. */
+export function startOfWeek(date: Date): Date {
+  const normalized = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const weekday = normalized.getDay();
+  const daysFromMonday = weekday === 0 ? 6 : weekday - 1;
+  normalized.setDate(normalized.getDate() - daysFromMonday);
+  return normalized;
+}
+
 export function formatInstant(value: string): string {
   return new Intl.DateTimeFormat('en-US', {
     dateStyle: 'medium',
