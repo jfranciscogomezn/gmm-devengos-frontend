@@ -1,3 +1,4 @@
+import i18n from '../i18n';
 import { formatInstant, formatWorkDate } from './timeFormat';
 
 export interface AuditSnapshot {
@@ -6,13 +7,6 @@ export interface AuditSnapshot {
   clockIn?: string | null;
   clockOut?: string | null;
 }
-
-const AUDIT_ACTION_LABELS: Record<string, string> = {
-  TIME_RECORD_REOPEN: 'Reopened',
-  TIME_RECORD_RESOLVE_INCOMPLETE: 'Resolved incomplete',
-  TIME_RECORD_CORRECT: 'Corrected timestamps',
-  TIME_RECORD_CREATE: 'Created record',
-};
 
 export function parseAuditSnapshot(json: string | null | undefined): AuditSnapshot | null {
   if (!json) {
@@ -26,7 +20,11 @@ export function parseAuditSnapshot(json: string | null | undefined): AuditSnapsh
 }
 
 export function formatAuditAction(action: string): string {
-  return AUDIT_ACTION_LABELS[action] ?? action.replace(/_/g, ' ').toLowerCase();
+  const key = `time:audit.actions.${action}`;
+  if (i18n.exists(key)) {
+    return i18n.t(key);
+  }
+  return action.replace(/_/g, ' ').toLowerCase();
 }
 
 export function formatAuditSnapshotSummary(snapshot: AuditSnapshot | null): string {
@@ -39,10 +37,10 @@ export function formatAuditSnapshotSummary(snapshot: AuditSnapshot | null): stri
     parts.push(formatWorkDate(snapshot.workDate));
   }
   if (snapshot.clockIn) {
-    parts.push(`In ${formatInstant(snapshot.clockIn)}`);
+    parts.push(i18n.t('time:audit.snapshot.in', { value: formatInstant(snapshot.clockIn) }));
   }
   if (snapshot.clockOut) {
-    parts.push(`Out ${formatInstant(snapshot.clockOut)}`);
+    parts.push(i18n.t('time:audit.snapshot.out', { value: formatInstant(snapshot.clockOut) }));
   }
 
   return parts.length > 0 ? parts.join(' · ') : '—';

@@ -1,4 +1,5 @@
 import { Badge } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import type { TimeRecordStatus } from '../../types';
 
 const STATUS_VARIANT: Record<TimeRecordStatus, string> = {
@@ -7,16 +8,11 @@ const STATUS_VARIANT: Record<TimeRecordStatus, string> = {
   INCOMPLETE: 'danger',
 };
 
-const STATUS_LABEL: Record<TimeRecordStatus, string> = {
-  OPEN: 'Open',
-  CLOSED: 'Closed',
-  INCOMPLETE: 'Incomplete',
-};
-
 interface TimeRecordStatusBadgeProps {
   status: TimeRecordStatus;
 }
 
 export function TimeRecordStatusBadge({ status }: TimeRecordStatusBadgeProps) {
-  return <Badge bg={STATUS_VARIANT[status]}>{STATUS_LABEL[status]}</Badge>;
+  const { t } = useTranslation('time');
+  return <Badge bg={STATUS_VARIANT[status]}>{t(`status.${status}`)}</Badge>;
 }

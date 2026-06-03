@@ -1,3 +1,4 @@
+import i18n from '../i18n';
 import type { TimeReportQueryParams } from '../api/reports.service';
 import { startOfWeek, toIsoDateString } from './timeFormat';
 
@@ -47,7 +48,7 @@ export function reportPeriodLabel(state: ReportPeriodState): string {
     case 'day':
       return state.day;
     case 'week':
-      return `Week of ${state.week}`;
+      return i18n.t('reports:period.weekOf', { date: state.week });
     case 'range':
       return `${state.startDate} – ${state.endDate}`;
     default:

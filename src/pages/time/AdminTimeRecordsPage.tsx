@@ -13,6 +13,7 @@ import {
   Tab,
   Table,
 } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { employeesService } from '../../api/employees.service';
 import {
   timeService,
@@ -40,6 +41,7 @@ import {
 type AdminModalMode = 'resolve' | 'correct' | 'create' | null;
 
 export function AdminTimeRecordsPage() {
+  const { t } = useTranslation(['time', 'common']);
   const { currentUser } = useAuth();
   const queryClient = useQueryClient();
   const today = toIsoDateString(new Date());
@@ -183,16 +185,16 @@ export function AdminTimeRecordsPage() {
             disabled={reopenMutation.isPending}
             onClick={() => reopenMutation.mutate(record.id)}
           >
-            Reopen
+            {t('time:admin.actions.reopen')}
           </Button>
         )}
         {record.status === 'INCOMPLETE' && (
           <Button size="sm" variant="outline-danger" onClick={() => openResolveModal(record)}>
-            Resolve
+            {t('time:admin.actions.resolve')}
           </Button>
         )}
         <Button size="sm" variant="outline-primary" onClick={() => openCorrectModal(record)}>
-          Correct
+          {t('time:admin.actions.correct')}
         </Button>
       </div>
     );
@@ -203,7 +205,7 @@ export function AdminTimeRecordsPage() {
       return (
         <tr>
           <td colSpan={showActions ? 6 : 5} className="text-center text-muted py-4">
-            No records found.
+            {t('time:admin.noRecords')}
           </td>
         </tr>
       );
@@ -219,7 +221,9 @@ export function AdminTimeRecordsPage() {
           <td>{durationMinutes !== null ? formatDuration(durationMinutes) : '—'}</td>
           <td>
             <TimeRecordStatusBadge status={record.status} />
-            {record.corrected && <span className="badge bg-secondary ms-2">Corrected</span>}
+            {record.corrected && (
+              <span className="badge bg-secondary ms-2">{t('time:badges.corrected')}</span>
+            )}
           </td>
           {showActions && <td>{renderActions(record)}</td>}
         </tr>
@@ -250,10 +254,10 @@ export function AdminTimeRecordsPage() {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="mb-0">Time Records</h4>
+        <h4 className="mb-0">{t('time:admin.title')}</h4>
         <div className="d-flex gap-2">
           <Link to="/admin/time/audit" className="btn btn-outline-secondary btn-sm">
-            Audit history
+            {t('time:admin.auditHistory')}
           </Link>
           <Button
             size="sm"
@@ -261,7 +265,7 @@ export function AdminTimeRecordsPage() {
             disabled={selectedEmployeeId === null}
             onClick={openCreateModal}
           >
-            + Create record
+            + {t('time:admin.createRecord')}
           </Button>
         </div>
       </div>
@@ -271,7 +275,7 @@ export function AdminTimeRecordsPage() {
       <Row className="g-3 mb-4">
         <Col md={4}>
           <Form.Group controlId="admin-time-employee">
-            <Form.Label>Employee</Form.Label>
+            <Form.Label>{t('common:labels.employee')}</Form.Label>
             <Form.Select
               value={employeeId}
               onChange={(event) => {
@@ -279,7 +283,7 @@ export function AdminTimeRecordsPage() {
                 setEmployeeId(value === '' ? '' : Number(value));
               }}
             >
-              <option value="">All employees (incomplete tab) / Select for records</option>
+              <option value="">{t('time:admin.employeeOptionAll')}</option>
               {employees.map((employee) => (
                 <option key={employee.id} value={employee.id}>
                   {employee.firstName} {employee.lastName} ({employee.email})
@@ -292,7 +296,7 @@ export function AdminTimeRecordsPage() {
           <>
             <Col md={3}>
               <Form.Group controlId="admin-time-from">
-                <Form.Label>From</Form.Label>
+                <Form.Label>{t('common:labels.from')}</Form.Label>
                 <Form.Control
                   type="date"
                   value={fromDate}
@@ -304,7 +308,7 @@ export function AdminTimeRecordsPage() {
             </Col>
             <Col md={3}>
               <Form.Group controlId="admin-time-to">
-                <Form.Label>To</Form.Label>
+                <Form.Label>{t('common:labels.to')}</Form.Label>
                 <Form.Control
                   type="date"
                   value={toDate}
@@ -325,7 +329,7 @@ export function AdminTimeRecordsPage() {
                   setToDate(today);
                 }}
               >
-                Last 30 days
+                {t('time:myTime.presets.last30Days')}
               </button>
             </Col>
           </>
@@ -335,17 +339,17 @@ export function AdminTimeRecordsPage() {
       <Tab.Container activeKey={activeTab} onSelect={(key) => setActiveTab((key as 'records' | 'incomplete') ?? 'records')}>
         <Nav variant="tabs" className="mb-3">
           <Nav.Item>
-            <Nav.Link eventKey="records">Records</Nav.Link>
+            <Nav.Link eventKey="records">{t('time:admin.tabs.records')}</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="incomplete">Incomplete</Nav.Link>
+            <Nav.Link eventKey="incomplete">{t('time:admin.tabs.incomplete')}</Nav.Link>
           </Nav.Item>
         </Nav>
 
         <Tab.Content>
           <Tab.Pane eventKey="records">
             {selectedEmployeeId === null && (
-              <p className="text-muted">Select an employee to view their time records.</p>
+              <p className="text-muted">{t('time:admin.selectEmployeeHint')}</p>
             )}
             {selectedEmployeeId !== null && recordsLoading && (
               <div className="text-center py-4"><Spinner /></div>
@@ -357,18 +361,22 @@ export function AdminTimeRecordsPage() {
               <>
                 {selectedEmployee && (
                   <p className="text-muted mb-3">
-                    Showing records for {selectedEmployee.firstName} {selectedEmployee.lastName}.
+                    {t('time:admin.showingRecords', {
+                      name: `${selectedEmployee.firstName} ${selectedEmployee.lastName}`,
+                      from: formatWorkDate(fromDate),
+                      to: formatWorkDate(toDate),
+                    })}
                   </p>
                 )}
                 <Table striped hover responsive>
                   <thead className="table-dark">
                     <tr>
-                      <th>Date</th>
-                      <th>Clock in</th>
-                      <th>Clock out</th>
-                      <th>Duration</th>
-                      <th>Status</th>
-                      <th>Actions</th>
+                      <th>{t('common:labels.date')}</th>
+                      <th>{t('time:admin.table.clockIn')}</th>
+                      <th>{t('time:admin.table.clockOut')}</th>
+                      <th>{t('common:labels.duration')}</th>
+                      <th>{t('common:labels.status')}</th>
+                      <th>{t('common:labels.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>{renderRecordRows(records, true)}</tbody>
@@ -386,12 +394,12 @@ export function AdminTimeRecordsPage() {
               <Table striped hover responsive>
                 <thead className="table-dark">
                   <tr>
-                    <th>Date</th>
-                    <th>Clock in</th>
-                    <th>Clock out</th>
-                    <th>Duration</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>{t('common:labels.date')}</th>
+                    <th>{t('time:admin.table.clockIn')}</th>
+                    <th>{t('time:admin.table.clockOut')}</th>
+                    <th>{t('common:labels.duration')}</th>
+                    <th>{t('common:labels.status')}</th>
+                    <th>{t('common:labels.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>{renderRecordRows(incompleteRecords, true)}</tbody>
@@ -403,11 +411,11 @@ export function AdminTimeRecordsPage() {
 
       <Modal show={modalMode === 'resolve'} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Resolve incomplete record</Modal.Title>
+          <Modal.Title>{t('time:admin.modals.resolveTitle')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group className="mb-3">
-            <Form.Label>Manual clock-out</Form.Label>
+            <Form.Label>{t('time:admin.modals.manualClockOut')}</Form.Label>
             <Form.Control
               type="datetime-local"
               value={resolveClockOut}
@@ -415,7 +423,7 @@ export function AdminTimeRecordsPage() {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Correction note</Form.Label>
+            <Form.Label>{t('time:admin.modals.correctionNote')}</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
@@ -425,7 +433,7 @@ export function AdminTimeRecordsPage() {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={closeModal}>Cancel</Button>
+          <Button variant="secondary" onClick={closeModal}>{t('common:actions.cancel')}</Button>
           <Button
             variant="primary"
             disabled={isMutating || !resolveClockOut || !resolveNote.trim() || !selectedRecord}
@@ -440,18 +448,18 @@ export function AdminTimeRecordsPage() {
               });
             }}
           >
-            Resolve
+            {t('time:admin.actions.resolve')}
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={modalMode === 'correct'} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Correct time record</Modal.Title>
+          <Modal.Title>{t('time:admin.modals.correctTitle')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group className="mb-3">
-            <Form.Label>Clock-in</Form.Label>
+            <Form.Label>{t('time:admin.table.clockIn')}</Form.Label>
             <Form.Control
               type="datetime-local"
               value={correctClockIn}
@@ -459,7 +467,7 @@ export function AdminTimeRecordsPage() {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Clock-out</Form.Label>
+            <Form.Label>{t('time:admin.table.clockOut')}</Form.Label>
             <Form.Control
               type="datetime-local"
               value={correctClockOut}
@@ -467,7 +475,7 @@ export function AdminTimeRecordsPage() {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Correction reason</Form.Label>
+            <Form.Label>{t('time:admin.modals.correctionReason')}</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
@@ -477,7 +485,7 @@ export function AdminTimeRecordsPage() {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={closeModal}>Cancel</Button>
+          <Button variant="secondary" onClick={closeModal}>{t('common:actions.cancel')}</Button>
           <Button
             variant="primary"
             disabled={isMutating || !correctionReason.trim() || !selectedRecord}
@@ -493,18 +501,18 @@ export function AdminTimeRecordsPage() {
               });
             }}
           >
-            Save correction
+            {t('time:admin.modals.saveCorrection')}
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={modalMode === 'create'} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Create time record</Modal.Title>
+          <Modal.Title>{t('time:admin.modals.createTitle')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group className="mb-3">
-            <Form.Label>Work date</Form.Label>
+            <Form.Label>{t('time:admin.modals.workDate')}</Form.Label>
             <Form.Control
               type="date"
               value={createWorkDate}
@@ -513,7 +521,7 @@ export function AdminTimeRecordsPage() {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Clock-in</Form.Label>
+            <Form.Label>{t('time:admin.table.clockIn')}</Form.Label>
             <Form.Control
               type="datetime-local"
               value={createClockIn}
@@ -521,7 +529,7 @@ export function AdminTimeRecordsPage() {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Clock-out</Form.Label>
+            <Form.Label>{t('time:admin.table.clockOut')}</Form.Label>
             <Form.Control
               type="datetime-local"
               value={createClockOut}
@@ -529,7 +537,7 @@ export function AdminTimeRecordsPage() {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Reason</Form.Label>
+            <Form.Label>{t('common:labels.reason')}</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
@@ -539,7 +547,7 @@ export function AdminTimeRecordsPage() {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={closeModal}>Cancel</Button>
+          <Button variant="secondary" onClick={closeModal}>{t('common:actions.cancel')}</Button>
           <Button
             variant="primary"
             disabled={
@@ -562,7 +570,7 @@ export function AdminTimeRecordsPage() {
               createMutation.mutate(request);
             }}
           >
-            Create record
+            {t('time:admin.createRecord')}
           </Button>
         </Modal.Footer>
       </Modal>

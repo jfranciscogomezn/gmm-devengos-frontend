@@ -1,0 +1,35 @@
+{
+  "list": {
+    "title": "Inquilinos",
+    "subtitle": "Administración del proveedor · {{count}} inquilino(s)",
+    "new": "Nuevo inquilino",
+    "users": "Usuarios",
+    "statusUpdateFailed": "No se pudo actualizar el estado del inquilino.",
+    "activate": "Activar",
+    "suspend": "Suspender"
+  },
+  "form": {
+    "editTitle": "Editar inquilino · {{name}}",
+    "newTitle": "Nuevo inquilino",
+    "companyName": "Nombre de la empresa *",
+    "slugPlaceholder": "acme",
+    "maxUsers": "Máx. usuarios",
+    "maxUsersPlaceholder": "Predeterminado del plan",
+    "initialAdmin": "Administrador inicial",
+    "adminEmail": "Correo del administrador *",
+    "adminFirstName": "Nombre del administrador *",
+    "adminLastName": "Apellido del administrador *",
+    "saveChanges": "Guardar cambios",
+    "provision": "Aprovisionar inquilino",
+    "saveFailed": "Error al guardar el inquilino.",
+    "provisionedTitle": "Inquilino aprovisionado",
+    "provisionedHint": "Comparta estas credenciales de forma segura con el administrador del inquilino.",
+    "provisionedBody": "Comparta estas credenciales de forma segura con el administrador del inquilino. La contraseña temporal se muestra <strong>solo una vez</strong> y debe cambiarse en el primer inicio de sesión.",
+    "tempPassword": "Contraseña temporal",
+    "status": {
+      "ACTIVE": "ACTIVO",
+      "SUSPENDED": "SUSPENDIDO",
+      "PROVISIONING": "APROVISIONANDO"
+    }
+  }
+}

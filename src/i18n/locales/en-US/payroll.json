@@ -1,0 +1,50 @@
+{
+  "title": "Payroll Configuration",
+  "sections": {
+    "salary": "Salary & subsidies",
+    "limits": "Work-hour limits",
+    "surcharges": "Surcharge factors",
+    "boundaries": "Time boundaries",
+    "rest": "Rest deduction",
+    "holidays": "Holiday calendar ({{year}})"
+  },
+  "fields": {
+    "minimumWage": "Minimum wage (monthly)",
+    "transportSubsidy": "Transport subsidy (monthly)",
+    "monthlyHours": "Monthly work hours",
+    "normalDailyHours": "Normal daily hours",
+    "maxDailyExtra": "Max daily extra hours",
+    "daytimeOvertime": "Daytime overtime",
+    "nocturnalOvertime": "Nocturnal overtime",
+    "nightSurcharge": "Night surcharge",
+    "sundayHolidayDaytimeOt": "Sunday/holiday daytime OT",
+    "sundayHolidayNocturnalOt": "Sunday/holiday nocturnal OT",
+    "sundayHolidayNormal": "Sunday/holiday normal",
+    "restMinutes": "Non-billable rest minutes (per day)",
+    "holidayDate": "Date",
+    "holidayDescription": "Description (optional)",
+    "holidayPlaceholder": "e.g. Independence Day"
+  },
+  "boundaries": {
+    "normalShift": "Normal shift",
+    "daytimeOvertime": "Daytime overtime",
+    "nightSurcharge": "Night surcharge",
+    "nocturnalOvertime": "Nocturnal overtime",
+    "sundayHolidayOvertime": "Sunday / holiday overtime"
+  },
+  "restHint": "Deducted from worked time before earnings classification.",
+  "noConfig": "No payroll configuration exists for {{year}}. Create one to continue.",
+  "noConfigSetup": "No payroll configuration exists for {{year}} yet. Review the defaults below and save to create it.",
+  "timeRange": {
+    "start": "Start",
+    "end": "End"
+  },
+  "saved": "Payroll configuration saved for {{year}}.",
+  "selectHolidayDate": "Select a holiday date.",
+  "noHolidays": "No holidays configured for {{year}}.",
+  "addHoliday": "Add holiday",
+  "adding": "Adding…",
+  "saving": "Saving…",
+  "createConfig": "Create configuration",
+  "saveConfig": "Save configuration"
+}

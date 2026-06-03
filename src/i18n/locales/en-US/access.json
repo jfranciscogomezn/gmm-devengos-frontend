@@ -1,0 +1,87 @@
+{
+  "hub": {
+    "title": "Access Control",
+    "subtitle": "Central administration for navigation, roles, and users.",
+    "menuCatalogue": {
+      "title": "Menu Catalogue",
+      "description": "Define the global navigation structure (modules, groups, and screens).",
+      "open": "Open"
+    },
+    "roles": {
+      "title": "Roles & Permissions",
+      "description": "Define roles and assign which menu screens each role can access.",
+      "open": "Open"
+    },
+    "users": {
+      "title": "Users & Roles",
+      "description": "Manage user accounts and assign roles.",
+      "open": "Open"
+    }
+  },
+  "backToAccess": "← Access Control",
+  "backToRoles": "← Roles",
+  "backToUsers": "← Users",
+  "roles": {
+    "title": "Roles & Permissions",
+    "new": "New Role",
+    "empty": "No roles found.",
+    "menuItems": "Menu Items",
+    "permissions": "Permissions",
+    "deleteConfirm": "Are you sure you want to delete role \"{{name}}\"? This action cannot be undone.",
+    "deleteFailed": "Failed to delete role.",
+    "editTitle": "Edit Role — {{name}}",
+    "newTitle": "New Role",
+    "roleName": "Role Name *",
+    "roleNamePlaceholder": "e.g. SUPERVISOR",
+    "tabs": {
+      "general": "General",
+      "permissions": "Menu Permissions"
+    },
+    "permissionsHint": "Select which screens the {{role}} role can access. Only leaf items grant permissions.",
+    "savePermissions": "Save Permissions",
+    "saveFailed": "Failed to save role.",
+    "genericRole": "this"
+  },
+  "users": {
+    "title": "Users & Roles",
+    "new": "New User",
+    "empty": "No users found.",
+    "deleteConfirm": "Are you sure you want to delete user \"{{name}}\"?",
+    "deleteFailed": "Cannot delete user.",
+    "editTitle": "Edit User — {{name}}",
+    "newTitle": "New User",
+    "password": "Password *",
+    "tabs": {
+      "profile": "Profile",
+      "role": "Role Assignment"
+    },
+    "roleHint": "The role determines which menu screens and permissions the user receives at login.",
+    "saveRole": "Save Role",
+    "updateProfile": "Update Profile",
+    "saveFailed": "Failed to save user.",
+    "roleUpdateFailed": "Failed to update role.",
+    "passwordMin": "Password must have at least 8 characters, including uppercase, lowercase, and a number.",
+    "selectRole": "Please select a role.",
+    "userLimitReached": "You've reached your plan's user limit. Contact your provider to upgrade the plan or free up a seat by disabling an existing user.",
+    "resetPasswordShort": "Reset PW"
+  },
+  "menuCatalogue": {
+    "title": "Menu Catalogue",
+    "intro": "Manage the global navigation catalogue. Changes affect all tenants.",
+    "readOnly": "Read-only view — contact the platform administrator to edit.",
+    "newNode": "+ New Node",
+    "empty": "No menu nodes defined.",
+    "editTitle": "Edit Menu Node",
+    "newTitle": "New Menu Node",
+    "deleteTitle": "Delete Menu Node",
+    "deleteConfirm": "Delete {{label}}? This cannot be undone.",
+    "types": {
+      "MODULE": "MODULE",
+      "GROUP": "GROUP",
+      "ITEM": "ITEM"
+    },
+    "codePlaceholder": "e.g. REPORTS_V2",
+    "routePlaceholder": "/admin/example",
+    "disabled": "Disabled"
+  }
+}

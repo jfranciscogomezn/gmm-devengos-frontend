@@ -1,4 +1,5 @@
 import { Table } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import type { ClassifiedMinutes, TimeReportRecord } from '../../api/reports.service';
 import { formatInstant, formatWorkDate } from '../../utils/timeFormat';
 import { formatMoney, highlightRowClass } from '../../utils/reportDisplay';
@@ -20,20 +21,22 @@ function renderMinutes(minutes: ClassifiedMinutes): JSX.Element {
   );
 }
 
-function renderNotes(record: TimeReportRecord): JSX.Element {
+function ReportNotes({ record }: { record: TimeReportRecord }) {
+  const { t } = useTranslation(['time', 'common']);
+
   return (
     <td>
       {record.corrected && (
-        <span className="badge bg-secondary me-1">Corrected</span>
+        <span className="badge bg-secondary me-1">{t('time:badges.corrected')}</span>
       )}
       {record.correctionReason && (
         <span className="small text-muted d-block mt-1">{record.correctionReason}</span>
       )}
       {record.highlightLevel === 'WARNING' && (
-        <span className="badge bg-warning text-dark me-1">Overtime</span>
+        <span className="badge bg-warning text-dark me-1">{t('time:badges.overtime')}</span>
       )}
       {record.highlightLevel === 'ALERT' && (
-        <span className="badge bg-danger">Extended hours</span>
+        <span className="badge bg-danger">{t('time:badges.extendedHours')}</span>
       )}
     </td>
   );
@@ -42,28 +45,30 @@ function renderNotes(record: TimeReportRecord): JSX.Element {
 export function TimeReportTable({
   records,
   uncapped,
-  emptyMessage = 'No closed records in this period.',
+  emptyMessage,
 }: TimeReportTableProps) {
+  const { t } = useTranslation(['reports', 'common', 'time']);
+
   return (
     <Table striped hover responsive>
       <thead className="table-dark">
         <tr>
-          <th>Date</th>
-          <th>Clock in</th>
-          <th>Clock out</th>
-          <th>Normal (min)</th>
-          <th>Daytime OT (min)</th>
-          <th>Night (min)</th>
-          <th>Nocturnal OT (min)</th>
-          <th>Earnings</th>
-          <th>Notes</th>
+          <th>{t('common:labels.date')}</th>
+          <th>{t('time:admin.table.clockIn')}</th>
+          <th>{t('time:admin.table.clockOut')}</th>
+          <th>{t('reports:table.normalMin')}</th>
+          <th>{t('reports:table.daytimeOtMin')}</th>
+          <th>{t('reports:table.nightMin')}</th>
+          <th>{t('reports:table.nocturnalOtMin')}</th>
+          <th>{t('reports:table.earnings')}</th>
+          <th>{t('common:labels.notes')}</th>
         </tr>
       </thead>
       <tbody>
         {records.length === 0 ? (
           <tr>
             <td colSpan={9} className="text-center text-muted py-4">
-              {emptyMessage}
+              {emptyMessage ?? t('reports:table.empty')}
             </td>
           </tr>
         ) : (
@@ -77,7 +82,7 @@ export function TimeReportTable({
                 <td>{formatInstant(record.clockOut)}</td>
                 {renderMinutes(minutes)}
                 <td>{formatMoney(earnings)}</td>
-                {renderNotes(record)}
+                <ReportNotes record={record} />
               </tr>
             );
           })

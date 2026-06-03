@@ -1,0 +1,87 @@
+{
+  "hub": {
+    "title": "Control de acceso",
+    "subtitle": "Administración central de navegación, roles y usuarios.",
+    "menuCatalogue": {
+      "title": "Catálogo de menú",
+      "description": "Defina la estructura global de navegación (módulos, grupos y pantallas).",
+      "open": "Abrir"
+    },
+    "roles": {
+      "title": "Roles y permisos",
+      "description": "Defina roles y asigne qué pantallas del menú puede acceder cada uno.",
+      "open": "Abrir"
+    },
+    "users": {
+      "title": "Usuarios y roles",
+      "description": "Administre cuentas de usuario y asigne roles.",
+      "open": "Abrir"
+    }
+  },
+  "backToAccess": "← Control de acceso",
+  "backToRoles": "← Roles",
+  "backToUsers": "← Usuarios",
+  "roles": {
+    "title": "Roles y permisos",
+    "new": "Nuevo rol",
+    "empty": "No se encontraron roles.",
+    "menuItems": "Elementos de menú",
+    "permissions": "Permisos",
+    "deleteConfirm": "¿Está seguro de eliminar el rol \"{{name}}\"? Esta acción no se puede deshacer.",
+    "deleteFailed": "Error al eliminar el rol.",
+    "editTitle": "Editar rol — {{name}}",
+    "newTitle": "Nuevo rol",
+    "roleName": "Nombre del rol *",
+    "roleNamePlaceholder": "ej. SUPERVISOR",
+    "tabs": {
+      "general": "General",
+      "permissions": "Permisos de menú"
+    },
+    "permissionsHint": "Seleccione las pantallas a las que el rol {{role}} puede acceder. Solo los elementos hoja otorgan permisos.",
+    "savePermissions": "Guardar permisos",
+    "saveFailed": "Error al guardar el rol.",
+    "genericRole": "este"
+  },
+  "users": {
+    "title": "Usuarios y roles",
+    "new": "Nuevo usuario",
+    "empty": "No se encontraron usuarios.",
+    "deleteConfirm": "¿Está seguro de eliminar al usuario \"{{name}}\"?",
+    "deleteFailed": "No se puede eliminar el usuario.",
+    "editTitle": "Editar usuario — {{name}}",
+    "newTitle": "Nuevo usuario",
+    "password": "Contraseña *",
+    "tabs": {
+      "profile": "Perfil",
+      "role": "Asignación de rol"
+    },
+    "roleHint": "El rol determina qué pantallas y permisos recibe el usuario al iniciar sesión.",
+    "saveRole": "Guardar rol",
+    "updateProfile": "Actualizar perfil",
+    "saveFailed": "Error al guardar el usuario.",
+    "roleUpdateFailed": "Error al actualizar el rol.",
+    "passwordMin": "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y un número.",
+    "selectRole": "Seleccione un rol.",
+    "userLimitReached": "Alcanzó el límite de usuarios de su plan. Contacte a su proveedor para ampliar el plan o libere un cupo desactivando un usuario existente.",
+    "resetPasswordShort": "Restablecer contraseña"
+  },
+  "menuCatalogue": {
+    "title": "Catálogo de menú",
+    "intro": "Administre el catálogo global de navegación. Los cambios afectan a todos los inquilinos.",
+    "readOnly": "Vista de solo lectura — contacte al administrador de plataforma para editar.",
+    "newNode": "Nuevo nodo",
+    "empty": "No hay nodos de menú definidos.",
+    "editTitle": "Editar nodo de menú",
+    "newTitle": "Nuevo nodo de menú",
+    "deleteTitle": "Eliminar nodo de menú",
+    "deleteConfirm": "¿Eliminar {{label}}? Esto no se puede deshacer.",
+    "types": {
+      "MODULE": "MÓDULO",
+      "GROUP": "GRUPO",
+      "ITEM": "ÍTEM"
+    },
+    "codePlaceholder": "ej. REPORTS_V2",
+    "routePlaceholder": "/admin/ejemplo",
+    "disabled": "Deshabilitado"
+  }
+}

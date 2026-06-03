@@ -1,3 +1,11 @@
+import i18n from '../i18n';
+import { type AppLocale } from '../i18n/locale';
+
+function activeIntlLocale(): string {
+  const locale = (i18n.language ?? 'es-CO') as AppLocale;
+  return locale;
+}
+
 export function toIsoDateString(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -25,14 +33,16 @@ export function startOfWeek(date: Date): Date {
 }
 
 export function formatInstant(value: string): string {
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat(activeIntlLocale(), {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(value));
 }
 
 export function formatWorkDate(value: string): string {
-  return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(`${value}T12:00:00`));
+  return new Intl.DateTimeFormat(activeIntlLocale(), { dateStyle: 'medium' }).format(
+    new Date(`${value}T12:00:00`)
+  );
 }
 
 export function computeDurationMinutes(clockIn: string, clockOut: string | null): number | null {

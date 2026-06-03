@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
@@ -32,12 +33,13 @@ const queryClient = new QueryClient({
 });
 
 function DashboardPlaceholder() {
+  const { t } = useTranslation('dashboard');
   const { hasPermission } = useAuth();
 
   return (
     <div>
-      <h4>Dashboard</h4>
-      <p className="text-muted">Welcome to StepCore.</p>
+      <h4>{t('title')}</h4>
+      <p className="text-muted">{t('welcome')}</p>
       {hasPermission('TIME_RECORDS_ADMIN') && <AdminNotificationsBanner />}
       {hasPermission('MY_TIME') && <IncompleteTimeRecordsBanner />}
     </div>

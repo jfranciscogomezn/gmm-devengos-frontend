@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { ChevronDown, ChevronUp } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
 import type { MenuTreeNode } from '../../types';
+import { menuLabel } from '../../i18n/menuLabel';
 import { menuNodeIcon } from '../../utils/menuIcons';
 import {
   collectAncestorCodesForRoute,
@@ -72,6 +74,9 @@ interface SidebarNavNodeProps {
 }
 
 function SidebarNavNode({ node, depth, expanded, onToggle }: SidebarNavNodeProps) {
+  const { t } = useTranslation('menu');
+  const label = menuLabel(t, node.code, node.label);
+
   if (node.type === 'ITEM' && node.route) {
     return (
       <div className={styles.navNode}>
@@ -82,7 +87,7 @@ function SidebarNavNode({ node, depth, expanded, onToggle }: SidebarNavNodeProps
           }
         >
           <span className={styles.icon}>{menuNodeIcon(node.code, 'ITEM')}</span>
-          <span className={styles.linkLabel}>{node.label}</span>
+          <span className={styles.linkLabel}>{label}</span>
         </NavLink>
       </div>
     );
@@ -101,7 +106,7 @@ function SidebarNavNode({ node, depth, expanded, onToggle }: SidebarNavNodeProps
           aria-expanded={isOpen}
         >
           <span className={styles.icon}>{menuNodeIcon(node.code, node.type)}</span>
-          <span className={styles.parentLabel}>{node.label}</span>
+          <span className={styles.parentLabel}>{label}</span>
           <span className={styles.chevron}>
             {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </span>

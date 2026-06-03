@@ -1,0 +1,35 @@
+{
+  "list": {
+    "title": "Tenants",
+    "subtitle": "Provider administration · {{count}} tenant(s)",
+    "new": "+ New tenant",
+    "users": "Users",
+    "statusUpdateFailed": "Could not update the tenant status.",
+    "activate": "Activate",
+    "suspend": "Suspend"
+  },
+  "form": {
+    "editTitle": "Edit tenant · {{name}}",
+    "newTitle": "New tenant",
+    "companyName": "Company name *",
+    "slugPlaceholder": "acme",
+    "maxUsers": "Max users",
+    "maxUsersPlaceholder": "Plan default",
+    "initialAdmin": "Initial administrator",
+    "adminEmail": "Admin email *",
+    "adminFirstName": "Admin first name *",
+    "adminLastName": "Admin last name *",
+    "saveChanges": "Save changes",
+    "provision": "Provision tenant",
+    "saveFailed": "Failed to save tenant.",
+    "provisionedTitle": "Tenant provisioned",
+    "provisionedHint": "Share these credentials securely with the tenant administrator.",
+    "provisionedBody": "Share these credentials securely with the tenant administrator. The temporary password is shown <strong>only once</strong> and must be changed on first login.",
+    "tempPassword": "Temporary password",
+    "status": {
+      "ACTIVE": "ACTIVE",
+      "SUSPENDED": "SUSPENDED",
+      "PROVISIONING": "PROVISIONING"
+    }
+  }
+}

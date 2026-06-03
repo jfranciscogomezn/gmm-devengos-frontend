@@ -1,0 +1,108 @@
+{
+  "myTime": {
+    "title": "My Time",
+    "today": "Today — {{date}}",
+    "history": "History (capped earnings view)",
+    "status": "Status:",
+    "clockIn": "Clock in:",
+    "clockOut": "Clock out:",
+    "noRecordToday": "No time record for today yet.",
+    "periodTotal": "Period total (capped):",
+    "fullReport": "Full earnings report",
+    "presets": {
+      "thisMonth": "This month",
+      "thisWeek": "This week",
+      "last30Days": "Last 30 days"
+    },
+    "clockInAction": "Clock in",
+    "clockOutAction": "Clock out",
+    "clockingIn": "Clocking in…",
+    "clockingOut": "Clocking out…"
+  },
+  "admin": {
+    "title": "Time Records",
+    "auditHistory": "Audit history",
+    "createRecord": "Create record",
+    "tabs": {
+      "records": "Records",
+      "incomplete": "Incomplete"
+    },
+    "employeeOptionAll": "All employees (incomplete tab) / Select for records",
+    "selectEmployeeHint": "Select an employee to view their time records.",
+    "showingRecords": "Showing records for {{name}} from {{from}} to {{to}}.",
+    "noRecords": "No records found.",
+    "table": {
+      "clockIn": "Clock in",
+      "clockOut": "Clock out"
+    },
+    "actions": {
+      "reopen": "Reopen",
+      "resolve": "Resolve",
+      "correct": "Correct"
+    },
+    "modals": {
+      "resolveTitle": "Resolve incomplete record",
+      "correctTitle": "Correct time record",
+      "createTitle": "Create time record",
+      "manualClockOut": "Manual clock-out",
+      "correctionNote": "Correction note",
+      "correctionReason": "Correction reason",
+      "workDate": "Work date",
+      "saveCorrection": "Save correction"
+    }
+  },
+  "audit": {
+    "title": "Time Record Audit",
+    "subtitle": "Admin changes to time records in the selected period.",
+    "back": "Back to time records",
+    "userActor": "User (actor)",
+    "allEmployees": "All employees",
+    "allUsers": "All users",
+    "empty": "No audit entries match the selected filters.",
+    "userFallback": "User #{{id}}",
+    "table": {
+      "when": "When",
+      "employee": "Employee",
+      "reason": "Reason",
+      "action": "Action",
+      "user": "User",
+      "record": "Record",
+      "before": "Before",
+      "after": "After"
+    },
+    "actions": {
+      "TIME_RECORD_REOPEN": "Reopened",
+      "TIME_RECORD_RESOLVE_INCOMPLETE": "Resolved incomplete",
+      "TIME_RECORD_CORRECT": "Corrected timestamps",
+      "TIME_RECORD_CREATE": "Created record"
+    },
+    "snapshot": {
+      "in": "In {{value}}",
+      "out": "Out {{value}}"
+    }
+  },
+  "status": {
+    "OPEN": "Open",
+    "CLOSED": "Closed",
+    "INCOMPLETE": "Incomplete"
+  },
+  "badges": {
+    "corrected": "Corrected",
+    "overtime": "Overtime",
+    "extendedHours": "Extended hours"
+  },
+  "incompleteBanner": {
+    "heading": "Incomplete time records",
+    "body": "You have {{count}} incomplete record(s) on: {{dates}}. Contact your administrator if you need help.",
+    "link": "View my time records"
+  },
+  "adminNotificationLink": "Open time records admin",
+  "history": {
+    "incompleteBlock": "Earnings summary is hidden while incomplete records exist on: {{dates}}.",
+    "noEarnings": "No earnings data",
+    "emptyRange": "No records in this date range.",
+    "normalMin": "Normal (min)",
+    "daytimeOtMin": "Daytime OT (min)",
+    "earnings": "Earnings"
+  }
+}

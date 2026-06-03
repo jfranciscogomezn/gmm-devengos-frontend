@@ -1,0 +1,31 @@
+{
+  "forbidden": "No tiene permiso para realizar esta acción. Contacte a su administrador o inicie sesión de nuevo.",
+  "unauthorized": "Su sesión ha expirado. Inicie sesión de nuevo.",
+  "notFound": "No se encontró {{resource}}.",
+  "serverError": "Ocurrió un error en el servidor. Inténtelo más tarde.",
+  "unexpectedServerError": "El servicio de negocio devolvió un error inesperado. Si actualizó recientemente el frontend, reinicie el backend de negocio (puerto 8081).",
+  "networkError": "No se pudo conectar con el servicio. Verifique su conexión y que los backends estén en ejecución.",
+  "loadFailed": "Error al cargar {{resource}}.",
+  "currentRoleHint": "Rol actual: <strong>{{roleName}}</strong>. Si recibió permisos recientes, cierre sesión e inicie de nuevo.",
+  "businessApiHint": "API de negocio: {{url}}",
+  "userLimitReached": "Alcanzó el límite de usuarios de su plan. Contacte a su proveedor para ampliar el plan o libere un cupo desactivando un usuario existente.",
+  "resources": {
+    "data": "datos",
+    "employees": "empleados",
+    "users": "usuarios",
+    "roles": "roles",
+    "timeRecords": "registros de tiempo",
+    "report": "reporte",
+    "reportExport": "exportación del reporte",
+    "auditHistory": "historial de auditoría",
+    "menuCatalogue": "catálogo de menú",
+    "menuNode": "nodo de menú",
+    "payrollConfig": "configuración de nómina",
+    "tenants": "inquilinos",
+    "tenant": "inquilino",
+    "earningsSummary": "resumen de devengados",
+    "incompleteRecords": "registros incompletos",
+    "clockIn": "registro de entrada",
+    "clockOut": "registro de salida"
+  }
+}

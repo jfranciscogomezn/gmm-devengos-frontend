@@ -1,4 +1,5 @@
 import { Col, Form, Row } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import type { ReportPeriodState } from '../../utils/reportPeriod';
 import { startOfWeek, toIsoDateString } from '../../utils/timeFormat';
 
@@ -10,6 +11,8 @@ interface ReportPeriodFiltersProps {
 }
 
 export function ReportPeriodFilters({ idPrefix, today, period, onChange }: ReportPeriodFiltersProps) {
+  const { t } = useTranslation(['reports', 'common']);
+
   const setMode = (mode: ReportPeriodState['mode']) => {
     onChange({ ...period, mode });
   };
@@ -22,15 +25,15 @@ export function ReportPeriodFilters({ idPrefix, today, period, onChange }: Repor
     <>
       <Col md={3}>
         <Form.Group controlId={`${idPrefix}-filter-mode`}>
-          <Form.Label>Period</Form.Label>
+          <Form.Label>{t('reports:period.label')}</Form.Label>
           <Form.Select
             value={period.mode}
             onChange={(event) => setMode(event.target.value as ReportPeriodState['mode'])}
           >
-            <option value="month">Month</option>
-            <option value="day">Single day</option>
-            <option value="week">Week</option>
-            <option value="range">Custom range</option>
+            <option value="month">{t('reports:period.month')}</option>
+            <option value="day">{t('reports:period.singleDay')}</option>
+            <option value="week">{t('reports:period.week')}</option>
+            <option value="range">{t('reports:period.range')}</option>
           </Form.Select>
         </Form.Group>
       </Col>
@@ -38,7 +41,7 @@ export function ReportPeriodFilters({ idPrefix, today, period, onChange }: Repor
       {period.mode === 'month' && (
         <Col md={3}>
           <Form.Group controlId={`${idPrefix}-month`}>
-            <Form.Label>Month</Form.Label>
+            <Form.Label>{t('reports:period.month')}</Form.Label>
             <Form.Control
               type="month"
               value={period.month}
@@ -51,7 +54,7 @@ export function ReportPeriodFilters({ idPrefix, today, period, onChange }: Repor
       {period.mode === 'day' && (
         <Col md={3}>
           <Form.Group controlId={`${idPrefix}-day`}>
-            <Form.Label>Day</Form.Label>
+            <Form.Label>{t('reports:period.day')}</Form.Label>
             <Form.Control
               type="date"
               value={period.day}
@@ -65,7 +68,7 @@ export function ReportPeriodFilters({ idPrefix, today, period, onChange }: Repor
       {period.mode === 'week' && (
         <Col md={3}>
           <Form.Group controlId={`${idPrefix}-week`}>
-            <Form.Label>Week (pick any day)</Form.Label>
+            <Form.Label>{t('reports:period.weekPicker')}</Form.Label>
             <Form.Control
               type="date"
               value={period.week}
@@ -76,7 +79,9 @@ export function ReportPeriodFilters({ idPrefix, today, period, onChange }: Repor
                 update({ week: weekStart });
               }}
             />
-            <Form.Text className="text-muted">Week starts {period.week}</Form.Text>
+            <Form.Text className="text-muted">
+              {t('reports:period.weekHint', { date: period.week })}
+            </Form.Text>
           </Form.Group>
         </Col>
       )}
@@ -85,7 +90,7 @@ export function ReportPeriodFilters({ idPrefix, today, period, onChange }: Repor
         <>
           <Col md={3}>
             <Form.Group controlId={`${idPrefix}-start`}>
-              <Form.Label>From</Form.Label>
+              <Form.Label>{t('common:labels.from')}</Form.Label>
               <Form.Control
                 type="date"
                 value={period.startDate}
@@ -96,7 +101,7 @@ export function ReportPeriodFilters({ idPrefix, today, period, onChange }: Repor
           </Col>
           <Col md={3}>
             <Form.Group controlId={`${idPrefix}-end`}>
-              <Form.Label>To</Form.Label>
+              <Form.Label>{t('common:labels.to')}</Form.Label>
               <Form.Control
                 type="date"
                 value={period.endDate}
@@ -118,12 +123,13 @@ interface ReportPeriodPresetRowProps {
 }
 
 export function ReportPeriodPresets({ today, onApply }: ReportPeriodPresetRowProps) {
+  const { t } = useTranslation('reports');
   const monthStart = `${today.slice(0, 7)}-01`;
 
   return (
     <Row className="g-2 mb-3">
       <Col xs="auto">
-        <Form.Label className="visually-hidden">Quick presets</Form.Label>
+        <Form.Label className="visually-hidden">{t('period.label')}</Form.Label>
         <div className="d-flex flex-wrap gap-2">
           <button
             type="button"
@@ -139,7 +145,7 @@ export function ReportPeriodPresets({ today, onApply }: ReportPeriodPresetRowPro
               })
             }
           >
-            This month
+            {t('period.presets.thisMonth')}
           </button>
           <button
             type="button"
@@ -156,7 +162,7 @@ export function ReportPeriodPresets({ today, onApply }: ReportPeriodPresetRowPro
               });
             }}
           >
-            This week
+            {t('period.presets.thisWeek')}
           </button>
           <button
             type="button"
@@ -172,7 +178,7 @@ export function ReportPeriodPresets({ today, onApply }: ReportPeriodPresetRowPro
               })
             }
           >
-            Today
+            {t('period.presets.today')}
           </button>
         </div>
       </Col>

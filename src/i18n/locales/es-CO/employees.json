@@ -1,0 +1,23 @@
+{
+  "list": {
+    "title": "Configuración de empleados",
+    "new": "Nuevo empleado",
+    "empty": "Aún no hay empleados configurados.",
+    "document": "Documento",
+    "monthlySalary": "Salario mensual",
+    "footnote": "Tipos de documento: CC = Cédula de ciudadanía; CE = Cédula de extranjería; PA = Pasaporte; TI = Tarjeta de identidad."
+  },
+  "form": {
+    "editTitle": "Editar empleado",
+    "newTitle": "Nuevo empleado",
+    "firstName": "Nombre *",
+    "lastName": "Apellido *",
+    "idType": "Tipo de documento *",
+    "idNumber": "Número de documento *",
+    "monthlySalary": "Salario mensual (COP) *",
+    "linkedUser": "ID de usuario vinculado",
+    "linkedUserPlaceholder": "Opcional — id de usuario del servicio de seguridad",
+    "linkedUserHint": "Vínculo opcional a una cuenta de usuario para acceso al sistema.",
+    "salaryInvalid": "El salario mensual debe ser mayor que cero."
+  }
+}

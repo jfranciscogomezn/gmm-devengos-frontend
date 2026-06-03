@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { reportsService, type TimeReportRecord } from '../../api/reports.service';
 import { timeService } from '../../api/time.service';
 import {
@@ -13,6 +14,7 @@ import { TimeRecordStatusBadge } from '../../components/time/TimeRecordStatusBad
 import { useAuth } from '../../context/AuthContext';
 import type { TimeRecord } from '../../types';
 import { getApiErrorMessage } from '../../utils/apiError';
+import { formatMoney } from '../../utils/reportDisplay';
 import {
   addDays,
   formatInstant,
@@ -27,6 +29,7 @@ function findTodayRecord(records: TimeRecord[], today: string): TimeRecord | und
 }
 
 export function MyTimePage() {
+  const { t } = useTranslation(['time', 'common']);
   const { currentUser } = useAuth();
   const queryClient = useQueryClient();
   const today = toIsoDateString(new Date());
@@ -110,31 +113,32 @@ export function MyTimePage() {
 
   return (
     <div>
-      <h4 className="mb-4">My Time</h4>
+      <h4 className="mb-4">{t('time:myTime.title')}</h4>
 
       <div className="card mb-4">
         <div className="card-body">
-          <h5 className="card-title">Today — {formatWorkDate(today)}</h5>
+          <h5 className="card-title">{t('time:myTime.today', { date: formatWorkDate(today) })}</h5>
           {todayRecord ? (
             <div className="mb-3">
               <div className="mb-2">
-                Status: <TimeRecordStatusBadge status={todayRecord.status} />
+                {t('time:myTime.status')}{' '}
+                <TimeRecordStatusBadge status={todayRecord.status} />
                 {todayRecord.corrected && (
-                  <span className="badge bg-secondary ms-2">Corrected</span>
+                  <span className="badge bg-secondary ms-2">{t('time:badges.corrected')}</span>
                 )}
               </div>
               <div className="text-muted small">
-                Clock in: {formatInstant(todayRecord.clockIn)}
+                {t('time:myTime.clockIn')} {formatInstant(todayRecord.clockIn)}
                 {todayRecord.clockOut && (
                   <>
                     {' '}
-                    · Clock out: {formatInstant(todayRecord.clockOut)}
+                    · {t('time:myTime.clockOut')} {formatInstant(todayRecord.clockOut)}
                   </>
                 )}
               </div>
             </div>
           ) : (
-            <p className="text-muted mb-3">No time record for today yet.</p>
+            <p className="text-muted mb-3">{t('time:myTime.noRecordToday')}</p>
           )}
 
           {actionError && <Alert variant="danger">{actionError}</Alert>}
@@ -145,28 +149,30 @@ export function MyTimePage() {
               disabled={!canClockIn || isMutating}
               onClick={() => clockInMutation.mutate()}
             >
-              {clockInMutation.isPending ? 'Clocking in…' : 'Clock in'}
+              {clockInMutation.isPending ? t('time:myTime.clockingIn') : t('time:myTime.clockInAction')}
             </Button>
             <Button
               variant="outline-primary"
               disabled={!canClockOut || isMutating}
               onClick={() => clockOutMutation.mutate()}
             >
-              {clockOutMutation.isPending ? 'Clocking out…' : 'Clock out'}
+              {clockOutMutation.isPending ? t('time:myTime.clockingOut') : t('time:myTime.clockOutAction')}
             </Button>
           </div>
         </div>
       </div>
 
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5 className="mb-0">History (capped earnings view)</h5>
-        <Link to="/my/reports" className="btn btn-outline-primary btn-sm">Full earnings report</Link>
+        <h5 className="mb-0">{t('time:myTime.history')}</h5>
+        <Link to="/my/reports" className="btn btn-outline-primary btn-sm">
+          {t('time:myTime.fullReport')}
+        </Link>
       </div>
 
       <Row className="g-3 mb-3">
         <Col md={3}>
           <Form.Group controlId="my-time-from">
-            <Form.Label>From</Form.Label>
+            <Form.Label>{t('common:labels.from')}</Form.Label>
             <Form.Control
               type="date"
               value={fromDate}
@@ -177,7 +183,7 @@ export function MyTimePage() {
         </Col>
         <Col md={3}>
           <Form.Group controlId="my-time-to">
-            <Form.Label>To</Form.Label>
+            <Form.Label>{t('common:labels.to')}</Form.Label>
             <Form.Control
               type="date"
               value={toDate}
@@ -196,7 +202,7 @@ export function MyTimePage() {
               setToDate(today);
             }}
           >
-            This month
+            {t('time:myTime.presets.thisMonth')}
           </Button>
           <Button
             variant="outline-secondary"
@@ -206,7 +212,7 @@ export function MyTimePage() {
               setToDate(today);
             }}
           >
-            This week
+            {t('time:myTime.presets.thisWeek')}
           </Button>
           <Button
             variant="outline-secondary"
@@ -216,19 +222,15 @@ export function MyTimePage() {
               setToDate(today);
             }}
           >
-            Last 30 days
+            {t('time:myTime.presets.last30Days')}
           </Button>
         </Col>
       </Row>
 
       {!reportBlocked && earningsQuery.data && (
         <p className="text-muted small mb-3">
-          Period total (capped):{' '}
-          {new Intl.NumberFormat('es-CO', {
-            style: 'currency',
-            currency: 'COP',
-            maximumFractionDigits: 0,
-          }).format(earningsQuery.data.totalCappedEarnings)}
+          {t('time:myTime.periodTotal')}{' '}
+          {formatMoney(earningsQuery.data.totalCappedEarnings)}
         </p>
       )}
 

@@ -1,0 +1,31 @@
+{
+  "forbidden": "You do not have permission to perform this action. Contact your administrator or sign in again.",
+  "unauthorized": "Your session has expired. Please sign in again.",
+  "notFound": "The requested {{resource}} was not found.",
+  "serverError": "A server error occurred. Please try again later.",
+  "unexpectedServerError": "The business API returned an unexpected error. If you recently updated the frontend, restart the business backend on port 8081.",
+  "networkError": "Unable to reach the service. Check your connection and that all backend services are running.",
+  "loadFailed": "Failed to load {{resource}}.",
+  "currentRoleHint": "Current role: <strong>{{roleName}}</strong>. If you recently received new permissions, sign out and sign in again.",
+  "businessApiHint": "Business API: {{url}}",
+  "userLimitReached": "You've reached your plan's user limit. Contact your provider to upgrade the plan or free up a seat by disabling an existing user.",
+  "resources": {
+    "data": "data",
+    "employees": "employees",
+    "users": "users",
+    "roles": "roles",
+    "timeRecords": "time records",
+    "report": "report",
+    "reportExport": "report export",
+    "auditHistory": "audit history",
+    "menuCatalogue": "menu catalogue",
+    "menuNode": "menu node",
+    "payrollConfig": "payroll configuration",
+    "tenants": "tenants",
+    "tenant": "tenant",
+    "earningsSummary": "earnings summary",
+    "incompleteRecords": "incomplete records",
+    "clockIn": "clock-in",
+    "clockOut": "clock-out"
+  }
+}

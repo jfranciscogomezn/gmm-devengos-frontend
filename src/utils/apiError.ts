@@ -1,4 +1,5 @@
 import axios from 'axios';
+import i18n from '../i18n';
 
 export interface ApiErrorBody {
   message?: string;
@@ -14,6 +15,35 @@ export interface ApiErrorDetails {
   isUnauthorized: boolean;
 }
 
+const RESOURCE_KEY_MAP: Record<string, string> = {
+  data: 'resources.data',
+  employees: 'resources.employees',
+  users: 'resources.users',
+  roles: 'resources.roles',
+  'time records': 'resources.timeRecords',
+  'time record': 'resources.timeRecords',
+  report: 'resources.report',
+  'report export': 'resources.reportExport',
+  'audit history': 'resources.auditHistory',
+  'menu catalogue': 'resources.menuCatalogue',
+  'menu node': 'resources.menuNode',
+  'payroll configuration': 'resources.payrollConfig',
+  tenants: 'resources.tenants',
+  tenant: 'resources.tenant',
+  'earnings summary': 'resources.earningsSummary',
+  'incomplete records': 'resources.incompleteRecords',
+  'clock-in': 'resources.clockIn',
+  'clock-out': 'resources.clockOut',
+};
+
+function translateResourceLabel(resourceLabel: string): string {
+  const key = RESOURCE_KEY_MAP[resourceLabel];
+  if (key) {
+    return i18n.t(`errors:${key}`, { defaultValue: resourceLabel });
+  }
+  return resourceLabel;
+}
+
 function readApiMessage(data: unknown): string | undefined {
   if (typeof data === 'object' && data !== null && 'message' in data) {
     const message = (data as ApiErrorBody).message;
@@ -23,6 +53,8 @@ function readApiMessage(data: unknown): string | undefined {
 }
 
 export function getApiErrorDetails(error: unknown, resourceLabel = 'data'): ApiErrorDetails {
+  const resource = translateResourceLabel(resourceLabel);
+
   if (axios.isAxiosError(error)) {
     const status = error.response?.status;
     const apiMessage = readApiMessage(error.response?.data);
@@ -30,8 +62,7 @@ export function getApiErrorDetails(error: unknown, resourceLabel = 'data'): ApiE
     if (status === 403) {
       return {
         status,
-        message: apiMessage
-          ?? 'You do not have permission to perform this action. Contact your administrator or sign in again.',
+        message: apiMessage ?? i18n.t('errors:forbidden'),
         isNetworkError: false,
         isForbidden: true,
         isUnauthorized: false,
@@ -41,7 +72,7 @@ export function getApiErrorDetails(error: unknown, resourceLabel = 'data'): ApiE
     if (status === 401) {
       return {
         status,
-        message: apiMessage ?? 'Your session has expired. Please sign in again.',
+        message: apiMessage ?? i18n.t('errors:unauthorized'),
         isNetworkError: false,
         isForbidden: false,
         isUnauthorized: true,
@@ -51,7 +82,7 @@ export function getApiErrorDetails(error: unknown, resourceLabel = 'data'): ApiE
     if (status === 404) {
       return {
         status,
-        message: apiMessage ?? `The requested ${resourceLabel} was not found.`,
+        message: apiMessage ?? i18n.t('errors:notFound', { resource }),
         isNetworkError: false,
         isForbidden: false,
         isUnauthorized: false,
@@ -63,8 +94,8 @@ export function getApiErrorDetails(error: unknown, resourceLabel = 'data'): ApiE
       return {
         status,
         message: genericServerMessage
-          ? 'The business API returned an unexpected error. If you recently updated the frontend, restart the business backend on branch feat/time-tracking (port 8081) so time-records endpoints are available.'
-          : (apiMessage ?? 'A server error occurred. Please try again later.'),
+          ? i18n.t('errors:unexpectedServerError')
+          : (apiMessage ?? i18n.t('errors:serverError')),
         isNetworkError: false,
         isForbidden: false,
         isUnauthorized: false,
@@ -72,6 +103,15 @@ export function getApiErrorDetails(error: unknown, resourceLabel = 'data'): ApiE
     }
 
     if (apiMessage) {
+      if (apiMessage.includes('USER_LIMIT_REACHED')) {
+        return {
+          status,
+          message: i18n.t('errors:userLimitReached'),
+          isNetworkError: false,
+          isForbidden: false,
+          isUnauthorized: false,
+        };
+      }
       return {
         status,
         message: apiMessage,
@@ -84,7 +124,7 @@ export function getApiErrorDetails(error: unknown, resourceLabel = 'data'): ApiE
     if (!error.response) {
       return {
         status,
-        message: 'Unable to reach the service. Check your connection and that all backend services are running.',
+        message: i18n.t('errors:networkError'),
         isNetworkError: true,
         isForbidden: false,
         isUnauthorized: false,
@@ -93,7 +133,7 @@ export function getApiErrorDetails(error: unknown, resourceLabel = 'data'): ApiE
   }
 
   return {
-    message: `Failed to load ${resourceLabel}.`,
+    message: i18n.t('errors:loadFailed', { resource }),
     isNetworkError: false,
     isForbidden: false,
     isUnauthorized: false,

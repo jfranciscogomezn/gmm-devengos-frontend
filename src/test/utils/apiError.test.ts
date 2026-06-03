@@ -30,6 +30,6 @@ describe('getApiErrorMessage', () => {
 
     const details = getApiErrorDetails(error, 'employees');
     expect(details.isNetworkError).toBe(true);
-    expect(details.message).toContain('Unable to reach the service');
+    expect(details.message).toContain('No se pudo conectar');
   });
 });

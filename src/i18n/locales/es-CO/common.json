@@ -1,0 +1,85 @@
+{
+  "appName": "StepCore",
+  "actions": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "create": "Crear",
+    "update": "Actualizar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "remove": "Quitar",
+    "refresh": "Actualizar",
+    "refreshing": "Actualizando…",
+    "open": "Abrir",
+    "done": "Listo",
+    "back": "Volver",
+    "signOut": "Cerrar sesión",
+    "signIn": "Iniciar sesión",
+    "signingIn": "Iniciando sesión…",
+    "exportExcel": "Exportar Excel",
+    "exporting": "Exportando…",
+    "enable": "Activar",
+    "disable": "Desactivar",
+    "resetPassword": "Restablecer contraseña",
+    "confirmDelete": "Confirmar eliminación",
+    "selectAllIn": "Seleccionar todo en {{module}}"
+  },
+  "labels": {
+    "from": "Desde",
+    "to": "Hasta",
+    "date": "Fecha",
+    "status": "Estado",
+    "actions": "Acciones",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "role": "Rol",
+    "employee": "Empleado",
+    "language": "Idioma",
+    "notes": "Notas",
+    "duration": "Duración",
+    "reason": "Motivo",
+    "description": "Descripción",
+    "year": "Año",
+    "plan": "Plan",
+    "slug": "Identificador",
+    "enabled": "Habilitado",
+    "code": "Código",
+    "type": "Tipo",
+    "parent": "Padre",
+    "route": "Ruta",
+    "sortOrder": "Orden"
+  },
+  "placeholders": {
+    "selectEmployee": "Seleccione un empleado…",
+    "selectRole": "Seleccione un rol…",
+    "selectParent": "Seleccione un padre…"
+  },
+  "status": {
+    "active": "Activo",
+    "disabled": "Inactivo",
+    "mustChangePassword": "Debe cambiar contraseña",
+    "platform": "plataforma"
+  },
+  "passwordStrength": {
+    "weak": "Débil",
+    "fair": "Regular",
+    "strong": "Fuerte"
+  },
+  "empty": {
+    "noResults": "No se encontraron resultados.",
+    "noData": "Sin datos."
+  },
+  "aria": {
+    "showNavigation": "Mostrar menú de navegación",
+    "hideNavigation": "Ocultar menú de navegación"
+  },
+  "footer": {
+    "version": "Versión {{version}}"
+  },
+  "language": {
+    "esCO": "Español (CO)",
+    "enUS": "English (US)"
+  },
+  "planSuffix": "plan {{plan}}"
+}

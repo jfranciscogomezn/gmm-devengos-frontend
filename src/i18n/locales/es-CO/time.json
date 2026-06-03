@@ -1,0 +1,108 @@
+{
+  "myTime": {
+    "title": "Mi tiempo",
+    "today": "Hoy — {{date}}",
+    "history": "Historial (devengado con tope)",
+    "status": "Estado:",
+    "clockIn": "Entrada:",
+    "clockOut": "Salida:",
+    "noRecordToday": "Aún no hay registro de tiempo para hoy.",
+    "periodTotal": "Total del periodo (con tope):",
+    "fullReport": "Reporte completo de devengados",
+    "presets": {
+      "thisMonth": "Este mes",
+      "thisWeek": "Esta semana",
+      "last30Days": "Últimos 30 días"
+    },
+    "clockInAction": "Registrar entrada",
+    "clockOutAction": "Registrar salida",
+    "clockingIn": "Registrando entrada…",
+    "clockingOut": "Registrando salida…"
+  },
+  "admin": {
+    "title": "Registros de tiempo",
+    "auditHistory": "Historial de auditoría",
+    "createRecord": "Crear registro",
+    "tabs": {
+      "records": "Registros",
+      "incomplete": "Incompletos"
+    },
+    "employeeOptionAll": "Todos los empleados (pestaña incompletos) / Seleccione para registros",
+    "selectEmployeeHint": "Seleccione un empleado para ver sus registros de tiempo.",
+    "showingRecords": "Mostrando registros de {{name}} del {{from}} al {{to}}.",
+    "noRecords": "No se encontraron registros.",
+    "table": {
+      "clockIn": "Entrada",
+      "clockOut": "Salida"
+    },
+    "actions": {
+      "reopen": "Reabrir",
+      "resolve": "Resolver",
+      "correct": "Corregir"
+    },
+    "modals": {
+      "resolveTitle": "Resolver registro incompleto",
+      "correctTitle": "Corregir registro de tiempo",
+      "createTitle": "Crear registro de tiempo",
+      "manualClockOut": "Salida manual",
+      "correctionNote": "Nota de corrección",
+      "correctionReason": "Motivo de corrección",
+      "workDate": "Fecha laboral",
+      "saveCorrection": "Guardar corrección"
+    }
+  },
+  "audit": {
+    "title": "Auditoría de registros de tiempo",
+    "subtitle": "Cambios administrativos a registros de tiempo en el periodo seleccionado.",
+    "back": "Volver a registros de tiempo",
+    "userActor": "Usuario (actor)",
+    "allEmployees": "Todos los empleados",
+    "allUsers": "Todos los usuarios",
+    "empty": "No hay entradas de auditoría que coincidan con los filtros seleccionados.",
+    "userFallback": "Usuario #{{id}}",
+    "table": {
+      "when": "Cuándo",
+      "action": "Acción",
+      "user": "Usuario",
+      "employee": "Empleado",
+      "record": "Registro",
+      "before": "Antes",
+      "after": "Después",
+      "reason": "Motivo"
+    },
+    "actions": {
+      "TIME_RECORD_REOPEN": "Reabierto",
+      "TIME_RECORD_RESOLVE_INCOMPLETE": "Incompleto resuelto",
+      "TIME_RECORD_CORRECT": "Timestamps corregidos",
+      "TIME_RECORD_CREATE": "Registro creado"
+    },
+    "snapshot": {
+      "in": "Entrada {{value}}",
+      "out": "Salida {{value}}"
+    }
+  },
+  "status": {
+    "OPEN": "Abierto",
+    "CLOSED": "Cerrado",
+    "INCOMPLETE": "Incompleto"
+  },
+  "badges": {
+    "corrected": "Corregido",
+    "overtime": "Horas extra",
+    "extendedHours": "Horas extendidas"
+  },
+  "incompleteBanner": {
+    "heading": "Registros de tiempo incompletos",
+    "body": "Tiene {{count}} registro(s) incompleto(s) en: {{dates}}. Contacte a su administrador si necesita ayuda.",
+    "link": "Ver mis registros de tiempo"
+  },
+  "adminNotificationLink": "Abrir administración de registros de tiempo",
+  "history": {
+    "incompleteBlock": "El resumen de devengados está oculto mientras existan registros incompletos en: {{dates}}.",
+    "noEarnings": "Sin datos de devengado",
+    "emptyRange": "No hay registros en este rango de fechas.",
+    "normalMin": "Normal (min)",
+    "daytimeOtMin": "H.E. diurna (min)",
+    "earnings": "Devengado"
+  }
+}

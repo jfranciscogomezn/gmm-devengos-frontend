@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Card, Form, Nav, Spinner, Tab } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { rolesService } from '../../api/roles.service';
 import { RoleMenuPermissionsPanel } from './RoleMenuPermissionsPanel';
 import type { CreateRoleRequest, UpdateRoleRequest } from '../../types';
 
 export function RoleDetailPage() {
+  const { t } = useTranslation(['access', 'common']);
   const { id } = useParams<{ id: string }>();
   const isEdit = id !== undefined;
   const navigate = useNavigate();
@@ -42,8 +44,8 @@ export function RoleDetailPage() {
       if (isEdit) return;
       navigate(`/admin/access/roles/${saved.id}?tab=permissions`);
     },
-    onError: (err: { response?: { data?: { message?: string } } }) => {
-      setServerError(err.response?.data?.message ?? 'Failed to save role.');
+    onError: () => {
+      setServerError(t('access:roles.saveFailed'));
     },
   });
 
@@ -61,17 +63,17 @@ export function RoleDetailPage() {
     >
       {serverError && <Alert variant="danger" className="py-2">{serverError}</Alert>}
       <Form.Group className="mb-3">
-        <Form.Label>Role Name <span className="text-danger">*</span></Form.Label>
+        <Form.Label>{t('access:roles.roleName')}</Form.Label>
         <Form.Control
           value={name}
           onChange={(e) => setName(e.target.value.toUpperCase())}
-          placeholder="e.g. SUPERVISOR"
+          placeholder={t('access:roles.roleNamePlaceholder')}
           required
           maxLength={100}
         />
       </Form.Group>
       <Form.Group className="mb-4">
-        <Form.Label>Description</Form.Label>
+        <Form.Label>{t('common:labels.description')}</Form.Label>
         <Form.Control
           as="textarea"
           rows={2}
@@ -83,10 +85,10 @@ export function RoleDetailPage() {
       <div className="d-flex gap-2">
         <Button type="submit" variant="primary" disabled={mutation.isPending}>
           {mutation.isPending ? <Spinner as="span" size="sm" className="me-2" /> : null}
-          {isEdit ? 'Update' : 'Create'}
+          {isEdit ? t('common:actions.update') : t('common:actions.create')}
         </Button>
         <Button variant="secondary" onClick={() => navigate('/admin/access/roles')}>
-          Cancel
+          {t('common:actions.cancel')}
         </Button>
       </div>
     </Form>
@@ -94,8 +96,10 @@ export function RoleDetailPage() {
 
   return (
     <div style={{ maxWidth: 720 }}>
-      <Link to="/admin/access/roles" className="text-decoration-none small">&larr; Roles</Link>
-      <h4 className="mb-4 mt-2">{isEdit ? `Edit Role — ${role?.name ?? ''}` : 'New Role'}</h4>
+      <Link to="/admin/access/roles" className="text-decoration-none small">{t('access:backToRoles')}</Link>
+      <h4 className="mb-4 mt-2">
+        {isEdit ? t('access:roles.editTitle', { name: role?.name ?? '' }) : t('access:roles.newTitle')}
+      </h4>
 
       {!isEdit ? (
         <Card><Card.Body>{generalForm}</Card.Body></Card>
@@ -106,10 +110,10 @@ export function RoleDetailPage() {
         >
           <Nav variant="tabs" className="mb-3">
             <Nav.Item>
-              <Nav.Link eventKey="general">General</Nav.Link>
+              <Nav.Link eventKey="general">{t('access:roles.tabs.general')}</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="permissions">Menu Permissions</Nav.Link>
+              <Nav.Link eventKey="permissions">{t('access:roles.tabs.permissions')}</Nav.Link>
             </Nav.Item>
           </Nav>
           <Card>

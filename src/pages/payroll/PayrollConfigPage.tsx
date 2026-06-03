@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Card, Col, Form, Row, Spinner, Table } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { payrollConfigService } from '../../api/payrollConfig.service';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 import { useAuth } from '../../context/AuthContext';
@@ -30,6 +31,7 @@ interface TimeRangeFieldsProps {
 }
 
 function TimeRangeFields({ prefix, label, values, onChange }: TimeRangeFieldsProps) {
+  const { t } = useTranslation('payroll');
   const startKey = `${prefix}Start` as keyof PayrollConfigFormValues;
   const endKey = `${prefix}End` as keyof PayrollConfigFormValues;
 
@@ -40,7 +42,7 @@ function TimeRangeFields({ prefix, label, values, onChange }: TimeRangeFieldsPro
       </Col>
       <Col md={6}>
         <Form.Group controlId={`${prefix}-start`}>
-          <Form.Label className="small mb-1">Start</Form.Label>
+          <Form.Label className="small mb-1">{t('timeRange.start')}</Form.Label>
           <Form.Control
             type="time"
             value={values[startKey]}
@@ -51,7 +53,7 @@ function TimeRangeFields({ prefix, label, values, onChange }: TimeRangeFieldsPro
       </Col>
       <Col md={6}>
         <Form.Group controlId={`${prefix}-end`}>
-          <Form.Label className="small mb-1">End</Form.Label>
+          <Form.Label className="small mb-1">{t('timeRange.end')}</Form.Label>
           <Form.Control
             type="time"
             value={values[endKey]}
@@ -64,7 +66,25 @@ function TimeRangeFields({ prefix, label, values, onChange }: TimeRangeFieldsPro
   );
 }
 
+const SURCHARGE_FIELDS = [
+  ['daytimeOtFactor', 'fields.daytimeOvertime'],
+  ['nocturnalOtFactor', 'fields.nocturnalOvertime'],
+  ['nightSurchargeFactor', 'fields.nightSurcharge'],
+  ['sundayHolidayDaytimeOtFactor', 'fields.sundayHolidayDaytimeOt'],
+  ['sundayHolidayNocturnalOtFactor', 'fields.sundayHolidayNocturnalOt'],
+  ['sundayHolidayNormalFactor', 'fields.sundayHolidayNormal'],
+] as const;
+
+const BOUNDARY_RANGES = [
+  ['daytime', 'boundaries.normalShift'],
+  ['daytimeOt', 'boundaries.daytimeOvertime'],
+  ['nightSurcharge', 'boundaries.nightSurcharge'],
+  ['nocturnalOt', 'boundaries.nocturnalOvertime'],
+  ['sundayOt', 'boundaries.sundayHolidayOvertime'],
+] as const;
+
 export function PayrollConfigPage() {
+  const { t } = useTranslation(['payroll', 'common']);
   const { currentUser } = useAuth();
   const queryClient = useQueryClient();
   const [year, setYear] = useState(currentYear());
@@ -104,7 +124,7 @@ export function PayrollConfigPage() {
     },
     onSuccess: () => {
       setIsNewConfig(false);
-      setSaveMessage(`Payroll configuration saved for ${year}.`);
+      setSaveMessage(t('payroll:saved', { year }));
       queryClient.invalidateQueries({ queryKey: ['payroll-config', year] });
     },
     onError: (error) => setSaveError(getApiErrorMessage(error, 'payroll configuration')),
@@ -159,9 +179,9 @@ export function PayrollConfigPage() {
   return (
     <div>
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <h4 className="mb-0">Payroll Configuration</h4>
+        <h4 className="mb-0">{t('payroll:title')}</h4>
         <Form.Group controlId="payroll-year" className="mb-0">
-          <Form.Label className="me-2 mb-0">Year</Form.Label>
+          <Form.Label className="me-2 mb-0">{t('common:labels.year')}</Form.Label>
           <Form.Select
             value={year}
             onChange={(event) => setYear(Number(event.target.value))}
@@ -177,9 +197,7 @@ export function PayrollConfigPage() {
       </div>
 
       {isNewConfig && (
-        <Alert variant="info">
-          No payroll configuration exists for {year} yet. Review the defaults below and save to create it.
-        </Alert>
+        <Alert variant="info">{t('payroll:noConfigSetup', { year })}</Alert>
       )}
 
       {saveMessage && <Alert variant="success">{saveMessage}</Alert>}
@@ -194,12 +212,12 @@ export function PayrollConfigPage() {
         <Row className="g-4">
           <Col lg={6}>
             <Card>
-              <Card.Header>Salary &amp; subsidies</Card.Header>
+              <Card.Header>{t('payroll:sections.salary')}</Card.Header>
               <Card.Body>
                 <Row className="g-3">
                   <Col md={6}>
                     <Form.Group controlId="minimum-wage">
-                      <Form.Label>Minimum wage (monthly)</Form.Label>
+                      <Form.Label>{t('payroll:fields.minimumWage')}</Form.Label>
                       <Form.Control
                         type="number"
                         min="0"
@@ -212,7 +230,7 @@ export function PayrollConfigPage() {
                   </Col>
                   <Col md={6}>
                     <Form.Group controlId="transport-subsidy">
-                      <Form.Label>Transport subsidy (monthly)</Form.Label>
+                      <Form.Label>{t('payroll:fields.transportSubsidy')}</Form.Label>
                       <Form.Control
                         type="number"
                         min="0"
@@ -228,12 +246,12 @@ export function PayrollConfigPage() {
             </Card>
 
             <Card className="mt-4">
-              <Card.Header>Work-hour limits</Card.Header>
+              <Card.Header>{t('payroll:sections.limits')}</Card.Header>
               <Card.Body>
                 <Row className="g-3">
                   <Col md={4}>
                     <Form.Group controlId="monthly-work-hours">
-                      <Form.Label>Monthly work hours</Form.Label>
+                      <Form.Label>{t('payroll:fields.monthlyHours')}</Form.Label>
                       <Form.Control
                         type="number"
                         min="0.01"
@@ -246,7 +264,7 @@ export function PayrollConfigPage() {
                   </Col>
                   <Col md={4}>
                     <Form.Group controlId="normal-daily-hours">
-                      <Form.Label>Normal daily hours</Form.Label>
+                      <Form.Label>{t('payroll:fields.normalDailyHours')}</Form.Label>
                       <Form.Control
                         type="number"
                         min="0.01"
@@ -259,7 +277,7 @@ export function PayrollConfigPage() {
                   </Col>
                   <Col md={4}>
                     <Form.Group controlId="max-daily-extra-hours">
-                      <Form.Label>Max daily extra hours</Form.Label>
+                      <Form.Label>{t('payroll:fields.maxDailyExtra')}</Form.Label>
                       <Form.Control
                         type="number"
                         min="0"
@@ -275,20 +293,13 @@ export function PayrollConfigPage() {
             </Card>
 
             <Card className="mt-4">
-              <Card.Header>Surcharge factors</Card.Header>
+              <Card.Header>{t('payroll:sections.surcharges')}</Card.Header>
               <Card.Body>
                 <Row className="g-3">
-                  {([
-                    ['daytimeOtFactor', 'Daytime overtime'],
-                    ['nocturnalOtFactor', 'Nocturnal overtime'],
-                    ['nightSurchargeFactor', 'Night surcharge'],
-                    ['sundayHolidayDaytimeOtFactor', 'Sunday/holiday daytime OT'],
-                    ['sundayHolidayNocturnalOtFactor', 'Sunday/holiday nocturnal OT'],
-                    ['sundayHolidayNormalFactor', 'Sunday/holiday normal'],
-                  ] as const).map(([field, label]) => (
+                  {SURCHARGE_FIELDS.map(([field, labelKey]) => (
                     <Col md={6} key={field}>
                       <Form.Group controlId={field}>
-                        <Form.Label>{label}</Form.Label>
+                        <Form.Label>{t(`payroll:${labelKey}`)}</Form.Label>
                         <Form.Control
                           type="number"
                           min="0"
@@ -307,21 +318,25 @@ export function PayrollConfigPage() {
 
           <Col lg={6}>
             <Card>
-              <Card.Header>Time boundaries</Card.Header>
+              <Card.Header>{t('payroll:sections.boundaries')}</Card.Header>
               <Card.Body>
-                <TimeRangeFields prefix="daytime" label="Normal shift" values={formValues} onChange={updateField} />
-                <TimeRangeFields prefix="daytimeOt" label="Daytime overtime" values={formValues} onChange={updateField} />
-                <TimeRangeFields prefix="nightSurcharge" label="Night surcharge" values={formValues} onChange={updateField} />
-                <TimeRangeFields prefix="nocturnalOt" label="Nocturnal overtime" values={formValues} onChange={updateField} />
-                <TimeRangeFields prefix="sundayOt" label="Sunday / holiday overtime" values={formValues} onChange={updateField} />
+                {BOUNDARY_RANGES.map(([prefix, labelKey]) => (
+                  <TimeRangeFields
+                    key={prefix}
+                    prefix={prefix}
+                    label={t(`payroll:${labelKey}`)}
+                    values={formValues}
+                    onChange={updateField}
+                  />
+                ))}
               </Card.Body>
             </Card>
 
             <Card className="mt-4">
-              <Card.Header>Rest deduction</Card.Header>
+              <Card.Header>{t('payroll:sections.rest')}</Card.Header>
               <Card.Body>
                 <Form.Group controlId="non-billable-rest-minutes">
-                  <Form.Label>Non-billable rest minutes (per day)</Form.Label>
+                  <Form.Label>{t('payroll:fields.restMinutes')}</Form.Label>
                   <Form.Control
                     type="number"
                     min="0"
@@ -330,9 +345,7 @@ export function PayrollConfigPage() {
                     onChange={(event) => updateField('nonBillableRestMinutes', event.target.value)}
                     required
                   />
-                  <Form.Text className="text-muted">
-                    Deducted from worked time before earnings classification.
-                  </Form.Text>
+                  <Form.Text className="text-muted">{t('payroll:restHint')}</Form.Text>
                 </Form.Group>
               </Card.Body>
             </Card>
@@ -341,13 +354,17 @@ export function PayrollConfigPage() {
 
         <div className="mt-4">
           <Button type="submit" variant="primary" disabled={saveMutation.isPending}>
-            {saveMutation.isPending ? 'Saving…' : isNewConfig ? 'Create configuration' : 'Save configuration'}
+            {saveMutation.isPending
+              ? t('payroll:saving')
+              : isNewConfig
+                ? t('payroll:createConfig')
+                : t('payroll:saveConfig')}
           </Button>
         </div>
       </Form>
 
       <Card className="mt-5">
-        <Card.Header>Holiday calendar ({year})</Card.Header>
+        <Card.Header>{t('payroll:sections.holidays', { year })}</Card.Header>
         <Card.Body>
           {holidayError && <Alert variant="danger">{holidayError}</Alert>}
 
@@ -356,7 +373,7 @@ export function PayrollConfigPage() {
             onSubmit={(event) => {
               event.preventDefault();
               if (!holidayDate) {
-                setHolidayError('Select a holiday date.');
+                setHolidayError(t('payroll:selectHolidayDate'));
                 return;
               }
               createHolidayMutation.mutate();
@@ -365,7 +382,7 @@ export function PayrollConfigPage() {
             <Row className="g-3 align-items-end">
               <Col md={3}>
                 <Form.Group controlId="holiday-date">
-                  <Form.Label>Date</Form.Label>
+                  <Form.Label>{t('payroll:fields.holidayDate')}</Form.Label>
                   <Form.Control
                     type="date"
                     value={holidayDate}
@@ -377,13 +394,13 @@ export function PayrollConfigPage() {
               </Col>
               <Col md={5}>
                 <Form.Group controlId="holiday-description">
-                  <Form.Label>Description (optional)</Form.Label>
+                  <Form.Label>{t('payroll:fields.holidayDescription')}</Form.Label>
                   <Form.Control
                     type="text"
                     maxLength={150}
                     value={holidayDescription}
                     onChange={(event) => setHolidayDescription(event.target.value)}
-                    placeholder="e.g. Independence Day"
+                    placeholder={t('payroll:fields.holidayPlaceholder')}
                   />
                 </Form.Group>
               </Col>
@@ -393,7 +410,7 @@ export function PayrollConfigPage() {
                   variant="outline-primary"
                   disabled={createHolidayMutation.isPending}
                 >
-                  {createHolidayMutation.isPending ? 'Adding…' : 'Add holiday'}
+                  {createHolidayMutation.isPending ? t('payroll:adding') : t('payroll:addHoliday')}
                 </Button>
               </Col>
             </Row>
@@ -411,8 +428,8 @@ export function PayrollConfigPage() {
             <Table striped hover responsive className="mb-0">
               <thead className="table-dark">
                 <tr>
-                  <th>Date</th>
-                  <th>Description</th>
+                  <th>{t('payroll:fields.holidayDate')}</th>
+                  <th>{t('common:labels.description')}</th>
                   <th style={{ width: '7rem' }} />
                 </tr>
               </thead>
@@ -420,7 +437,7 @@ export function PayrollConfigPage() {
                 {holidays.length === 0 ? (
                   <tr>
                     <td colSpan={3} className="text-center text-muted py-4">
-                      No holidays configured for {year}.
+                      {t('payroll:noHolidays', { year })}
                     </td>
                   </tr>
                 ) : (
@@ -435,7 +452,7 @@ export function PayrollConfigPage() {
                           disabled={deleteHolidayMutation.isPending}
                           onClick={() => deleteHolidayMutation.mutate(holiday.id)}
                         >
-                          Remove
+                          {t('common:actions.remove')}
                         </Button>
                       </td>
                     </tr>

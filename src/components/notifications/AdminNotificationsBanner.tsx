@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Alert, Spinner } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { notificationsService } from '../../api/notifications.service';
 import { useAuth } from '../../context/AuthContext';
 import { formatWorkDate } from '../../utils/timeFormat';
 
 export function AdminNotificationsBanner() {
+  const { t } = useTranslation('time');
   const { hasPermission } = useAuth();
   const isTimeAdmin = hasPermission('TIME_RECORDS_ADMIN');
 
@@ -46,7 +48,7 @@ export function AdminNotificationsBanner() {
         </ul>
       )}
       <Link to="/admin/time" className="alert-link">
-        Open time records admin
+        {t('adminNotificationLink')}
       </Link>
     </Alert>
   );

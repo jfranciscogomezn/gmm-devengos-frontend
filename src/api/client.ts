@@ -1,4 +1,6 @@
 import axios from 'axios';
+import i18n from '../i18n';
+import { type AppLocale, localeToAcceptLanguage } from '../i18n/locale';
 
 const TOKEN_KEY = 'stepcore_token';
 const SESSION_KEY = 'stepcore_session';
@@ -32,6 +34,8 @@ apiClient.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  const locale = (i18n.language ?? 'es-CO') as AppLocale;
+  config.headers['Accept-Language'] = localeToAcceptLanguage(locale);
   return config;
 });
 
