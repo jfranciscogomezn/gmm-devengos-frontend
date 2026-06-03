@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Col, Form, Row, Spinner, Table } from 'react-bootstrap';
 import { timeService } from '../../api/time.service';
@@ -128,6 +129,7 @@ export function MyTimePage() {
 
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h5 className="mb-0">History</h5>
+        <Link to="/my/reports" className="btn btn-outline-primary btn-sm">View earnings report</Link>
       </div>
 
       <Row className="g-3 mb-3">
