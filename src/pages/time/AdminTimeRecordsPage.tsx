@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Alert,
@@ -250,14 +251,19 @@ export function AdminTimeRecordsPage() {
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h4 className="mb-0">Time Records</h4>
-        <Button
-          size="sm"
-          variant="primary"
-          disabled={selectedEmployeeId === null}
-          onClick={openCreateModal}
-        >
-          + Create record
-        </Button>
+        <div className="d-flex gap-2">
+          <Link to="/admin/time/audit" className="btn btn-outline-secondary btn-sm">
+            Audit history
+          </Link>
+          <Button
+            size="sm"
+            variant="primary"
+            disabled={selectedEmployeeId === null}
+            onClick={openCreateModal}
+          >
+            + Create record
+          </Button>
+        </div>
       </div>
 
       {actionError && <Alert variant="danger">{actionError}</Alert>}
