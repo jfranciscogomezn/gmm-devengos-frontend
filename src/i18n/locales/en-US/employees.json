@@ -1,0 +1,23 @@
+{
+  "list": {
+    "title": "Employee Configuration",
+    "new": "New Employee",
+    "empty": "No employees configured yet.",
+    "document": "Document",
+    "monthlySalary": "Monthly Salary",
+    "footnote": "Document types: CC = Citizenship ID (CC); CE = Foreign ID (CE); PA = Passport; TI = Identity card."
+  },
+  "form": {
+    "editTitle": "Edit Employee",
+    "newTitle": "New Employee",
+    "firstName": "First Name *",
+    "lastName": "Last Name *",
+    "idType": "ID Type *",
+    "idNumber": "ID Number *",
+    "monthlySalary": "Monthly Salary (COP) *",
+    "linkedUser": "Linked User ID",
+    "linkedUserPlaceholder": "Optional — security service user id",
+    "linkedUserHint": "Optional link to a user account for system access.",
+    "salaryInvalid": "Monthly salary must be greater than zero."
+  }
+}

@@ -17,7 +17,7 @@ describe('auditDisplay', () => {
   });
 
   it('formats known audit actions', () => {
-    expect(formatAuditAction('TIME_RECORD_CREATE')).toBe('Created record');
+    expect(formatAuditAction('TIME_RECORD_CREATE')).toBe('Registro creado');
     expect(formatAuditAction('TIME_RECORD_UNKNOWN')).toBe('time record unknown');
   });
 
@@ -28,8 +28,8 @@ describe('auditDisplay', () => {
       clockOut: '2026-05-20T22:00:00Z',
     });
 
-    expect(summary).toContain('In ');
-    expect(summary).toContain('Out ');
+    expect(summary).toContain('Entrada');
+    expect(summary).toContain('Salida');
   });
 
   it('resolves employee id from new or old snapshot', () => {

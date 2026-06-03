@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Badge, Button, Card, Spinner, Table } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { platformService } from '../../api/platform.service';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 import type { Tenant, TenantStatus } from '../../types';
@@ -12,6 +13,7 @@ const STATUS_VARIANT: Record<TenantStatus, string> = {
 };
 
 export function TenantListPage() {
+  const { t } = useTranslation(['platform', 'common']);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -38,62 +40,72 @@ export function TenantListPage() {
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h4 className="mb-0">Tenants</h4>
-          <span className="text-muted small">Provider administration · {tenants.length} tenant(s)</span>
+          <h4 className="mb-0">{t('platform:list.title')}</h4>
+          <span className="text-muted small">
+            {t('platform:list.subtitle', { count: tenants.length })}
+          </span>
         </div>
         <Button variant="primary" onClick={() => navigate('/platform/tenants/new')}>
-          + New tenant
+          + {t('platform:list.new')}
         </Button>
       </div>
 
       {statusMutation.isError && (
-        <Alert variant="danger" className="py-2">Could not update the tenant status.</Alert>
+        <Alert variant="danger" className="py-2">{t('platform:list.statusUpdateFailed')}</Alert>
       )}
 
       <Card>
         <Table responsive hover className="mb-0 align-middle">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Slug</th>
-              <th>Plan</th>
-              <th>Users</th>
-              <th>Status</th>
-              <th className="text-end">Actions</th>
+              <th>{t('common:labels.name')}</th>
+              <th>{t('common:labels.slug')}</th>
+              <th>{t('common:labels.plan')}</th>
+              <th>{t('platform:list.users')}</th>
+              <th>{t('common:labels.status')}</th>
+              <th className="text-end">{t('common:labels.actions')}</th>
             </tr>
           </thead>
           <tbody>
-            {tenants.map((t) => {
-              const atCap = t.currentUsers >= t.maxUsers;
+            {tenants.map((tenant) => {
+              const atCap = tenant.currentUsers >= tenant.maxUsers;
               return (
-                <tr key={t.id}>
+                <tr key={tenant.id}>
                   <td>
-                    {t.name}
-                    {t.platform && <Badge bg="info" className="ms-2">platform</Badge>}
+                    {tenant.name}
+                    {tenant.platform && (
+                      <Badge bg="info" className="ms-2">{t('common:status.platform')}</Badge>
+                    )}
                   </td>
-                  <td><code>{t.slug}</code></td>
-                  <td>{t.plan}</td>
+                  <td><code>{tenant.slug}</code></td>
+                  <td>{tenant.plan}</td>
                   <td className={atCap ? 'text-danger fw-semibold' : undefined}>
-                    {t.currentUsers}/{t.maxUsers}
+                    {tenant.currentUsers}/{tenant.maxUsers}
                   </td>
-                  <td><Badge bg={STATUS_VARIANT[t.status]}>{t.status}</Badge></td>
+                  <td>
+                    <Badge bg={STATUS_VARIANT[tenant.status]}>
+                      {t(`platform:form.status.${tenant.status}`)}
+                    </Badge>
+                  </td>
                   <td className="text-end">
                     <Button
                       size="sm"
                       variant="outline-secondary"
                       className="me-2"
-                      onClick={() => navigate(`/platform/tenants/${t.id}`)}
+                      onClick={() => navigate(`/platform/tenants/${tenant.id}`)}
                     >
-                      Edit
+                      {t('common:actions.edit')}
                     </Button>
-                    {!t.platform && (
+                    {!tenant.platform && (
                       <Button
                         size="sm"
-                        variant={t.status === 'SUSPENDED' ? 'outline-success' : 'outline-danger'}
-                        disabled={t.status === 'PROVISIONING' || statusMutation.isPending}
-                        onClick={() => toggleStatus(t)}
+                        variant={tenant.status === 'SUSPENDED' ? 'outline-success' : 'outline-danger'}
+                        disabled={tenant.status === 'PROVISIONING' || statusMutation.isPending}
+                        onClick={() => toggleStatus(tenant)}
                       >
-                        {t.status === 'SUSPENDED' ? 'Activate' : 'Suspend'}
+                        {tenant.status === 'SUSPENDED'
+                          ? t('platform:list.activate')
+                          : t('platform:list.suspend')}
                       </Button>
                     )}
                   </td>

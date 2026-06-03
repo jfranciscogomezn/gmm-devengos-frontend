@@ -10,6 +10,7 @@ import {
   Spinner,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { menuService } from '../../api/menu.service';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 import { useAuth } from '../../context/AuthContext';
@@ -64,6 +65,7 @@ function CatalogueRow({
   onEdit: (node: MenuTreeNode) => void;
   onDelete: (node: MenuTreeNode) => void;
 }) {
+  const { t } = useTranslation(['access', 'common']);
   return (
     <div
       className="d-flex align-items-center gap-2 py-2 border-bottom"
@@ -76,7 +78,7 @@ function CatalogueRow({
             {node.label}
           </span>
           <Badge bg="light" text="dark" className="border">{node.type}</Badge>
-          {!node.enabled && <Badge bg="secondary">Disabled</Badge>}
+          {!node.enabled && <Badge bg="secondary">{t('access:menuCatalogue.disabled')}</Badge>}
         </div>
         <div className="small text-muted">
           <code>{node.code}</code>
@@ -85,8 +87,12 @@ function CatalogueRow({
       </div>
       {isPlatformAdmin && node.id != null && (
         <div className="d-flex gap-1">
-          <Button size="sm" variant="outline-primary" onClick={() => onEdit(node)}>Edit</Button>
-          <Button size="sm" variant="outline-danger" onClick={() => onDelete(node)}>Delete</Button>
+          <Button size="sm" variant="outline-primary" onClick={() => onEdit(node)}>
+            {t('common:actions.edit')}
+          </Button>
+          <Button size="sm" variant="outline-danger" onClick={() => onDelete(node)}>
+            {t('common:actions.delete')}
+          </Button>
         </div>
       )}
     </div>
@@ -133,6 +139,7 @@ function CatalogueTree({
 }
 
 export function MenuCataloguePage() {
+  const { t } = useTranslation(['access', 'common']);
   const { isPlatformAdmin } = useAuth();
   const queryClient = useQueryClient();
   const [showModal, setShowModal] = useState(false);
@@ -225,18 +232,18 @@ export function MenuCataloguePage() {
 
   return (
     <div>
-      <Link to="/admin/access" className="text-decoration-none small">&larr; Access Control</Link>
+      <Link to="/admin/access" className="text-decoration-none small">{t('access:backToAccess')}</Link>
       <div className="d-flex justify-content-between align-items-center mb-4 mt-2">
         <div>
-          <h4 className="mb-1">Menu Catalogue</h4>
+          <h4 className="mb-1">{t('access:menuCatalogue.title')}</h4>
           <p className="text-muted small mb-0">
-            {isPlatformAdmin
-              ? 'Manage the global navigation structure. Changes affect all tenants.'
-              : 'Read-only view of the global navigation structure.'}
+            {isPlatformAdmin ? t('access:menuCatalogue.intro') : t('access:menuCatalogue.readOnly')}
           </p>
         </div>
         {isPlatformAdmin && (
-          <Button size="sm" variant="primary" onClick={openCreate}>+ New Node</Button>
+          <Button size="sm" variant="primary" onClick={openCreate}>
+            + {t('access:menuCatalogue.newNode')}
+          </Button>
         )}
       </div>
 
@@ -256,14 +263,16 @@ export function MenuCataloguePage() {
             onDelete={setDeleteTarget}
           />
           {catalogue.length === 0 && (
-            <p className="text-muted p-3 mb-0">No menu nodes defined.</p>
+            <p className="text-muted p-3 mb-0">{t('access:menuCatalogue.empty')}</p>
           )}
         </Card.Body>
       </Card>
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>{editingNode ? 'Edit Menu Node' : 'New Menu Node'}</Modal.Title>
+          <Modal.Title>
+            {editingNode ? t('access:menuCatalogue.editTitle') : t('access:menuCatalogue.newTitle')}
+          </Modal.Title>
         </Modal.Header>
         <Form onSubmit={submitForm}>
           <Modal.Body>
@@ -271,34 +280,34 @@ export function MenuCataloguePage() {
             {!editingNode && (
               <>
                 <Form.Group className="mb-3">
-                  <Form.Label>Code</Form.Label>
+                  <Form.Label>{t('common:labels.code')}</Form.Label>
                   <Form.Control
                     value={form.code}
                     onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })}
-                    placeholder="e.g. REPORTS_V2"
+                    placeholder={t('access:menuCatalogue.codePlaceholder')}
                     required
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                  <Form.Label>Type</Form.Label>
+                  <Form.Label>{t('common:labels.type')}</Form.Label>
                   <Form.Select
                     value={form.nodeType}
                     onChange={(e) => setForm({ ...form, nodeType: e.target.value as MenuNodeType })}
                   >
-                    <option value="MODULE">MODULE</option>
-                    <option value="GROUP">GROUP</option>
-                    <option value="ITEM">ITEM</option>
+                    <option value="MODULE">{t('access:menuCatalogue.types.MODULE')}</option>
+                    <option value="GROUP">{t('access:menuCatalogue.types.GROUP')}</option>
+                    <option value="ITEM">{t('access:menuCatalogue.types.ITEM')}</option>
                   </Form.Select>
                 </Form.Group>
                 {(form.nodeType === 'GROUP' || form.nodeType === 'ITEM') && (
                   <Form.Group className="mb-3">
-                    <Form.Label>Parent</Form.Label>
+                    <Form.Label>{t('common:labels.parent')}</Form.Label>
                     <Form.Select
                       value={form.parentId}
                       onChange={(e) => setForm({ ...form, parentId: e.target.value })}
                       required
                     >
-                      <option value="">Select parent…</option>
+                      <option value="">{t('common:placeholders.selectParent')}</option>
                       {parentOptions.map((n) => (
                         <option key={n.id!} value={n.id!}>{n.label} ({n.type})</option>
                       ))}
@@ -309,11 +318,11 @@ export function MenuCataloguePage() {
             )}
             {editingNode && (
               <p className="small text-muted">
-                Code: <code>{editingNode.code}</code> · Type: {editingNode.type}
+                {t('common:labels.code')}: <code>{editingNode.code}</code> · {t('common:labels.type')}: {editingNode.type}
               </p>
             )}
             <Form.Group className="mb-3">
-              <Form.Label>Label</Form.Label>
+              <Form.Label>{t('common:labels.name')}</Form.Label>
               <Form.Control
                 value={form.label}
                 onChange={(e) => setForm({ ...form, label: e.target.value })}
@@ -322,17 +331,17 @@ export function MenuCataloguePage() {
             </Form.Group>
             {(editingNode?.type === 'ITEM' || form.nodeType === 'ITEM') && (
               <Form.Group className="mb-3">
-                <Form.Label>Route</Form.Label>
+                <Form.Label>{t('common:labels.route')}</Form.Label>
                 <Form.Control
                   value={form.route}
                   onChange={(e) => setForm({ ...form, route: e.target.value })}
-                  placeholder="/admin/example"
+                  placeholder={t('access:menuCatalogue.routePlaceholder')}
                   required={!editingNode || editingNode.type === 'ITEM'}
                 />
               </Form.Group>
             )}
             <Form.Group className="mb-3">
-              <Form.Label>Sort order</Form.Label>
+              <Form.Label>{t('common:labels.sortOrder')}</Form.Label>
               <Form.Control
                 type="number"
                 value={form.sortOrder}
@@ -342,13 +351,13 @@ export function MenuCataloguePage() {
             <Form.Check
               type="switch"
               id="menu-node-enabled"
-              label="Enabled"
+              label={t('common:labels.enabled')}
               checked={form.enabled}
               onChange={(e) => setForm({ ...form, enabled: e.target.checked })}
             />
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>{t('common:actions.cancel')}</Button>
             <Button
               type="submit"
               variant="primary"
@@ -357,25 +366,27 @@ export function MenuCataloguePage() {
               {createMutation.isPending || updateMutation.isPending ? (
                 <Spinner as="span" size="sm" className="me-2" />
               ) : null}
-              Save
+              {t('common:actions.save')}
             </Button>
           </Modal.Footer>
         </Form>
       </Modal>
 
       <Modal show={deleteTarget !== null} onHide={() => setDeleteTarget(null)} centered>
-        <Modal.Header closeButton><Modal.Title>Delete Menu Node</Modal.Title></Modal.Header>
+        <Modal.Header closeButton>
+          <Modal.Title>{t('access:menuCatalogue.deleteTitle')}</Modal.Title>
+        </Modal.Header>
         <Modal.Body>
-          Delete <strong>{deleteTarget?.label}</strong>? This cannot be undone.
+          {t('access:menuCatalogue.deleteConfirm', { label: deleteTarget?.label ?? '' })}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Cancel</Button>
+          <Button variant="secondary" onClick={() => setDeleteTarget(null)}>{t('common:actions.cancel')}</Button>
           <Button
             variant="danger"
             disabled={deleteMutation.isPending}
             onClick={() => deleteTarget?.id != null && deleteMutation.mutate(deleteTarget.id)}
           >
-            Delete
+            {t('common:actions.delete')}
           </Button>
         </Modal.Footer>
       </Modal>

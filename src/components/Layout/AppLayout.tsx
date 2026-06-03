@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { List } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router-dom';
 import { AppFooter } from './AppFooter';
 import { Sidebar } from '../Sidebar/Sidebar';
@@ -7,6 +8,7 @@ import { loadSidebarVisible, saveSidebarVisible } from '../../utils/sidebarNavSt
 import layoutStyles from './AppLayout.module.css';
 
 export function AppLayout() {
+  const { t } = useTranslation('common');
   const [sidebarOpen, setSidebarOpen] = useState(() => loadSidebarVisible());
 
   const toggleSidebar = useCallback(() => {
@@ -28,7 +30,7 @@ export function AppLayout() {
                 type="button"
                 className={layoutStyles.menuToggle}
                 onClick={toggleSidebar}
-                aria-label="Show navigation menu"
+                aria-label={t('aria.showNavigation')}
               >
                 <List size={20} />
               </button>

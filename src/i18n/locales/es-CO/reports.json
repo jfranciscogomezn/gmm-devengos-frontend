@@ -1,0 +1,34 @@
+{
+  "title": "Reportes de tiempo y devengados",
+  "uncappedView": "Vista sin tope (Reporte B)",
+  "selectEmployeeHint": "Seleccione un empleado para generar el reporte.",
+  "summary": "{{name}} · {{period}} · Vista {{view}} · Total: {{total}}",
+  "viewCapped": "con tope",
+  "viewUncapped": "sin tope",
+  "incompleteHeading": "Registros incompletos bloquean este reporte",
+  "incompleteBody": "Resuelva los registros incompletos en: {{dates}} antes de generar el reporte.",
+  "period": {
+    "label": "Periodo",
+    "month": "Mes",
+    "day": "Día",
+    "week": "Semana",
+    "weekHint": "La semana inicia {{date}}",
+    "weekPicker": "Semana (elija cualquier día)",
+    "range": "Rango personalizado",
+    "singleDay": "Día único",
+    "presets": {
+      "thisMonth": "Este mes",
+      "thisWeek": "Esta semana",
+      "today": "Hoy"
+    },
+    "weekOf": "Semana del {{date}}"
+  },
+  "table": {
+    "normalMin": "Normal (min)",
+    "daytimeOtMin": "H.E. diurna (min)",
+    "nightMin": "Nocturno (min)",
+    "nocturnalOtMin": "H.E. nocturna (min)",
+    "earnings": "Devengado",
+    "empty": "No hay registros cerrados en este periodo."
+  }
+}

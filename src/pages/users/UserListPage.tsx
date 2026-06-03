@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Badge, Button, Modal, Spinner, Table } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { usersService } from '../../api/users.service';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 import type { UserProfile } from '../../types';
 
 export function UserListPage() {
+  const { t } = useTranslation(['access', 'common']);
   const queryClient = useQueryClient();
   const [deleteTarget, setDeleteTarget] = useState<UserProfile | null>(null);
   const [actionError, setActionError] = useState('');
@@ -23,8 +25,8 @@ export function UserListPage() {
       setDeleteTarget(null);
       setActionError('');
     },
-    onError: (err: { response?: { data?: { message?: string } } }) => {
-      setActionError(err.response?.data?.message ?? 'Cannot delete user.');
+    onError: () => {
+      setActionError(t('access:users.deleteFailed'));
     },
   });
 
@@ -44,10 +46,12 @@ export function UserListPage() {
 
   return (
     <div>
-      <Link to="/admin/access" className="text-decoration-none small">&larr; Access Control</Link>
+      <Link to="/admin/access" className="text-decoration-none small">{t('access:backToAccess')}</Link>
       <div className="d-flex justify-content-between align-items-center mb-4 mt-2">
-        <h4 className="mb-0">Users &amp; Roles</h4>
-        <Link to="/admin/access/users/new" className="btn btn-primary btn-sm">+ New User</Link>
+        <h4 className="mb-0">{t('access:users.title')}</h4>
+        <Link to="/admin/access/users/new" className="btn btn-primary btn-sm">
+          + {t('access:users.new')}
+        </Link>
       </div>
 
       {actionError && <Alert variant="danger" dismissible onClose={() => setActionError('')}>{actionError}</Alert>}
@@ -56,11 +60,11 @@ export function UserListPage() {
         <thead className="table-dark">
           <tr>
             <th>#</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>{t('common:labels.name')}</th>
+            <th>{t('common:labels.email')}</th>
+            <th>{t('common:labels.role')}</th>
+            <th>{t('common:labels.status')}</th>
+            <th>{t('common:labels.actions')}</th>
           </tr>
         </thead>
         <tbody>
@@ -72,14 +76,16 @@ export function UserListPage() {
               <td><Badge bg="secondary">{user.roleName}</Badge></td>
               <td>
                 <Badge bg={user.enabled ? 'success' : 'danger'}>
-                  {user.enabled ? 'Active' : 'Disabled'}
+                  {user.enabled ? t('common:status.active') : t('common:status.disabled')}
                 </Badge>
                 {user.mustChangePassword && (
-                  <Badge bg="warning" text="dark" className="ms-1">Must Change PW</Badge>
+                  <Badge bg="warning" text="dark" className="ms-1">{t('common:status.mustChangePassword')}</Badge>
                 )}
               </td>
               <td>
-                <Link to={`/admin/access/users/${user.id}`} className="btn btn-outline-primary btn-sm me-1">Edit</Link>
+                <Link to={`/admin/access/users/${user.id}`} className="btn btn-outline-primary btn-sm me-1">
+                  {t('common:actions.edit')}
+                </Link>
                 <Button
                   size="sm"
                   variant={user.enabled ? 'outline-warning' : 'outline-success'}
@@ -87,7 +93,7 @@ export function UserListPage() {
                   disabled={statusMutation.isPending}
                   onClick={() => statusMutation.mutate({ id: user.id, enabled: !user.enabled })}
                 >
-                  {user.enabled ? 'Disable' : 'Enable'}
+                  {user.enabled ? t('common:actions.disable') : t('common:actions.enable')}
                 </Button>
                 <Button
                   size="sm"
@@ -96,42 +102,43 @@ export function UserListPage() {
                   disabled={resetMutation.isPending}
                   onClick={() => resetMutation.mutate(user.id)}
                 >
-                  Reset PW
+                  {t('access:users.resetPasswordShort')}
                 </Button>
                 <Button
                   size="sm"
                   variant="outline-danger"
                   onClick={() => { setDeleteTarget(user); setActionError(''); }}
                 >
-                  Delete
+                  {t('common:actions.delete')}
                 </Button>
               </td>
             </tr>
           ))}
           {users.length === 0 && (
-            <tr><td colSpan={6} className="text-center text-muted py-4">No users found.</td></tr>
+            <tr><td colSpan={6} className="text-center text-muted py-4">{t('access:users.empty')}</td></tr>
           )}
         </tbody>
       </Table>
 
       <Modal show={deleteTarget !== null} onHide={() => setDeleteTarget(null)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
+          <Modal.Title>{t('common:actions.confirmDelete')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {actionError && <Alert variant="danger" className="py-2">{actionError}</Alert>}
-          Are you sure you want to delete user{' '}
-          <strong>{deleteTarget?.firstName} {deleteTarget?.lastName}</strong>?
+          {t('access:users.deleteConfirm', {
+            name: deleteTarget ? `${deleteTarget.firstName} ${deleteTarget.lastName}` : '',
+          })}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Cancel</Button>
+          <Button variant="secondary" onClick={() => setDeleteTarget(null)}>{t('common:actions.cancel')}</Button>
           <Button
             variant="danger"
             onClick={() => deleteTarget && deleteMutation.mutate(deleteTarget.id)}
             disabled={deleteMutation.isPending}
           >
             {deleteMutation.isPending ? <Spinner as="span" size="sm" className="me-1" /> : null}
-            Delete
+            {t('common:actions.delete')}
           </Button>
         </Modal.Footer>
       </Modal>

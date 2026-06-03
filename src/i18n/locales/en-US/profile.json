@@ -1,0 +1,15 @@
+{
+  "title": "My Profile",
+  "accountInfo": "Account Information",
+  "changePassword": "Change Password",
+  "currentPassword": "Current Password",
+  "newPassword": "New Password",
+  "confirmPassword": "Confirm New Password",
+  "mustChangePassword": "You must change your password before continuing.",
+  "passwordChanged": "Password changed successfully.",
+  "passwordMin": "Password must have at least 8 characters, including uppercase, lowercase, and a number.",
+  "passwordMismatch": "Passwords do not match.",
+  "passwordChangeFailed": "Failed to change password. Check your current password.",
+  "savePassword": "Save Password",
+  "toggleChange": "Change"
+}

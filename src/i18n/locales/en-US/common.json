@@ -1,0 +1,85 @@
+{
+  "appName": "StepCore",
+  "actions": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "update": "Update",
+    "edit": "Edit",
+    "delete": "Delete",
+    "remove": "Remove",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing…",
+    "open": "Open",
+    "done": "Done",
+    "back": "Back",
+    "signOut": "Sign out",
+    "signIn": "Sign in",
+    "signingIn": "Signing in…",
+    "exportExcel": "Export Excel",
+    "exporting": "Exporting…",
+    "enable": "Enable",
+    "disable": "Disable",
+    "resetPassword": "Reset PW",
+    "confirmDelete": "Confirm Delete",
+    "selectAllIn": "Select all in {{module}}"
+  },
+  "labels": {
+    "from": "From",
+    "to": "To",
+    "date": "Date",
+    "status": "Status",
+    "actions": "Actions",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "role": "Role",
+    "employee": "Employee",
+    "language": "Language",
+    "notes": "Notes",
+    "duration": "Duration",
+    "reason": "Reason",
+    "description": "Description",
+    "year": "Year",
+    "plan": "Plan",
+    "slug": "Slug",
+    "enabled": "Enabled",
+    "code": "Code",
+    "type": "Type",
+    "parent": "Parent",
+    "route": "Route",
+    "sortOrder": "Sort order"
+  },
+  "placeholders": {
+    "selectEmployee": "Select an employee…",
+    "selectRole": "Select a role…",
+    "selectParent": "Select parent…"
+  },
+  "status": {
+    "active": "Active",
+    "disabled": "Disabled",
+    "mustChangePassword": "Must Change PW",
+    "platform": "platform"
+  },
+  "passwordStrength": {
+    "weak": "Weak",
+    "fair": "Fair",
+    "strong": "Strong"
+  },
+  "empty": {
+    "noResults": "No results found.",
+    "noData": "No data."
+  },
+  "aria": {
+    "showNavigation": "Show navigation menu",
+    "hideNavigation": "Hide navigation menu"
+  },
+  "footer": {
+    "version": "Version {{version}}"
+  },
+  "language": {
+    "esCO": "Español (CO)",
+    "enUS": "English (US)"
+  },
+  "planSuffix": "{{plan}} plan"
+}

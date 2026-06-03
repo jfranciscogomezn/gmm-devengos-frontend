@@ -1,0 +1,34 @@
+{
+  "title": "Time & Earnings Reports",
+  "uncappedView": "Uncapped view (Report B)",
+  "selectEmployeeHint": "Select an employee to generate the report.",
+  "summary": "{{name}} · {{period}} · {{view}} view · Total: {{total}}",
+  "viewCapped": "Capped",
+  "viewUncapped": "Uncapped",
+  "incompleteHeading": "Incomplete records block this report",
+  "incompleteBody": "Resolve incomplete records on: {{dates}} before generating the report.",
+  "period": {
+    "label": "Period",
+    "month": "Month",
+    "day": "Day",
+    "week": "Week",
+    "weekHint": "Week starts {{date}}",
+    "weekPicker": "Week (pick any day)",
+    "range": "Custom range",
+    "singleDay": "Single day",
+    "presets": {
+      "thisMonth": "This month",
+      "thisWeek": "This week",
+      "today": "Today"
+    },
+    "weekOf": "Week of {{date}}"
+  },
+  "table": {
+    "normalMin": "Normal (min)",
+    "daytimeOtMin": "Daytime OT (min)",
+    "nightMin": "Night (min)",
+    "nocturnalOtMin": "Nocturnal OT (min)",
+    "earnings": "Earnings",
+    "empty": "No closed records in this period."
+  }
+}

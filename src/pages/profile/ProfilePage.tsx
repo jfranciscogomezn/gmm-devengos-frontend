@@ -2,19 +2,14 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Alert, Badge, Button, Card, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { authService } from '../../api/auth.service';
 import { useAuth } from '../../context/AuthContext';
 
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
-function getStrengthLabel(pwd: string): { label: string; variant: string } {
-  if (!pwd) return { label: '', variant: 'secondary' };
-  if (!PASSWORD_REGEX.test(pwd)) return { label: 'Weak', variant: 'danger' };
-  if (pwd.length < 12) return { label: 'Fair', variant: 'warning' };
-  return { label: 'Strong', variant: 'success' };
-}
-
 export function ProfilePage() {
+  const { t } = useTranslation(['profile', 'common']);
   const { currentUser, mustChangePassword } = useAuth();
   const location = useLocation();
   const forceChange = (location.state as { forceChangePassword?: boolean })?.forceChangePassword ?? mustChangePassword;
@@ -33,7 +28,7 @@ export function ProfilePage() {
   const mutation = useMutation({
     mutationFn: () => authService.changePassword({ currentPassword, newPassword }),
     onSuccess: () => {
-      setSuccessMsg('Password changed successfully.');
+      setSuccessMsg(t('profile:passwordChanged'));
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
@@ -41,16 +36,23 @@ export function ProfilePage() {
     },
   });
 
+  const getStrengthLabel = (pwd: string): { label: string; variant: string } => {
+    if (!pwd) return { label: '', variant: 'secondary' };
+    if (!PASSWORD_REGEX.test(pwd)) return { label: t('common:passwordStrength.weak'), variant: 'danger' };
+    if (pwd.length < 12) return { label: t('common:passwordStrength.fair'), variant: 'warning' };
+    return { label: t('common:passwordStrength.strong'), variant: 'success' };
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setClientError('');
     setSuccessMsg('');
     if (!PASSWORD_REGEX.test(newPassword)) {
-      setClientError('Password must have at least 8 characters, one uppercase, one lowercase, one digit, and one special character.');
+      setClientError(t('profile:passwordMin'));
       return;
     }
     if (newPassword !== confirmPassword) {
-      setClientError('Passwords do not match.');
+      setClientError(t('profile:passwordMismatch'));
       return;
     }
     mutation.mutate();
@@ -60,25 +62,25 @@ export function ProfilePage() {
 
   return (
     <div>
-      <h4 className="mb-4">My Profile</h4>
+      <h4 className="mb-4">{t('profile:title')}</h4>
 
       {forceChange && (
         <Alert variant="warning" className="mb-3">
-          You must change your password before continuing.
+          {t('profile:mustChangePassword')}
         </Alert>
       )}
 
       <Row>
         <Col md={6}>
           <Card className="mb-4">
-            <Card.Header>Account Information</Card.Header>
+            <Card.Header>{t('profile:accountInfo')}</Card.Header>
             <Card.Body>
               <dl className="row mb-0">
-                <dt className="col-sm-4">Name</dt>
+                <dt className="col-sm-4">{t('common:labels.name')}</dt>
                 <dd className="col-sm-8">{currentUser?.firstName} {currentUser?.lastName}</dd>
-                <dt className="col-sm-4">Email</dt>
+                <dt className="col-sm-4">{t('common:labels.email')}</dt>
                 <dd className="col-sm-8">{currentUser?.email}</dd>
-                <dt className="col-sm-4">Role</dt>
+                <dt className="col-sm-4">{t('common:labels.role')}</dt>
                 <dd className="col-sm-8">
                   <Badge bg="primary">{currentUser?.roleName}</Badge>
                 </dd>
@@ -90,10 +92,10 @@ export function ProfilePage() {
         <Col md={6}>
           <Card>
             <Card.Header className="d-flex justify-content-between align-items-center">
-              Change Password
+              {t('profile:changePassword')}
               {!forceChange && (
                 <Button size="sm" variant="outline-primary" onClick={() => setShowForm((s) => !s)}>
-                  {showForm ? 'Cancel' : 'Change'}
+                  {showForm ? t('common:actions.cancel') : t('profile:toggleChange')}
                 </Button>
               )}
             </Card.Header>
@@ -102,17 +104,17 @@ export function ProfilePage() {
                 {successMsg && <Alert variant="success" className="py-2">{successMsg}</Alert>}
                 {(clientError || mutation.isError) && (
                   <Alert variant="danger" className="py-2">
-                    {clientError || 'Failed to change password. Check your current password.'}
+                    {clientError || t('profile:passwordChangeFailed')}
                   </Alert>
                 )}
                 <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Current Password</Form.Label>
+                    <Form.Label>{t('profile:currentPassword')}</Form.Label>
                     <Form.Control type="password" value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)} required />
                   </Form.Group>
                   <Form.Group className="mb-2">
-                    <Form.Label>New Password</Form.Label>
+                    <Form.Label>{t('profile:newPassword')}</Form.Label>
                     <Form.Control type="password" value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)} required />
                     {newPassword && (
@@ -122,13 +124,13 @@ export function ProfilePage() {
                     )}
                   </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Label>Confirm New Password</Form.Label>
+                    <Form.Label>{t('profile:confirmPassword')}</Form.Label>
                     <Form.Control type="password" value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)} required />
                   </Form.Group>
                   <Button type="submit" variant="primary" disabled={mutation.isPending}>
                     {mutation.isPending ? <Spinner as="span" size="sm" className="me-2" /> : null}
-                    Save Password
+                    {t('profile:savePassword')}
                   </Button>
                 </Form>
               </Card.Body>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Card, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { employeesService } from '../../api/employees.service';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 import { getApiErrorMessage } from '../../utils/apiError';
@@ -10,6 +11,7 @@ import type { CreateEmployeeRequest, IdType, UpdateEmployeeRequest } from '../..
 const ID_TYPES: IdType[] = ['CC', 'CE', 'TI', 'PASSPORT', 'NIT'];
 
 export function EmployeeFormPage() {
+  const { t } = useTranslation(['employees', 'common']);
   const { id } = useParams<{ id: string }>();
   const isEdit = id !== undefined;
   const navigate = useNavigate();
@@ -102,7 +104,7 @@ export function EmployeeFormPage() {
 
     const salary = Number(monthlySalary);
     if (!Number.isFinite(salary) || salary <= 0) {
-      setServerError('Monthly salary must be greater than zero.');
+      setServerError(t('employees:form.salaryInvalid'));
       return;
     }
 
@@ -111,7 +113,7 @@ export function EmployeeFormPage() {
 
   return (
     <div style={{ maxWidth: 720 }}>
-      <h4 className="mb-4">{isEdit ? 'Edit Employee' : 'New Employee'}</h4>
+      <h4 className="mb-4">{isEdit ? t('employees:form.editTitle') : t('employees:form.newTitle')}</h4>
       <Card>
         <Card.Body>
           {serverError && <Alert variant="danger" className="py-2">{serverError}</Alert>}
@@ -119,7 +121,7 @@ export function EmployeeFormPage() {
             <Row>
               <Col sm={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>First Name <span className="text-danger">*</span></Form.Label>
+                  <Form.Label>{t('employees:form.firstName')}</Form.Label>
                   <Form.Control
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
@@ -130,7 +132,7 @@ export function EmployeeFormPage() {
               </Col>
               <Col sm={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Last Name <span className="text-danger">*</span></Form.Label>
+                  <Form.Label>{t('employees:form.lastName')}</Form.Label>
                   <Form.Control
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
@@ -144,7 +146,7 @@ export function EmployeeFormPage() {
             <Row>
               <Col sm={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>ID Type <span className="text-danger">*</span></Form.Label>
+                  <Form.Label>{t('employees:form.idType')}</Form.Label>
                   <Form.Select
                     value={idType}
                     onChange={(e) => setIdType(e.target.value as IdType)}
@@ -158,7 +160,7 @@ export function EmployeeFormPage() {
               </Col>
               <Col sm={8}>
                 <Form.Group className="mb-3">
-                  <Form.Label>ID Number <span className="text-danger">*</span></Form.Label>
+                  <Form.Label>{t('employees:form.idNumber')}</Form.Label>
                   <Form.Control
                     value={idNumber}
                     onChange={(e) => setIdNumber(e.target.value)}
@@ -170,7 +172,7 @@ export function EmployeeFormPage() {
             </Row>
 
             <Form.Group className="mb-3">
-              <Form.Label>Email <span className="text-danger">*</span></Form.Label>
+              <Form.Label>{t('common:labels.email')} <span className="text-danger">*</span></Form.Label>
               <Form.Control
                 type="email"
                 value={email}
@@ -181,7 +183,7 @@ export function EmployeeFormPage() {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Phone</Form.Label>
+              <Form.Label>{t('common:labels.phone')}</Form.Label>
               <Form.Control
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -190,7 +192,7 @@ export function EmployeeFormPage() {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Monthly Salary (COP) <span className="text-danger">*</span></Form.Label>
+              <Form.Label>{t('employees:form.monthlySalary')}</Form.Label>
               <Form.Control
                 type="number"
                 min="0.01"
@@ -202,25 +204,25 @@ export function EmployeeFormPage() {
             </Form.Group>
 
             <Form.Group className="mb-4">
-              <Form.Label>Linked User ID</Form.Label>
+              <Form.Label>{t('employees:form.linkedUser')}</Form.Label>
               <Form.Control
                 type="number"
                 min="1"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
-                placeholder="Optional — security service user id"
+                placeholder={t('employees:form.linkedUserPlaceholder')}
               />
-              <Form.Text className="text-muted">
-                Optional link to a user account in the security service (same tenant).
-              </Form.Text>
+              <Form.Text className="text-muted">{t('employees:form.linkedUserHint')}</Form.Text>
             </Form.Group>
 
             <div className="d-flex gap-2">
               <Button type="submit" variant="primary" disabled={mutation.isPending}>
                 {mutation.isPending ? <Spinner as="span" size="sm" className="me-2" /> : null}
-                {isEdit ? 'Update' : 'Create'}
+                {isEdit ? t('common:actions.update') : t('common:actions.create')}
               </Button>
-              <Button variant="secondary" onClick={() => navigate('/admin/employees')}>Cancel</Button>
+              <Button variant="secondary" onClick={() => navigate('/admin/employees')}>
+                {t('common:actions.cancel')}
+              </Button>
             </div>
           </Form>
         </Card.Body>

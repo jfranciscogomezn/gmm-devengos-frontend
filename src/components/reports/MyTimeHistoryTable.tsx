@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Alert, Table } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import type { TimeReportRecord } from '../../api/reports.service';
 import type { TimeRecord } from '../../types';
 import { TimeRecordStatusBadge } from '../time/TimeRecordStatusBadge';
@@ -24,29 +25,30 @@ export function MyTimeHistoryTable({
   reportBlocked,
   incompleteDates,
 }: MyTimeHistoryTableProps) {
+  const { t } = useTranslation(['time', 'common', 'reports']);
+
   return (
     <>
       {reportBlocked && incompleteDates && (
         <Alert variant="warning" className="mb-3">
-          Earnings summary is hidden while incomplete records exist on:{' '}
-          {incompleteDates.join(', ')}. Resolve them with your administrator to see classified hours.
+          {t('time:history.incompleteBlock', { dates: incompleteDates.join(', ') })}
         </Alert>
       )}
 
       <Table striped hover responsive>
         <thead className="table-dark">
           <tr>
-            <th>Date</th>
-            <th>Clock in</th>
-            <th>Clock out</th>
-            <th>Duration</th>
-            <th>Status</th>
+            <th>{t('common:labels.date')}</th>
+            <th>{t('time:admin.table.clockIn')}</th>
+            <th>{t('time:admin.table.clockOut')}</th>
+            <th>{t('common:labels.duration')}</th>
+            <th>{t('common:labels.status')}</th>
             {!reportBlocked && (
               <>
-                <th>Normal (min)</th>
-                <th>Daytime OT (min)</th>
-                <th>Earnings</th>
-                <th>Notes</th>
+                <th>{t('reports:table.normalMin')}</th>
+                <th>{t('reports:table.daytimeOtMin')}</th>
+                <th>{t('reports:table.earnings')}</th>
+                <th>{t('common:labels.notes')}</th>
               </>
             )}
           </tr>
@@ -55,7 +57,7 @@ export function MyTimeHistoryTable({
           {records.length === 0 ? (
             <tr>
               <td colSpan={reportBlocked ? 5 : 9} className="text-center text-muted py-4">
-                No records in this date range.
+                {t('time:history.emptyRange')}
               </td>
             </tr>
           ) : (
@@ -73,7 +75,7 @@ export function MyTimeHistoryTable({
                   <td>
                     <TimeRecordStatusBadge status={record.status} />
                     {record.corrected && (
-                      <span className="badge bg-secondary ms-2">Corrected</span>
+                      <span className="badge bg-secondary ms-2">{t('time:badges.corrected')}</span>
                     )}
                   </td>
                   {!reportBlocked && (
@@ -86,13 +88,13 @@ export function MyTimeHistoryTable({
                           <span className="small text-muted">{report.correctionReason}</span>
                         )}
                         {!report && record.status === 'CLOSED' && (
-                          <span className="small text-muted">No earnings data</span>
+                          <span className="small text-muted">{t('time:history.noEarnings')}</span>
                         )}
                         {report?.highlightLevel === 'WARNING' && (
-                          <span className="badge bg-warning text-dark ms-1">Overtime</span>
+                          <span className="badge bg-warning text-dark ms-1">{t('time:badges.overtime')}</span>
                         )}
                         {report?.highlightLevel === 'ALERT' && (
-                          <span className="badge bg-danger ms-1">Extended hours</span>
+                          <span className="badge bg-danger ms-1">{t('time:badges.extendedHours')}</span>
                         )}
                       </td>
                     </>

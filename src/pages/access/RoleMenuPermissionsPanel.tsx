@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Form, Spinner } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { menuService } from '../../api/menu.service';
 import { rolesService } from '../../api/roles.service';
 import { MenuTreeAssign } from '../../components/MenuTreeAssign/MenuTreeAssign';
@@ -25,6 +26,7 @@ interface RoleMenuPermissionsPanelProps {
 }
 
 export function RoleMenuPermissionsPanel({ roleId, roleName, onSaved }: RoleMenuPermissionsPanelProps) {
+  const { t } = useTranslation('access');
   const queryClient = useQueryClient();
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [serverError, setServerError] = useState('');
@@ -86,8 +88,9 @@ export function RoleMenuPermissionsPanel({ roleId, roleName, onSaved }: RoleMenu
     <div>
       {serverError && <Alert variant="danger" className="py-2">{serverError}</Alert>}
       <p className="text-muted small mb-3">
-        Select which screens {roleName ? `the ${roleName} role` : 'this role'} can access.
-        Only leaf items grant permissions.
+        {t('roles.permissionsHint', {
+          role: roleName ?? t('roles.genericRole'),
+        })}
       </p>
       <Form
         onSubmit={(e) => {
@@ -106,7 +109,7 @@ export function RoleMenuPermissionsPanel({ roleId, roleName, onSaved }: RoleMenu
         <div className="d-flex gap-2 mt-3">
           <Button type="submit" variant="primary" disabled={mutation.isPending}>
             {mutation.isPending ? <Spinner as="span" size="sm" className="me-2" /> : null}
-            Save Permissions
+            {t('roles.savePermissions')}
           </Button>
         </div>
       </Form>

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { employeesService } from '../../api/employees.service';
 import { reportsService } from '../../api/reports.service';
 import { ReportPeriodFilters, ReportPeriodPresets } from '../../components/reports/ReportPeriodFilters';
@@ -18,6 +19,7 @@ import {
 import { toIsoDateString } from '../../utils/timeFormat';
 
 export function ReportsPage() {
+  const { t } = useTranslation(['reports', 'common']);
   const { currentUser, hasPermission } = useAuth();
   const isAdmin = hasPermission('REPORTS');
   const today = toIsoDateString(new Date());
@@ -76,14 +78,14 @@ export function ReportsPage() {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="mb-0">Time &amp; Earnings Reports</h4>
+        <h4 className="mb-0">{t('reports:title')}</h4>
         <Button
           size="sm"
           variant="outline-success"
           disabled={!report || exportMutation.isPending}
           onClick={() => exportMutation.mutate()}
         >
-          {exportMutation.isPending ? 'Exporting…' : 'Export Excel'}
+          {exportMutation.isPending ? t('common:actions.exporting') : t('common:actions.exportExcel')}
         </Button>
       </div>
 
@@ -93,7 +95,7 @@ export function ReportsPage() {
         {isAdmin && (
           <Col md={4}>
             <Form.Group controlId="reports-employee">
-              <Form.Label>Employee</Form.Label>
+              <Form.Label>{t('common:labels.employee')}</Form.Label>
               <Form.Select
                 value={employeeId}
                 onChange={(event) => {
@@ -101,7 +103,7 @@ export function ReportsPage() {
                   setEmployeeId(value === '' ? '' : Number(value));
                 }}
               >
-                <option value="">Select an employee…</option>
+                <option value="">{t('common:placeholders.selectEmployee')}</option>
                 {employees.map((employee) => (
                   <option key={employee.id} value={employee.id}>
                     {employee.firstName} {employee.lastName}
@@ -122,7 +124,7 @@ export function ReportsPage() {
             <Form.Check
               type="switch"
               id="reports-uncapped"
-              label="Uncapped view (Report B)"
+              label={t('reports:uncappedView')}
               checked={uncapped}
               onChange={(event) => setUncapped(event.target.checked)}
             />
@@ -133,7 +135,7 @@ export function ReportsPage() {
       {exportError && <Alert variant="danger">{exportError}</Alert>}
 
       {isAdmin && employeeId === '' && (
-        <p className="text-muted">Select an employee to generate the report.</p>
+        <p className="text-muted">{t('reports:selectEmployeeHint')}</p>
       )}
 
       {reportQuery.isLoading && (
@@ -142,9 +144,9 @@ export function ReportsPage() {
 
       {incompleteDates && (
         <Alert variant="warning">
-          <Alert.Heading className="h6">Incomplete records block this report</Alert.Heading>
+          <Alert.Heading className="h6">{t('reports:incompleteHeading')}</Alert.Heading>
           <p className="mb-0">
-            Resolve incomplete records on: {incompleteDates.join(', ')} before generating the report.
+            {t('reports:incompleteBody', { dates: incompleteDates.join(', ') })}
           </p>
         </Alert>
       )}
@@ -156,8 +158,12 @@ export function ReportsPage() {
       {report && (
         <>
           <p className="text-muted mb-3">
-            {report.employeeName} · {reportPeriodLabel(period)} ·{' '}
-            {uncapped ? 'Uncapped' : 'Capped'} view · Total: {formatMoney(totalEarnings)}
+            {t('reports:summary', {
+              name: report.employeeName,
+              period: reportPeriodLabel(period),
+              view: uncapped ? t('reports:viewUncapped') : t('reports:viewCapped'),
+              total: formatMoney(totalEarnings),
+            })}
           </p>
           <TimeReportTable records={report.records} uncapped={uncapped} />
         </>

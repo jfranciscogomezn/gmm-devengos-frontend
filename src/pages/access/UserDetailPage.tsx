@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Badge, Button, Card, Col, Form, Nav, Row, Spinner, Tab } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { usersService } from '../../api/users.service';
 import { rolesService } from '../../api/roles.service';
 import type { CreateUserRequest, UpdateUserRequest } from '../../types';
@@ -9,15 +10,21 @@ import type { CreateUserRequest, UpdateUserRequest } from '../../types';
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
 function PasswordStrength({ password }: { password: string }) {
+  const { t } = useTranslation('common');
   if (!password) return null;
   const valid = PASSWORD_REGEX.test(password);
   const long = password.length >= 12;
   const variant = !valid ? 'danger' : long ? 'success' : 'warning';
-  const label = !valid ? 'Weak' : long ? 'Strong' : 'Fair';
+  const label = !valid
+    ? t('passwordStrength.weak')
+    : long
+      ? t('passwordStrength.strong')
+      : t('passwordStrength.fair');
   return <Badge bg={variant} className="mt-1">{label}</Badge>;
 }
 
 export function UserDetailPage() {
+  const { t } = useTranslation(['access', 'common', 'employees']);
   const { id } = useParams<{ id: string }>();
   const isEdit = id !== undefined;
   const navigate = useNavigate();
@@ -81,12 +88,9 @@ export function UserDetailPage() {
       navigate('/admin/access/users');
     },
     onError: (err: { response?: { data?: { message?: string } } }) => {
-      const message = err.response?.data?.message ?? 'Failed to save user.';
+      const message = err.response?.data?.message ?? t('access:users.saveFailed');
       if (message.includes('USER_LIMIT_REACHED')) {
-        setServerError(
-          "You've reached your plan's user limit. Contact your provider to upgrade the plan or "
-          + 'free up a seat by disabling an existing user.',
-        );
+        setServerError(t('access:users.userLimitReached'));
         return;
       }
       setServerError(message);
@@ -105,8 +109,8 @@ export function UserDetailPage() {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       navigate('/admin/access/users');
     },
-    onError: (err: { response?: { data?: { message?: string } } }) => {
-      setServerError(err.response?.data?.message ?? 'Failed to update role.');
+    onError: () => {
+      setServerError(t('access:users.roleUpdateFailed'));
     },
   });
 
@@ -116,13 +120,11 @@ export function UserDetailPage() {
   const validateAndSave = (mutation: { mutate: () => void }) => {
     setServerError('');
     if (!isEdit && !PASSWORD_REGEX.test(password)) {
-      setServerError(
-        'Password must have at least 8 characters, one uppercase, one lowercase, one digit, and one special character.',
-      );
+      setServerError(t('access:users.passwordMin'));
       return;
     }
     if (roleId === '') {
-      setServerError('Please select a role.');
+      setServerError(t('access:users.selectRole'));
       return;
     }
     mutation.mutate();
@@ -133,7 +135,7 @@ export function UserDetailPage() {
       <Row>
         <Col sm={6}>
           <Form.Group className="mb-3">
-            <Form.Label>First Name <span className="text-danger">*</span></Form.Label>
+            <Form.Label>{t('employees:form.firstName')}</Form.Label>
             <Form.Control
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
@@ -144,7 +146,7 @@ export function UserDetailPage() {
         </Col>
         <Col sm={6}>
           <Form.Group className="mb-3">
-            <Form.Label>Last Name <span className="text-danger">*</span></Form.Label>
+            <Form.Label>{t('employees:form.lastName')}</Form.Label>
             <Form.Control
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
@@ -155,7 +157,7 @@ export function UserDetailPage() {
         </Col>
       </Row>
       <Form.Group className="mb-3">
-        <Form.Label>Email <span className="text-danger">*</span></Form.Label>
+        <Form.Label>{t('common:labels.email')} <span className="text-danger">*</span></Form.Label>
         <Form.Control
           type="email"
           value={email}
@@ -166,12 +168,12 @@ export function UserDetailPage() {
         />
       </Form.Group>
       <Form.Group className="mb-3">
-        <Form.Label>Phone</Form.Label>
+        <Form.Label>{t('common:labels.phone')}</Form.Label>
         <Form.Control value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={20} />
       </Form.Group>
       {!isEdit && (
         <Form.Group className="mb-3">
-          <Form.Label>Password <span className="text-danger">*</span></Form.Label>
+          <Form.Label>{t('access:users.password')}</Form.Label>
           <Form.Control
             type="password"
             value={password}
@@ -186,16 +188,14 @@ export function UserDetailPage() {
 
   const roleSelect = (
     <Form.Group className="mb-4">
-      <Form.Label>Role <span className="text-danger">*</span></Form.Label>
+      <Form.Label>{t('common:labels.role')} <span className="text-danger">*</span></Form.Label>
       <Form.Select value={roleId} onChange={(e) => setRoleId(Number(e.target.value))} required>
-        <option value="">Select a role…</option>
+        <option value="">{t('common:placeholders.selectRole')}</option>
         {roles.map((r) => (
           <option key={r.id} value={r.id}>{r.name}</option>
         ))}
       </Form.Select>
-      <Form.Text className="text-muted">
-        The role determines which menu screens and permissions the user receives at login.
-      </Form.Text>
+      <Form.Text className="text-muted">{t('access:users.roleHint')}</Form.Text>
     </Form.Group>
   );
 
@@ -212,18 +212,22 @@ export function UserDetailPage() {
       <div className="d-flex gap-2">
         <Button type="submit" variant="primary" disabled={saveProfileMutation.isPending}>
           {saveProfileMutation.isPending ? <Spinner as="span" size="sm" className="me-2" /> : null}
-          Create
+          {t('common:actions.create')}
         </Button>
-        <Button variant="secondary" onClick={() => navigate('/admin/access/users')}>Cancel</Button>
+        <Button variant="secondary" onClick={() => navigate('/admin/access/users')}>
+          {t('common:actions.cancel')}
+        </Button>
       </div>
     </Form>
   );
 
   return (
     <div style={{ maxWidth: 720 }}>
-      <Link to="/admin/access/users" className="text-decoration-none small">&larr; Users</Link>
+      <Link to="/admin/access/users" className="text-decoration-none small">{t('access:backToUsers')}</Link>
       <h4 className="mb-4 mt-2">
-        {isEdit ? `Edit User — ${user?.firstName ?? ''} ${user?.lastName ?? ''}` : 'New User'}
+        {isEdit
+          ? t('access:users.editTitle', { name: `${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim() })
+          : t('access:users.newTitle')}
       </h4>
 
       {!isEdit ? (
@@ -235,10 +239,10 @@ export function UserDetailPage() {
         >
           <Nav variant="tabs" className="mb-3">
             <Nav.Item>
-              <Nav.Link eventKey="profile">Profile</Nav.Link>
+              <Nav.Link eventKey="profile">{t('access:users.tabs.profile')}</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="role">Role Assignment</Nav.Link>
+              <Nav.Link eventKey="role">{t('access:users.tabs.role')}</Nav.Link>
             </Nav.Item>
           </Nav>
           <Card>
@@ -256,10 +260,10 @@ export function UserDetailPage() {
                     <div className="d-flex gap-2">
                       <Button type="submit" variant="primary" disabled={saveProfileMutation.isPending}>
                         {saveProfileMutation.isPending ? <Spinner as="span" size="sm" className="me-2" /> : null}
-                        Update Profile
+                        {t('access:users.updateProfile')}
                       </Button>
                       <Button variant="secondary" onClick={() => navigate('/admin/access/users')}>
-                        Cancel
+                        {t('common:actions.cancel')}
                       </Button>
                     </div>
                   </Form>
@@ -275,7 +279,7 @@ export function UserDetailPage() {
                     <div className="d-flex gap-2">
                       <Button type="submit" variant="primary" disabled={saveRoleMutation.isPending}>
                         {saveRoleMutation.isPending ? <Spinner as="span" size="sm" className="me-2" /> : null}
-                        Save Role
+                        {t('access:users.saveRole')}
                       </Button>
                     </div>
                   </Form>

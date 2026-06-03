@@ -1,4 +1,6 @@
 import { List } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '../LanguageSwitcher/LanguageSwitcher';
 import { useAuth } from '../../context/AuthContext';
 import { CollapsibleSidebarNav } from './CollapsibleSidebarNav';
 import styles from './Sidebar.module.css';
@@ -9,6 +11,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ open, onToggle }: SidebarProps) {
+  const { t } = useTranslation(['dashboard', 'common']);
   const { menu, currentUser, tenant, isPlatformAdmin, logout } = useAuth();
 
   const initials = (tenant?.name ?? 'SC')
@@ -24,10 +27,10 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
           <div className={styles.brandContent}>
             <div className={styles.brandLogo}>{initials || 'SC'}</div>
             <div className={styles.brandTitle}>
-              {isPlatformAdmin ? 'Platform Console' : tenant?.name ?? 'StepCore'}
+              {isPlatformAdmin ? t('dashboard:platformConsole') : tenant?.name ?? t('common:appName')}
             </div>
             {tenant && !isPlatformAdmin && (
-              <div className={styles.brandMeta}>{tenant.plan} plan</div>
+              <div className={styles.brandMeta}>{t('common:planSuffix', { plan: tenant.plan })}</div>
             )}
             {currentUser && (
               <div className={styles.brandUser}>
@@ -39,7 +42,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
             type="button"
             className={styles.menuToggle}
             onClick={onToggle}
-            aria-label="Hide navigation menu"
+            aria-label={t('common:aria.hideNavigation')}
           >
             <List size={18} />
           </button>
@@ -49,8 +52,11 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
       <CollapsibleSidebarNav nodes={menu} />
 
       <div className={styles.footer}>
+        <div className="mb-2">
+          <LanguageSwitcher id="sidebar-language" />
+        </div>
         <button type="button" className="btn btn-outline-danger btn-sm w-100" onClick={logout}>
-          Sign out
+          {t('common:actions.signOut')}
         </button>
       </div>
     </aside>

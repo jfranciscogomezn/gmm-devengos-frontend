@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Alert, Button, Col, Form, Row, Spinner, Table } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { auditService } from '../../api/audit.service';
 import { employeesService } from '../../api/employees.service';
 import { usersService } from '../../api/users.service';
@@ -24,6 +25,7 @@ function userLabel(user: UserProfile): string {
 }
 
 export function TimeRecordAuditPage() {
+  const { t } = useTranslation(['time', 'common']);
   const today = toIsoDateString(new Date());
   const [fromDate, setFromDate] = useState(toIsoDateString(startOfMonth(new Date())));
   const [toDate, setToDate] = useState(today);
@@ -78,11 +80,11 @@ export function TimeRecordAuditPage() {
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h4 className="mb-1">Time Record Audit</h4>
-          <p className="text-muted mb-0">Admin changes to time records in the selected period.</p>
+          <h4 className="mb-1">{t('time:audit.title')}</h4>
+          <p className="text-muted mb-0">{t('time:audit.subtitle')}</p>
         </div>
         <Link to="/admin/time" className="btn btn-outline-secondary btn-sm">
-          Back to time records
+          {t('time:audit.back')}
         </Link>
       </div>
 
@@ -96,7 +98,7 @@ export function TimeRecordAuditPage() {
       <Row className="g-3 mb-4">
         <Col md={3}>
           <Form.Group controlId="audit-from-date">
-            <Form.Label>From</Form.Label>
+            <Form.Label>{t('common:labels.from')}</Form.Label>
             <Form.Control
               type="date"
               value={fromDate}
@@ -107,7 +109,7 @@ export function TimeRecordAuditPage() {
         </Col>
         <Col md={3}>
           <Form.Group controlId="audit-to-date">
-            <Form.Label>To</Form.Label>
+            <Form.Label>{t('common:labels.to')}</Form.Label>
             <Form.Control
               type="date"
               value={toDate}
@@ -119,7 +121,7 @@ export function TimeRecordAuditPage() {
         </Col>
         <Col md={3}>
           <Form.Group controlId="audit-employee">
-            <Form.Label>Employee</Form.Label>
+            <Form.Label>{t('common:labels.employee')}</Form.Label>
             <Form.Select
               value={employeeId}
               disabled={filtersLoading}
@@ -128,7 +130,7 @@ export function TimeRecordAuditPage() {
                 setEmployeeId(value === '' ? '' : Number(value));
               }}
             >
-              <option value="">All employees</option>
+              <option value="">{t('time:audit.allEmployees')}</option>
               {employees.map((employee) => (
                 <option key={employee.id} value={employee.id}>
                   {employeeLabel(employee)}
@@ -139,7 +141,7 @@ export function TimeRecordAuditPage() {
         </Col>
         <Col md={3}>
           <Form.Group controlId="audit-user">
-            <Form.Label>User (actor)</Form.Label>
+            <Form.Label>{t('time:audit.userActor')}</Form.Label>
             <Form.Select
               value={userId}
               disabled={filtersLoading}
@@ -148,7 +150,7 @@ export function TimeRecordAuditPage() {
                 setUserId(value === '' ? '' : Number(value));
               }}
             >
-              <option value="">All users</option>
+              <option value="">{t('time:audit.allUsers')}</option>
               {users.map((user) => (
                 <option key={user.id} value={user.id}>
                   {userLabel(user)}
@@ -159,7 +161,7 @@ export function TimeRecordAuditPage() {
         </Col>
         <Col xs={12} className="d-flex justify-content-end">
           <Button variant="primary" size="sm" disabled={isFetching} onClick={() => refetch()}>
-            {isFetching ? 'Refreshing…' : 'Refresh'}
+            {isFetching ? t('common:actions.refreshing') : t('common:actions.refresh')}
           </Button>
         </Col>
       </Row>
@@ -171,19 +173,19 @@ export function TimeRecordAuditPage() {
           <Spinner animation="border" role="status" />
         </div>
       ) : entries.length === 0 ? (
-        <Alert variant="info">No audit entries match the selected filters.</Alert>
+        <Alert variant="info">{t('time:audit.empty')}</Alert>
       ) : (
         <Table responsive hover size="sm" className="align-middle">
           <thead>
             <tr>
-              <th>When</th>
-              <th>Action</th>
-              <th>User</th>
-              <th>Employee</th>
-              <th>Record</th>
-              <th>Before</th>
-              <th>After</th>
-              <th>Reason</th>
+              <th>{t('time:audit.table.when')}</th>
+              <th>{t('time:audit.table.action')}</th>
+              <th>{t('time:audit.table.user')}</th>
+              <th>{t('time:audit.table.employee')}</th>
+              <th>{t('time:audit.table.record')}</th>
+              <th>{t('time:audit.table.before')}</th>
+              <th>{t('time:audit.table.after')}</th>
+              <th>{t('time:audit.table.reason')}</th>
             </tr>
           </thead>
           <tbody>
@@ -198,7 +200,9 @@ export function TimeRecordAuditPage() {
               const actorDisplay =
                 actor != null
                   ? userLabel(actor)
-                  : entry.actorEmail ?? (entry.actorUserId != null ? `User #${entry.actorUserId}` : '—');
+                  : entry.actorEmail ?? (entry.actorUserId != null
+                    ? t('time:audit.userFallback', { id: entry.actorUserId })
+                    : '—');
 
               return (
                 <tr key={entry.id}>

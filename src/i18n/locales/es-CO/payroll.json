@@ -1,0 +1,50 @@
+{
+  "title": "Configuración de nómina",
+  "sections": {
+    "salary": "Salario y subsidios",
+    "limits": "Límites de jornada",
+    "surcharges": "Factores de recargo",
+    "boundaries": "Límites horarios",
+    "rest": "Descuento de descanso",
+    "holidays": "Calendario de festivos ({{year}})"
+  },
+  "fields": {
+    "minimumWage": "Salario mínimo (mensual)",
+    "transportSubsidy": "Subsidio de transporte (mensual)",
+    "monthlyHours": "Horas laborales mensuales",
+    "normalDailyHours": "Horas diarias normales",
+    "maxDailyExtra": "Máx. horas extra diarias",
+    "daytimeOvertime": "Horas extra diurnas",
+    "nocturnalOvertime": "Horas extra nocturnas",
+    "nightSurcharge": "Recargo nocturno",
+    "sundayHolidayDaytimeOt": "H.E. diurna domingo/festivo",
+    "sundayHolidayNocturnalOt": "H.E. nocturna domingo/festivo",
+    "sundayHolidayNormal": "Domingo/festivo normal",
+    "restMinutes": "Minutos de descanso no facturables (por día)",
+    "holidayDate": "Fecha",
+    "holidayDescription": "Descripción (opcional)",
+    "holidayPlaceholder": "ej. Día de la Independencia"
+  },
+  "boundaries": {
+    "normalShift": "Turno normal",
+    "daytimeOvertime": "Horas extra diurnas",
+    "nightSurcharge": "Recargo nocturno",
+    "nocturnalOvertime": "Horas extra nocturnas",
+    "sundayHolidayOvertime": "Horas extra domingo / festivo"
+  },
+  "restHint": "Se descuenta del tiempo trabajado antes de clasificar devengados.",
+  "noConfig": "No existe configuración de nómina para {{year}}. Cree una para continuar.",
+  "noConfigSetup": "Aún no existe configuración de nómina para {{year}}. Revise los valores predeterminados y guarde para crearla.",
+  "timeRange": {
+    "start": "Inicio",
+    "end": "Fin"
+  },
+  "saved": "Configuración de nómina guardada para {{year}}.",
+  "selectHolidayDate": "Seleccione una fecha de festivo.",
+  "noHolidays": "No hay festivos configurados para {{year}}.",
+  "addHoliday": "Agregar festivo",
+  "adding": "Agregando…",
+  "saving": "Guardando…",
+  "createConfig": "Crear configuración",
+  "saveConfig": "Guardar configuración"
+}

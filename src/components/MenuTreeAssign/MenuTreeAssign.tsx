@@ -1,4 +1,5 @@
 import { Form } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import type { MenuTreeNode } from '../../types';
 import { walkMenuTree } from '../../utils/menuTree';
 
@@ -62,6 +63,8 @@ function MenuTreeAssignNode({
   onToggleModule,
   depth,
 }: MenuTreeAssignNodeProps) {
+  const { t } = useTranslation('common');
+
   if (node.type === 'ITEM') {
     const id = node.id ?? idByCode.get(node.code);
     if (id === undefined) return null;
@@ -88,7 +91,7 @@ function MenuTreeAssignNode({
         <Form.Check
           type="checkbox"
           id={`module-${node.code}`}
-          label={`Select all in ${node.label}`}
+          label={t('actions.selectAllIn', { module: node.label })}
           checked={allSelected}
           onChange={() => onToggleModule(itemIds, !allSelected)}
           className="mb-2 ms-1"
