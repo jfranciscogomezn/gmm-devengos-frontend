@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   computeDurationMinutes,
   formatDuration,
+  startOfWeek,
   toIsoDateString,
 } from '../../utils/timeFormat';
 
@@ -21,5 +22,10 @@ describe('timeFormat', () => {
   it('formats duration as hours and minutes', () => {
     expect(formatDuration(540)).toBe('9h 0m');
     expect(formatDuration(95)).toBe('1h 35m');
+  });
+
+  it('returns Monday as ISO week start', () => {
+    expect(toIsoDateString(startOfWeek(new Date(2026, 4, 30)))).toBe('2026-05-25');
+    expect(toIsoDateString(startOfWeek(new Date(2026, 5, 1)))).toBe('2026-06-01');
   });
 });

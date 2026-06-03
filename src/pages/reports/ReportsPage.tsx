@@ -1,38 +1,28 @@
 import { useMemo, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Alert, Button, Col, Form, Row, Spinner, Table } from 'react-bootstrap';
+import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import { employeesService } from '../../api/employees.service';
-import { reportsService, type TimeReportRecord } from '../../api/reports.service';
+import { reportsService } from '../../api/reports.service';
+import { ReportPeriodFilters, ReportPeriodPresets } from '../../components/reports/ReportPeriodFilters';
+import { parseIncompleteReportError } from '../../components/reports/MyTimeHistoryTable';
+import { TimeReportTable } from '../../components/reports/TimeReportTable';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
 import { getApiErrorMessage } from '../../utils/apiError';
-import { formatInstant, formatWorkDate, toIsoDateString } from '../../utils/timeFormat';
-
-function highlightClass(level: TimeReportRecord['highlightLevel']): string {
-  if (level === 'WARNING') {
-    return 'table-warning';
-  }
-  if (level === 'ALERT') {
-    return 'table-danger';
-  }
-  return '';
-}
-
-function formatMoney(value: number): string {
-  return new Intl.NumberFormat('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    maximumFractionDigits: 0,
-  }).format(value);
-}
+import { formatMoney } from '../../utils/reportDisplay';
+import {
+  buildReportQueryParams,
+  defaultReportPeriodState,
+  reportPeriodLabel,
+} from '../../utils/reportPeriod';
+import { toIsoDateString } from '../../utils/timeFormat';
 
 export function ReportsPage() {
   const { currentUser, hasPermission } = useAuth();
   const isAdmin = hasPermission('REPORTS');
   const today = toIsoDateString(new Date());
   const [employeeId, setEmployeeId] = useState<number | ''>('');
-  const [month, setMonth] = useState(today.slice(0, 7));
+  const [period, setPeriod] = useState(() => defaultReportPeriodState(today));
   const [uncapped, setUncapped] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
 
@@ -42,10 +32,13 @@ export function ReportsPage() {
     enabled: isAdmin,
   });
 
-  const queryParams = useMemo(() => {
-    const base = { month, ...(isAdmin && employeeId !== '' ? { employeeId } : {}) };
-    return base;
-  }, [month, isAdmin, employeeId]);
+  const queryParams = useMemo(
+    () => ({
+      ...buildReportQueryParams(period),
+      ...(isAdmin && employeeId !== '' ? { employeeId } : {}),
+    }),
+    [period, isAdmin, employeeId]
+  );
 
   const reportQuery = useQuery({
     queryKey: ['reports', 'time', uncapped, queryParams],
@@ -74,14 +67,7 @@ export function ReportsPage() {
     onError: (error) => setExportError(getApiErrorMessage(error, 'report export')),
   });
 
-  const incompleteDates = axios.isAxiosError(reportQuery.error)
-    && reportQuery.error.response?.status === 409
-    && typeof reportQuery.error.response.data === 'object'
-    && reportQuery.error.response.data !== null
-    && 'incompleteDates' in reportQuery.error.response.data
-    ? (reportQuery.error.response.data as { incompleteDates: string[] }).incompleteDates
-    : null;
-
+  const incompleteDates = parseIncompleteReportError(reportQuery.error);
   const report = reportQuery.data;
   const totalEarnings = report
     ? (report.capped ? report.totalCappedEarnings : report.totalUncappedEarnings)
@@ -94,12 +80,14 @@ export function ReportsPage() {
         <Button
           size="sm"
           variant="outline-success"
-          disabled={!report || exportMutation.isPending || (!isAdmin && false)}
+          disabled={!report || exportMutation.isPending}
           onClick={() => exportMutation.mutate()}
         >
           {exportMutation.isPending ? 'Exporting…' : 'Export Excel'}
         </Button>
       </div>
+
+      <ReportPeriodPresets today={today} onApply={setPeriod} />
 
       <Row className="g-3 mb-4">
         {isAdmin && (
@@ -123,12 +111,12 @@ export function ReportsPage() {
             </Form.Group>
           </Col>
         )}
-        <Col md={3}>
-          <Form.Group controlId="reports-month">
-            <Form.Label>Month</Form.Label>
-            <Form.Control type="month" value={month} onChange={(event) => setMonth(event.target.value)} />
-          </Form.Group>
-        </Col>
+        <ReportPeriodFilters
+          idPrefix="reports"
+          today={today}
+          period={period}
+          onChange={setPeriod}
+        />
         {isAdmin && (
           <Col md={3} className="d-flex align-items-end">
             <Form.Check
@@ -168,51 +156,10 @@ export function ReportsPage() {
       {report && (
         <>
           <p className="text-muted mb-3">
-            {report.employeeName} · {uncapped ? 'Uncapped' : 'Capped'} view · Total: {formatMoney(totalEarnings)}
+            {report.employeeName} · {reportPeriodLabel(period)} ·{' '}
+            {uncapped ? 'Uncapped' : 'Capped'} view · Total: {formatMoney(totalEarnings)}
           </p>
-          <Table striped hover responsive>
-            <thead className="table-dark">
-              <tr>
-                <th>Date</th>
-                <th>Clock in</th>
-                <th>Clock out</th>
-                <th>Normal (min)</th>
-                <th>Daytime OT (min)</th>
-                <th>Earnings</th>
-                <th>Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {report.records.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="text-center text-muted py-4">No closed records in this period.</td>
-                </tr>
-              ) : (
-                report.records.map((record) => {
-                  const minutes = uncapped ? record.classifiedMinutes : record.cappedMinutes;
-                  const earnings = uncapped ? record.uncappedEarnings : record.cappedEarnings;
-                  return (
-                    <tr key={record.timeRecordId} className={highlightClass(record.highlightLevel)}>
-                      <td>{formatWorkDate(record.workDate)}</td>
-                      <td>{formatInstant(record.clockIn)}</td>
-                      <td>{formatInstant(record.clockOut)}</td>
-                      <td>{minutes.normal}</td>
-                      <td>{minutes.daytimeOt}</td>
-                      <td>{formatMoney(earnings)}</td>
-                      <td>
-                        {record.corrected && record.correctionReason && (
-                          <span className="badge bg-secondary me-1">Corrected</span>
-                        )}
-                        {record.highlightLevel === 'ALERT' && (
-                          <span className="badge bg-danger">Extended hours</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </Table>
+          <TimeReportTable records={report.records} uncapped={uncapped} />
         </>
       )}
     </div>
