@@ -21,6 +21,7 @@ import { AdminTimeRecordsPage } from './pages/time/AdminTimeRecordsPage';
 import { ReportsPage } from './pages/reports/ReportsPage';
 import { PayrollConfigPage } from './pages/payroll/PayrollConfigPage';
 import { IncompleteTimeRecordsBanner } from './components/time/IncompleteTimeRecordsBanner';
+import { AdminNotificationsBanner } from './components/notifications/AdminNotificationsBanner';
 import { useAuth } from './context/AuthContext';
 
 const queryClient = new QueryClient({
@@ -36,6 +37,7 @@ function DashboardPlaceholder() {
     <div>
       <h4>Dashboard</h4>
       <p className="text-muted">Welcome to StepCore.</p>
+      {hasPermission('TIME_RECORDS_ADMIN') && <AdminNotificationsBanner />}
       {hasPermission('MY_TIME') && <IncompleteTimeRecordsBanner />}
     </div>
   );
