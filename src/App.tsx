@@ -19,6 +19,7 @@ import { UserDetailPage } from './pages/access/UserDetailPage';
 import { MyTimePage } from './pages/time/MyTimePage';
 import { AdminTimeRecordsPage } from './pages/time/AdminTimeRecordsPage';
 import { ReportsPage } from './pages/reports/ReportsPage';
+import { PayrollConfigPage } from './pages/payroll/PayrollConfigPage';
 import { IncompleteTimeRecordsBanner } from './components/time/IncompleteTimeRecordsBanner';
 import { useAuth } from './context/AuthContext';
 
@@ -167,6 +168,14 @@ export default function App() {
                 element={
                   <ProtectedRoute requirePermission="EMPLOYEE_CONFIG">
                     <EmployeeFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/config"
+                element={
+                  <ProtectedRoute requirePermission="PAYROLL_CONFIG">
+                    <PayrollConfigPage />
                   </ProtectedRoute>
                 }
               />

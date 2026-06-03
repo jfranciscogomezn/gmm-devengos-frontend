@@ -213,3 +213,42 @@ export interface TimeRecord {
   status: TimeRecordStatus;
   corrected: boolean;
 }
+
+export interface PayrollConfigResponse {
+  year: number;
+  minimumWage: number;
+  transportSubsidy: number;
+  monthlyWorkHours: number;
+  normalDailyHours: number;
+  maxDailyExtraHours: number;
+  daytimeStart: string;
+  daytimeEnd: string;
+  daytimeOtStart: string;
+  daytimeOtEnd: string;
+  nightSurchargeStart: string;
+  nightSurchargeEnd: string;
+  nocturnalOtStart: string;
+  nocturnalOtEnd: string;
+  sundayOtStart: string;
+  sundayOtEnd: string;
+  daytimeOtFactor: number;
+  nocturnalOtFactor: number;
+  nightSurchargeFactor: number;
+  sundayHolidayDaytimeOtFactor: number;
+  sundayHolidayNocturnalOtFactor: number;
+  sundayHolidayNormalFactor: number;
+  nonBillableRestMinutes: number;
+}
+
+export type PayrollConfigRequest = Omit<PayrollConfigResponse, 'year'>;
+
+export interface Holiday {
+  id: number;
+  date: string;
+  description: string | null;
+}
+
+export interface CreateHolidayRequest {
+  date: string;
+  description?: string;
+}
