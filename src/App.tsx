@@ -18,6 +18,7 @@ import { RoleDetailPage } from './pages/access/RoleDetailPage';
 import { UserDetailPage } from './pages/access/UserDetailPage';
 import { MyTimePage } from './pages/time/MyTimePage';
 import { AdminTimeRecordsPage } from './pages/time/AdminTimeRecordsPage';
+import { ReportsPage } from './pages/reports/ReportsPage';
 import { IncompleteTimeRecordsBanner } from './components/time/IncompleteTimeRecordsBanner';
 import { useAuth } from './context/AuthContext';
 
@@ -207,6 +208,22 @@ export default function App() {
                 element={
                   <ProtectedRoute requirePermission="TIME_RECORDS_ADMIN">
                     <AdminTimeRecordsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="reports"
+                element={
+                  <ProtectedRoute requirePermission="REPORTS">
+                    <ReportsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="my/reports"
+                element={
+                  <ProtectedRoute requirePermission="MY_TIME">
+                    <ReportsPage />
                   </ProtectedRoute>
                 }
               />
