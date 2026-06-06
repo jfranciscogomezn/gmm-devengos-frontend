@@ -1,5 +1,24 @@
 {
   "title": "Panel",
   "welcome": "Bienvenido a StepCore.",
-  "platformConsole": "Consola de plataforma"
+  "welcomeUser": "Hola, {{name}} — {{company}}",
+  "platformConsole": "Consola de plataforma",
+  "platformSubtitle": "Administre inquilinos y la plataforma SaaS.",
+  "quickActions": "Accesos rápidos",
+  "emptyModules": "Use el menú lateral para acceder a los módulos disponibles.",
+  "stats": {
+    "todayStatus": "Estado de hoy",
+    "noRecordToday": "Sin registro",
+    "clockedInAt": "Entrada: {{time}}",
+    "clockHint": "Registre entrada desde Mi tiempo",
+    "myIncomplete": "Mis incompletos",
+    "incompleteHint": "Requiere atención del administrador",
+    "allClear": "Todo al día",
+    "teamIncomplete": "Incompletos del equipo",
+    "teamIncompleteHint": "Pendientes de resolución",
+    "employees": "Empleados",
+    "employeesHint": "Activos en la empresa",
+    "activeTenants": "Inquilinos activos",
+    "tenantsHint": "{{total}} inquilinos en total"
+  }
 }

@@ -53,9 +53,9 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
 
       <div className={styles.footer}>
         <div className="mb-2">
-          <LanguageSwitcher id="sidebar-language" />
+          <LanguageSwitcher id="sidebar-language" variant="dark" />
         </div>
-        <button type="button" className="btn btn-outline-danger btn-sm w-100" onClick={logout}>
+        <button type="button" className={styles.signOutBtn} onClick={logout}>
           {t('common:actions.signOut')}
         </button>
       </div>

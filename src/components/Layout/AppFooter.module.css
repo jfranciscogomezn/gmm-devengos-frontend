@@ -6,19 +6,19 @@
   flex-wrap: wrap;
   gap: 0.35rem 0.5rem;
   padding: 0.65rem 1.25rem;
-  background: #f1f5f9;
-  border-top: 1px solid #e2e8f0;
-  color: #64748b;
+  background: var(--sc-bg-muted);
+  border-top: 1px solid var(--sc-border);
+  color: var(--sc-text-muted);
   font-size: 0.75rem;
 }
 
 .version {
   font-weight: 500;
-  color: #475569;
+  color: var(--sc-navy-700);
 }
 
 .separator {
-  color: #cbd5e1;
+  color: var(--sc-border-strong);
 }
 
 .copyright {

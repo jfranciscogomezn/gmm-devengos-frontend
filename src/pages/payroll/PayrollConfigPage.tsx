@@ -426,7 +426,7 @@ export function PayrollConfigPage() {
             />
           ) : (
             <Table striped hover responsive className="mb-0">
-              <thead className="table-dark">
+              <thead>
                 <tr>
                   <th>{t('payroll:fields.holidayDate')}</th>
                   <th>{t('common:labels.description')}</th>

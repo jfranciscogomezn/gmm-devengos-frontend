@@ -1,5 +1,24 @@
 {
   "title": "Dashboard",
   "welcome": "Welcome to StepCore.",
-  "platformConsole": "Platform Console"
+  "welcomeUser": "Hello, {{name}} — {{company}}",
+  "platformConsole": "Platform Console",
+  "platformSubtitle": "Manage tenants and the SaaS platform.",
+  "quickActions": "Quick actions",
+  "emptyModules": "Use the sidebar to access your available modules.",
+  "stats": {
+    "todayStatus": "Today's status",
+    "noRecordToday": "No record",
+    "clockedInAt": "Clock-in: {{time}}",
+    "clockHint": "Clock in from My Time",
+    "myIncomplete": "My incomplete",
+    "incompleteHint": "Requires admin attention",
+    "allClear": "All clear",
+    "teamIncomplete": "Team incomplete",
+    "teamIncompleteHint": "Pending resolution",
+    "employees": "Employees",
+    "employeesHint": "Active in company",
+    "activeTenants": "Active tenants",
+    "tenantsHint": "{{total}} tenants total"
+  }
 }

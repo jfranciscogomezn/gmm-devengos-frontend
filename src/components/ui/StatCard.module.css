@@ -1,0 +1,61 @@
+.card {
+  background: var(--sc-bg-surface);
+  border: 1px solid var(--sc-border);
+  border-radius: var(--sc-radius-md);
+  padding: 1.25rem 1.35rem;
+  box-shadow: var(--sc-shadow-sm);
+  min-height: 7.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sc-text-muted);
+}
+
+.icon {
+  color: var(--sc-text-muted);
+  opacity: 0.85;
+}
+
+.value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--sc-text-muted);
+  line-height: 1.4;
+}
+
+.gold .value {
+  color: var(--sc-gold);
+}
+
+.navy .value {
+  color: var(--sc-navy-700);
+}
+
+.success .value {
+  color: #15803d;
+}
+
+.warning .value {
+  color: #b45309;
+}

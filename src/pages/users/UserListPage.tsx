@@ -57,7 +57,7 @@ export function UserListPage() {
       {actionError && <Alert variant="danger" dismissible onClose={() => setActionError('')}>{actionError}</Alert>}
 
       <Table striped hover responsive>
-        <thead className="table-dark">
+        <thead>
           <tr>
             <th>#</th>
             <th>{t('common:labels.name')}</th>

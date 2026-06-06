@@ -36,7 +36,7 @@ export function MyTimeHistoryTable({
       )}
 
       <Table striped hover responsive>
-        <thead className="table-dark">
+        <thead>
           <tr>
             <th>{t('common:labels.date')}</th>
             <th>{t('time:admin.table.clockIn')}</th>

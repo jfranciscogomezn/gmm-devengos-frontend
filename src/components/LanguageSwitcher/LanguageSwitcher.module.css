@@ -1,0 +1,17 @@
+.dark {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #e2e8f0;
+}
+
+.dark:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(201, 162, 39, 0.45);
+  color: #f8fafc;
+  box-shadow: 0 0 0 0.2rem rgba(201, 162, 39, 0.15);
+}
+
+.dark option {
+  color: var(--sc-text);
+  background: var(--sc-bg-surface);
+}

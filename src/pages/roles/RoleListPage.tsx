@@ -44,7 +44,7 @@ export function RoleListPage() {
       </div>
 
       <Table striped hover responsive>
-        <thead className="table-dark">
+        <thead>
           <tr>
             <th>#</th>
             <th>{t('common:labels.name')}</th>
