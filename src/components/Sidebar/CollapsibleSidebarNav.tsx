@@ -52,7 +52,7 @@ export function CollapsibleSidebarNav({ nodes }: CollapsibleSidebarNavProps) {
   };
 
   return (
-    <nav className={styles.nav}>
+    <div className={styles.navSection}>
       {nodes.map((node) => (
         <SidebarNavNode
           key={node.code}
@@ -62,7 +62,7 @@ export function CollapsibleSidebarNav({ nodes }: CollapsibleSidebarNavProps) {
           onToggle={toggle}
         />
       ))}
-    </nav>
+    </div>
   );
 }
 

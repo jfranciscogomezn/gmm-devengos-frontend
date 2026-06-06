@@ -1,25 +1,28 @@
+import { type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Col, Row, Spinner } from 'react-bootstrap';
+import { Col, Row, Spinner, Table } from 'react-bootstrap';
 import {
   Building,
   Calendar3,
+  ClockHistory,
   ExclamationTriangle,
   People,
-  Person,
 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
+import { auditService } from '../../api/audit.service';
 import { employeesService } from '../../api/employees.service';
+import { notificationsService } from '../../api/notifications.service';
 import { platformService } from '../../api/platform.service';
 import { timeService } from '../../api/time.service';
-import { AdminNotificationsBanner } from '../../components/notifications/AdminNotificationsBanner';
-import { PageHeader } from '../../components/ui/PageHeader';
-import { StatCard } from '../../components/ui/StatCard';
 import { IncompleteTimeRecordsBanner } from '../../components/time/IncompleteTimeRecordsBanner';
 import { TimeRecordStatusBadge } from '../../components/time/TimeRecordStatusBadge';
+import { StatCard } from '../../components/ui/StatCard';
 import { useAuth } from '../../context/AuthContext';
 import { menuLabel } from '../../i18n/menuLabel';
 import type { MenuTreeNode, TimeRecord } from '../../types';
+import { formatAuditAction } from '../../utils/auditDisplay';
+import { formatDashboardDate, getGreetingPeriod } from '../../utils/dashboardGreeting';
 import { flattenMenuItems } from '../../utils/flattenMenuItems';
 import { menuNodeIcon } from '../../utils/menuIcons';
 import { formatInstant, toIsoDateString } from '../../utils/timeFormat';
@@ -44,11 +47,16 @@ function QuickActionLink({ node }: { node: MenuTreeNode }) {
   );
 }
 
+function teamInitials(firstName: string, lastName: string): string {
+  return `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase();
+}
+
 export function DashboardPage() {
-  const { t } = useTranslation(['dashboard', 'common', 'time']);
+  const { t, i18n } = useTranslation(['dashboard', 'common', 'time']);
   const { currentUser, tenant, isPlatformAdmin, hasPermission, menu } = useAuth();
   const today = toIsoDateString(new Date());
   const firstName = currentUser?.firstName ?? '';
+  const greetingPeriod = getGreetingPeriod();
 
   const { data: todayRecords = [], isLoading: todayLoading } = useQuery({
     queryKey: ['time-records', 'mine', 'today', today],
@@ -84,116 +92,237 @@ export function DashboardPage() {
     staleTime: 120_000,
   });
 
+  const { data: recentAudit = [], isLoading: auditLoading } = useQuery({
+    queryKey: ['audit', 'time-records', 'dashboard'],
+    queryFn: () => auditService.listTimeRecords({ limit: 5 }),
+    enabled: hasPermission('TIME_RECORD_AUDIT') || hasPermission('TIME_RECORDS_ADMIN'),
+    staleTime: 60_000,
+  });
+
+  const { data: notifications = [] } = useQuery({
+    queryKey: ['notifications', 'dashboard'],
+    queryFn: notificationsService.listRecent,
+    enabled: hasPermission('TIME_RECORDS_ADMIN'),
+    staleTime: 60_000,
+  });
+
   const todayRecord = findTodayRecord(todayRecords, today);
   const quickLinks = flattenMenuItems(menu).filter((node) => node.route !== '/dashboard');
   const activeTenants = tenants.filter((item) => item.status === 'ACTIVE').length;
+  const incompleteCount = hasPermission('TIME_RECORDS_ADMIN') ? adminIncomplete.length : myIncomplete.length;
 
-  const welcomeSubtitle = isPlatformAdmin
-    ? t('dashboard:platformSubtitle')
-    : t('dashboard:welcomeUser', { name: firstName, company: tenant?.name ?? t('common:appName') });
+  const kpiCards: ReactNode[] = [];
+
+  if (hasPermission('MY_TIME')) {
+    kpiCards.push(
+      <Col key="today" xs={12} md={4}>
+        <StatCard
+          label={t('dashboard:stats.todayRecords')}
+          icon={<Calendar3 size={16} />}
+          iconTone="navy"
+          value={
+            todayLoading ? (
+              <Spinner size="sm" />
+            ) : todayRecord ? (
+              <TimeRecordStatusBadge status={todayRecord.status} />
+            ) : (
+              '—'
+            )
+          }
+          trend={
+            todayRecord
+              ? { label: t('dashboard:stats.active'), tone: 'up' }
+              : { label: t('dashboard:stats.pending'), tone: 'neutral' }
+          }
+          hint={
+            todayRecord?.clockIn
+              ? t('dashboard:stats.clockedInAt', { time: formatInstant(todayRecord.clockIn) })
+              : t('dashboard:stats.clockHint')
+          }
+        />
+      </Col>,
+    );
+  }
+
+  if (hasPermission('MY_TIME') || hasPermission('TIME_RECORDS_ADMIN')) {
+    kpiCards.push(
+      <Col key="incomplete" xs={12} md={4}>
+        <StatCard
+          label={t('dashboard:stats.incomplete')}
+          icon={<ExclamationTriangle size={16} />}
+          iconTone="warning"
+          accent={incompleteCount > 0 ? 'warning' : 'success'}
+          value={incompleteCount}
+          trend={
+            incompleteCount > 0
+              ? { label: t('dashboard:stats.actionNeeded'), tone: 'down' }
+              : { label: t('dashboard:stats.allClear'), tone: 'up' }
+          }
+        />
+      </Col>,
+    );
+  }
+
+  if (hasPermission('EMPLOYEE_CONFIG')) {
+    kpiCards.push(
+      <Col key="employees" xs={12} md={4}>
+        <StatCard
+          label={t('dashboard:stats.teamHours')}
+          icon={<People size={16} />}
+          iconTone="gold"
+          accent="gold"
+          value={employees.length}
+          trend={{ label: t('dashboard:stats.employeesHint'), tone: 'neutral' }}
+        />
+      </Col>,
+    );
+  } else if (isPlatformAdmin) {
+    kpiCards.push(
+      <Col key="tenants" xs={12} md={4}>
+        <StatCard
+          label={t('dashboard:stats.activeTenants')}
+          icon={<Building size={16} />}
+          iconTone="gold"
+          accent="gold"
+          value={activeTenants}
+          trend={{ label: t('dashboard:stats.tenantsHint', { total: tenants.length }), tone: 'neutral' }}
+        />
+      </Col>,
+    );
+  }
 
   return (
     <div className={styles.page}>
-      <PageHeader title={t('dashboard:title')} subtitle={welcomeSubtitle} />
+      <header className={styles.hero}>
+        <div>
+          <h1 className={styles.greeting}>
+            {t(`dashboard:greeting.${greetingPeriod}`, { name: firstName })}
+          </h1>
+          {!isPlatformAdmin && tenant && (
+            <p className={styles.companyLine}>{tenant.name}</p>
+          )}
+        </div>
+        <time className={styles.dateLine} dateTime={today}>
+          {formatDashboardDate(new Date(), i18n.language)}
+        </time>
+      </header>
 
-      <Row className="g-3 mb-4">
-        {hasPermission('MY_TIME') && (
-          <Col xs={12} sm={6} xl={3}>
-            <StatCard
-              label={t('dashboard:stats.todayStatus')}
-              accent="navy"
-              icon={<Calendar3 size={18} />}
-              value={
-                todayLoading ? (
-                  <Spinner size="sm" />
-                ) : todayRecord ? (
-                  <TimeRecordStatusBadge status={todayRecord.status} />
-                ) : (
-                  t('dashboard:stats.noRecordToday')
-                )
-              }
-              hint={
-                todayRecord?.clockIn
-                  ? t('dashboard:stats.clockedInAt', { time: formatInstant(todayRecord.clockIn) })
-                  : t('dashboard:stats.clockHint')
-              }
-            />
-          </Col>
-        )}
+      {kpiCards.length > 0 && <Row className="g-3 mb-4">{kpiCards.slice(0, 3)}</Row>}
 
-        {hasPermission('MY_TIME') && (
-          <Col xs={12} sm={6} xl={3}>
-            <StatCard
-              label={t('dashboard:stats.myIncomplete')}
-              accent={myIncomplete.length > 0 ? 'warning' : 'success'}
-              icon={<ExclamationTriangle size={18} />}
-              value={myIncomplete.length}
-              hint={
-                myIncomplete.length > 0
-                  ? t('dashboard:stats.incompleteHint')
-                  : t('dashboard:stats.allClear')
-              }
-            />
-          </Col>
-        )}
-
-        {hasPermission('TIME_RECORDS_ADMIN') && (
-          <Col xs={12} sm={6} xl={3}>
-            <StatCard
-              label={t('dashboard:stats.teamIncomplete')}
-              accent={adminIncomplete.length > 0 ? 'warning' : 'success'}
-              icon={<ExclamationTriangle size={18} />}
-              value={adminIncomplete.length}
-              hint={t('dashboard:stats.teamIncompleteHint')}
-            />
-          </Col>
-        )}
-
-        {hasPermission('EMPLOYEE_CONFIG') && (
-          <Col xs={12} sm={6} xl={3}>
-            <StatCard
-              label={t('dashboard:stats.employees')}
-              accent="gold"
-              icon={<People size={18} />}
-              value={employees.length}
-              hint={t('dashboard:stats.employeesHint')}
-            />
-          </Col>
-        )}
-
-        {isPlatformAdmin && (
-          <Col xs={12} sm={6} xl={3}>
-            <StatCard
-              label={t('dashboard:stats.activeTenants')}
-              accent="gold"
-              icon={<Building size={18} />}
-              value={activeTenants}
-              hint={t('dashboard:stats.tenantsHint', { total: tenants.length })}
-            />
-          </Col>
-        )}
-      </Row>
-
-      {hasPermission('TIME_RECORDS_ADMIN') && <AdminNotificationsBanner />}
       {hasPermission('MY_TIME') && <IncompleteTimeRecordsBanner />}
 
-      {quickLinks.length > 0 && (
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>{t('dashboard:quickActions')}</h2>
-          <div className={styles.quickGrid}>
-            {quickLinks.map((node) => (
-              <QuickActionLink key={node.code} node={node} />
-            ))}
-          </div>
-        </section>
-      )}
+      <Row className="g-4">
+        <Col lg={8}>
+          {quickLinks.length > 0 && (
+            <section className={styles.panel}>
+              <h2 className={styles.panelTitle}>{t('dashboard:quickActions')}</h2>
+              <div className={styles.quickGrid}>
+                {quickLinks.slice(0, 8).map((node) => (
+                  <QuickActionLink key={node.code} node={node} />
+                ))}
+              </div>
+            </section>
+          )}
 
-      {!hasPermission('MY_TIME') && !hasPermission('TIME_RECORDS_ADMIN') && !isPlatformAdmin && (
-        <div className={styles.emptyHint}>
-          <Person size={28} className="mb-2 text-muted" />
-          <p className="mb-0 text-muted">{t('dashboard:emptyModules')}</p>
-        </div>
-      )}
+          {(hasPermission('TIME_RECORD_AUDIT') || hasPermission('TIME_RECORDS_ADMIN')) && (
+            <section className={`${styles.panel} mt-4`}>
+              <div className={styles.panelHeader}>
+                <h2 className={styles.panelTitle}>{t('dashboard:recentActivity')}</h2>
+                {hasPermission('TIME_RECORD_AUDIT') && (
+                  <Link to="/admin/time/audit" className={styles.panelLink}>
+                    {t('dashboard:viewAll')}
+                  </Link>
+                )}
+              </div>
+              {auditLoading ? (
+                <div className="text-center py-4"><Spinner size="sm" /></div>
+              ) : (
+                <div className="table-responsive">
+                  <Table hover className="mb-0">
+                    <thead>
+                      <tr>
+                        <th>{t('dashboard:activityCol')}</th>
+                        <th>{t('dashboard:timeCol')}</th>
+                        <th>{t('dashboard:actorCol')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recentAudit.map((entry) => (
+                        <tr key={entry.id}>
+                          <td>{formatAuditAction(entry.action)}</td>
+                          <td className="text-muted small">{formatInstant(entry.createdAt)}</td>
+                          <td className="text-muted small">{entry.actorEmail ?? '—'}</td>
+                        </tr>
+                      ))}
+                      {recentAudit.length === 0 && (
+                        <tr>
+                          <td colSpan={3} className="text-center text-muted py-4">
+                            {t('dashboard:noActivity')}
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </Table>
+                </div>
+              )}
+            </section>
+          )}
+        </Col>
+
+        <Col lg={4}>
+          {hasPermission('TIME_RECORDS_ADMIN') && notifications.length > 0 && (
+            <section className={styles.panel}>
+              <h2 className={styles.panelTitle}>{t('dashboard:announcements')}</h2>
+              <ul className={styles.feed}>
+                {notifications.slice(0, 3).map((item) => (
+                  <li key={item.id} className={styles.feedItem}>
+                    <span className={styles.feedTitle}>{item.title}</span>
+                    <span className={styles.feedMeta}>{formatInstant(item.createdAt)}</span>
+                    <p className={styles.feedBody}>{item.message}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {hasPermission('EMPLOYEE_CONFIG') && employees.length > 0 && (
+            <section className={`${styles.panel} ${notifications.length > 0 ? 'mt-4' : ''}`}>
+              <div className={styles.panelHeader}>
+                <h2 className={styles.panelTitle}>{t('dashboard:yourTeam')}</h2>
+                <Link to="/admin/employees" className={styles.panelLink}>
+                  {t('dashboard:viewAll')}
+                </Link>
+              </div>
+              <ul className={styles.teamList}>
+                {employees.slice(0, 5).map((employee) => (
+                  <li key={employee.id} className={styles.teamMember}>
+                    <span className={styles.teamAvatar}>
+                      {teamInitials(employee.firstName, employee.lastName)}
+                    </span>
+                    <span className={styles.teamMeta}>
+                      <span className={styles.teamName}>
+                        {employee.firstName} {employee.lastName}
+                      </span>
+                      <span className={styles.teamEmail}>{employee.email}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {hasPermission('TIME_RECORDS_ADMIN') && !hasPermission('EMPLOYEE_CONFIG') && (
+            <section className={styles.panel}>
+              <h2 className={styles.panelTitle}>{t('dashboard:adminTips')}</h2>
+              <p className={styles.tipText}>{t('dashboard:adminTipsBody')}</p>
+              <Link to="/admin/time" className={styles.panelLink}>
+                <ClockHistory size={14} className="me-1" />
+                {t('dashboard:goToTimeAdmin')}
+              </Link>
+            </section>
+          )}
+        </Col>
+      </Row>
     </div>
   );
 }
