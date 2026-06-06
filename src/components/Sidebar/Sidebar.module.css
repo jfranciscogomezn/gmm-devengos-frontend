@@ -88,9 +88,15 @@
 }
 
 .linkActive {
-  background: rgba(196, 162, 101, 0.22) !important;
-  color: #fef9e7 !important;
+  background: linear-gradient(90deg, #e6a817 0%, #d4920a 100%) !important;
+  color: #0f172a !important;
   font-weight: 600;
+  box-shadow: 0 2px 8px rgba(230, 168, 23, 0.25);
+}
+
+.linkActive .icon {
+  color: #0f172a;
+  opacity: 1;
 }
 
 .navNode {
@@ -156,6 +162,18 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   margin-top: auto;
   flex-shrink: 0;
+}
+
+.tenantName {
+  margin: 0 0 0.5rem 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .userProfile {

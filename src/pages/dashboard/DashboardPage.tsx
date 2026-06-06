@@ -12,9 +12,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { auditService } from '../../api/audit.service';
 import { employeesService } from '../../api/employees.service';
-import { notificationsService } from '../../api/notifications.service';
 import { platformService } from '../../api/platform.service';
 import { timeService } from '../../api/time.service';
+import { AnnouncementsPanel } from '../../components/dashboard/AnnouncementsPanel';
 import { IncompleteTimeRecordsBanner } from '../../components/time/IncompleteTimeRecordsBanner';
 import { TimeRecordStatusBadge } from '../../components/time/TimeRecordStatusBadge';
 import { StatCard } from '../../components/ui/StatCard';
@@ -96,13 +96,6 @@ export function DashboardPage() {
     queryKey: ['audit', 'time-records', 'dashboard'],
     queryFn: () => auditService.listTimeRecords({ limit: 5 }),
     enabled: hasPermission('TIME_RECORD_AUDIT') || hasPermission('TIME_RECORDS_ADMIN'),
-    staleTime: 60_000,
-  });
-
-  const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications', 'dashboard'],
-    queryFn: notificationsService.listRecent,
-    enabled: hasPermission('TIME_RECORDS_ADMIN'),
     staleTime: 60_000,
   });
 
@@ -270,23 +263,10 @@ export function DashboardPage() {
         </Col>
 
         <Col lg={4}>
-          {hasPermission('TIME_RECORDS_ADMIN') && notifications.length > 0 && (
-            <section className={styles.panel}>
-              <h2 className={styles.panelTitle}>{t('dashboard:announcements')}</h2>
-              <ul className={styles.feed}>
-                {notifications.slice(0, 3).map((item) => (
-                  <li key={item.id} className={styles.feedItem}>
-                    <span className={styles.feedTitle}>{item.title}</span>
-                    <span className={styles.feedMeta}>{formatInstant(item.createdAt)}</span>
-                    <p className={styles.feedBody}>{item.message}</p>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
+          <AnnouncementsPanel />
 
           {hasPermission('EMPLOYEE_CONFIG') && employees.length > 0 && (
-            <section className={`${styles.panel} ${notifications.length > 0 ? 'mt-4' : ''}`}>
+            <section className={`${styles.panel} mt-4`}>
               <div className={styles.panelHeader}>
                 <h2 className={styles.panelTitle}>{t('dashboard:yourTeam')}</h2>
                 <Link to="/admin/employees" className={styles.panelLink}>
@@ -312,7 +292,7 @@ export function DashboardPage() {
           )}
 
           {hasPermission('TIME_RECORDS_ADMIN') && !hasPermission('EMPLOYEE_CONFIG') && (
-            <section className={styles.panel}>
+            <section className={`${styles.panel} mt-4`}>
               <h2 className={styles.panelTitle}>{t('dashboard:adminTips')}</h2>
               <p className={styles.tipText}>{t('dashboard:adminTipsBody')}</p>
               <Link to="/admin/time" className={styles.panelLink}>

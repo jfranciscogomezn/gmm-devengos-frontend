@@ -25,8 +25,9 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
         <div className={styles.brandHeader}>
           <BrandMark
             variant="dark"
+            size="sidebar"
             showSubtitle
-            subtitle={isPlatformAdmin ? t('dashboard:platformConsole') : (tenant?.name ?? t('auth:productLine'))}
+            subtitle={t('auth:productLine')}
           />
           <button
             type="button"
@@ -42,6 +43,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
       <nav className={styles.nav}>
         <NavLink
           to="/dashboard"
+          end
           className={({ isActive }) => `${styles.link} ${isActive ? styles.linkActive : ''}`}
         >
           <span className={styles.icon}><Speedometer2 size={18} /></span>
@@ -52,6 +54,9 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
 
       {currentUser && (
         <div className={styles.userFooter}>
+          {tenant && !isPlatformAdmin && (
+            <p className={styles.tenantName}>{tenant.name}</p>
+          )}
           <Link to="/my/profile" className={styles.userProfile}>
             <span className={styles.avatar}>
               {userInitials(currentUser.firstName, currentUser.lastName)}

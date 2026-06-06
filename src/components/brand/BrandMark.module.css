@@ -5,10 +5,38 @@
   min-width: 0;
 }
 
+.sidebarMark {
+  gap: 0.55rem;
+}
+
 .inline .icon {
   flex-shrink: 0;
+}
+
+.hexSidebar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #e8d48a 0%, #c9a227 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.28);
+}
+
+.hexLetter {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+  font-family: var(--sc-font, Inter, system-ui, sans-serif);
+  margin-top: -1px;
+}
+
+.hexDefault {
   width: 36px;
   height: 39px;
+  display: block;
 }
 
 .hero {
@@ -18,8 +46,14 @@
 }
 
 .hero .icon {
+  width: auto;
+  height: auto;
+}
+
+.hexHero {
   width: 72px;
   height: 78px;
+  display: block;
 }
 
 .hero .name {
@@ -44,7 +78,7 @@
 }
 
 .name {
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -71,12 +105,12 @@
 }
 
 .subtitle {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   color: var(--sc-gold-light);
-  margin-top: 0.15rem;
+  margin-top: 0.12rem;
 }
 
 .light .subtitle {

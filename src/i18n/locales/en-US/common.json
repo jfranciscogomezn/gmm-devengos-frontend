@@ -75,6 +75,10 @@
     "hideNavigation": "Hide navigation menu"
   },
   "footer": {
+    "copyright": "© {{year}} StepCore SAS. All rights reserved.",
+    "terms": "Terms & conditions",
+    "privacy": "Privacy policy",
+    "madeIn": "Made with ❤️ in Colombia",
     "version": "Version {{version}}"
   },
   "language": {

@@ -6,7 +6,29 @@
   "platformSubtitle": "Administre inquilinos y la plataforma SaaS.",
   "quickActions": "Accesos rápidos",
   "recentActivity": "Actividad reciente",
-  "announcements": "Anuncios",
+  "announcements": {
+    "title": "Anuncios",
+    "items": [
+      {
+        "id": "dian-update",
+        "title": "Nuevo: actualización de validación DIAN",
+        "body": "Se ajustaron reglas de validación para reportes de nómina. Revise la configuración del periodo.",
+        "dateLabel": "10 may 2026"
+      },
+      {
+        "id": "maintenance",
+        "title": "Mantenimiento programado",
+        "body": "Ventana de mantenimiento el domingo 02:00–04:00 COT. El servicio puede interrumpirse brevemente.",
+        "dateLabel": "8 may 2026"
+      },
+      {
+        "id": "welcome",
+        "title": "Bienvenido a StepCore",
+        "body": "Explore accesos rápidos y el panel de actividad para comenzar con su equipo.",
+        "dateLabel": "1 may 2026"
+      }
+    ]
+  },
   "yourTeam": "Su equipo",
   "viewAll": "Ver todo",
   "activityCol": "Actividad",
