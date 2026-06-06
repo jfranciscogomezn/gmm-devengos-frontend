@@ -18,12 +18,12 @@
 }
 
 .hero .icon {
-  width: 88px;
-  height: 96px;
+  width: 72px;
+  height: 78px;
 }
 
 .hero .name {
-  font-size: 2rem;
+  font-size: 1.75rem;
 }
 
 .hero .subtitle {

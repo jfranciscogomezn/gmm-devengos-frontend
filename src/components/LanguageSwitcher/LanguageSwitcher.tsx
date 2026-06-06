@@ -1,4 +1,3 @@
-import { Form } from 'react-bootstrap';
 import { Globe } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { type AppLocale, setStoredLocale, SUPPORTED_LOCALES } from '../../i18n/locale';
@@ -6,7 +5,6 @@ import styles from './LanguageSwitcher.module.css';
 
 interface LanguageSwitcherProps {
   id?: string;
-  size?: 'sm' | 'lg';
   className?: string;
   variant?: 'light' | 'dark';
   appearance?: 'default' | 'compact';
@@ -24,7 +22,6 @@ const LOCALE_SHORT_KEYS: Record<AppLocale, string> = {
 
 export function LanguageSwitcher({
   id = 'app-language',
-  size = 'sm',
   className,
   variant = 'light',
   appearance = 'default',
@@ -34,33 +31,52 @@ export function LanguageSwitcher({
     ? i18n.language
     : 'es-CO') as AppLocale;
 
-  const labelKeys = appearance === 'compact' ? LOCALE_SHORT_KEYS : LOCALE_LABEL_KEYS;
+  const changeLocale = (locale: AppLocale) => {
+    void i18n.changeLanguage(locale);
+    setStoredLocale(locale);
+  };
+
+  if (appearance === 'compact') {
+    return (
+      <div
+        id={id}
+        className={`${styles.compactToggle} ${variant === 'dark' ? styles.compactDark : ''} ${className ?? ''}`.trim()}
+        role="group"
+        aria-label={t('labels.language')}
+      >
+        <Globe size={15} className={styles.globe} aria-hidden />
+        <div className={styles.segmented}>
+          {SUPPORTED_LOCALES.map((locale) => (
+            <button
+              key={locale}
+              type="button"
+              className={`${styles.segment} ${current === locale ? styles.segmentActive : ''}`}
+              aria-pressed={current === locale}
+              onClick={() => changeLocale(locale)}
+            >
+              {t(LOCALE_SHORT_KEYS[locale])}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={`${styles.wrap} ${appearance === 'compact' ? styles.compactWrap : ''} ${className ?? ''}`.trim()}
-    >
-      {appearance === 'compact' && <Globe size={14} className={styles.globe} aria-hidden />}
-      <Form.Select
+    <div className={`${styles.wrap} ${className ?? ''}`.trim()}>
+      <select
         id={id}
-        size={size}
-        className={`${variant === 'dark' ? styles.dark : styles.light} ${
-          appearance === 'compact' ? styles.compact : ''
-        }`.trim()}
+        className={`${styles.select} ${variant === 'dark' ? styles.dark : styles.lightSelect}`}
         aria-label={t('labels.language')}
         value={current}
-        onChange={(event) => {
-          const next = event.target.value as AppLocale;
-          void i18n.changeLanguage(next);
-          setStoredLocale(next);
-        }}
+        onChange={(event) => changeLocale(event.target.value as AppLocale)}
       >
         {SUPPORTED_LOCALES.map((locale) => (
           <option key={locale} value={locale}>
-            {t(labelKeys[locale])}
+            {t(LOCALE_LABEL_KEYS[locale])}
           </option>
         ))}
-      </Form.Select>
+      </select>
     </div>
   );
 }
