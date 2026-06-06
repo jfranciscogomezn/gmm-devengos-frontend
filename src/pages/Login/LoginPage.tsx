@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Alert, Button, Form, Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../../api/auth.service';
-import { BrandMark } from '../../components/brand/BrandMark';
+import { LoginBrandHeader } from './LoginBrandHeader';
 import { LoginSkyline } from '../../components/brand/LoginSkyline';
 import { LanguageSwitcher } from '../../components/LanguageSwitcher/LanguageSwitcher';
 import { useAuth } from '../../context/AuthContext';
@@ -52,8 +52,10 @@ export function LoginPage() {
     <div className={styles.shell}>
       <aside className={styles.brandPanel}>
         <div className={styles.brandInner}>
-          <BrandMark variant="dark" layout="hero" showSubtitle subtitle={t('auth:productLine')} />
-          <p className={styles.brandTagline}>{t('auth:brandTagline')}</p>
+          <LoginBrandHeader
+            productLine={t('auth:productLine')}
+            tagline={t('auth:brandTagline')}
+          />
         </div>
         <LoginSkyline />
       </aside>
@@ -65,7 +67,12 @@ export function LoginPage() {
 
         <div className={styles.formInner}>
           <div className={styles.mobileBrand}>
-            <BrandMark variant="light" layout="hero" showSubtitle subtitle={t('auth:productLine')} />
+            <LoginBrandHeader
+              variant="light"
+              hideTagline
+              productLine={t('auth:productLine')}
+              tagline={t('auth:brandTagline')}
+            />
           </div>
 
           <header className={styles.formHeader}>
