@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/theme.css';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { AppLayout } from './components/Layout/AppLayout';
@@ -22,9 +22,7 @@ import { AdminTimeRecordsPage } from './pages/time/AdminTimeRecordsPage';
 import { TimeRecordAuditPage } from './pages/time/TimeRecordAuditPage';
 import { ReportsPage } from './pages/reports/ReportsPage';
 import { PayrollConfigPage } from './pages/payroll/PayrollConfigPage';
-import { IncompleteTimeRecordsBanner } from './components/time/IncompleteTimeRecordsBanner';
-import { AdminNotificationsBanner } from './components/notifications/AdminNotificationsBanner';
-import { useAuth } from './context/AuthContext';
+import { DashboardPage } from './pages/dashboard/DashboardPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,19 +30,6 @@ const queryClient = new QueryClient({
   },
 });
 
-function DashboardPlaceholder() {
-  const { t } = useTranslation('dashboard');
-  const { hasPermission } = useAuth();
-
-  return (
-    <div>
-      <h4>{t('title')}</h4>
-      <p className="text-muted">{t('welcome')}</p>
-      {hasPermission('TIME_RECORDS_ADMIN') && <AdminNotificationsBanner />}
-      {hasPermission('MY_TIME') && <IncompleteTimeRecordsBanner />}
-    </div>
-  );
-}
 
 function LegacyRoleRedirect() {
   const { id } = useParams<{ id: string }>();
@@ -77,7 +62,7 @@ export default function App() {
               }
             >
               <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<DashboardPlaceholder />} />
+              <Route path="dashboard" element={<DashboardPage />} />
 
               <Route
                 path="admin/access"

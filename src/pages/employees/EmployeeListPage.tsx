@@ -4,6 +4,7 @@ import { Badge, Spinner, Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { employeesService } from '../../api/employees.service';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { useAuth } from '../../context/AuthContext';
 
 function formatSalary(value: number): string {
@@ -42,15 +43,18 @@ export function EmployeeListPage() {
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="mb-0">{t('employees:list.title')}</h4>
-        <Link to="/admin/employees/new" className="btn btn-primary btn-sm">
-          + {t('employees:list.new')}
-        </Link>
-      </div>
+      <PageHeader
+        title={t('employees:list.title')}
+        actions={
+          <Link to="/admin/employees/new" className="btn btn-primary btn-sm">
+            + {t('employees:list.new')}
+          </Link>
+        }
+      />
 
-      <Table striped hover responsive>
-        <thead className="table-dark">
+      <div className="table-responsive">
+      <Table striped hover className="mb-0">
+        <thead>
           <tr>
             <th>{t('common:labels.name')}</th>
             <th>{t('employees:list.document')}</th>
@@ -88,8 +92,9 @@ export function EmployeeListPage() {
           )}
         </tbody>
       </Table>
+      </div>
 
-      <p className="text-muted small">{t('employees:list.footnote')}</p>
+      <p className="text-muted small mt-3">{t('employees:list.footnote')}</p>
     </div>
   );
 }

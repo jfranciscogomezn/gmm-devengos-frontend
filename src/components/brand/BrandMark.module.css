@@ -1,0 +1,122 @@
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.sidebarMark {
+  gap: 0.55rem;
+}
+
+.inline .icon {
+  flex-shrink: 0;
+}
+
+.hexSidebar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #e8d48a 0%, #c9a227 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.28);
+}
+
+.hexLetter {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+  font-family: var(--sc-font, Inter, system-ui, sans-serif);
+  margin-top: -1px;
+}
+
+.hexDefault {
+  width: 36px;
+  height: 39px;
+  display: block;
+}
+
+.hero {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.hero .icon {
+  width: auto;
+  height: auto;
+}
+
+.hexHero {
+  width: 72px;
+  height: 78px;
+  display: block;
+}
+
+.hero .name {
+  font-size: 1.75rem;
+}
+
+.hero .subtitle {
+  font-size: 0.8125rem;
+  margin-top: 0.35rem;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.accent {
+  color: var(--sc-gold);
+}
+
+.dark .name {
+  color: #f8fafc;
+}
+
+.dark .accent {
+  color: var(--sc-gold-light);
+}
+
+.light .name {
+  color: var(--sc-navy-900);
+}
+
+.light .accent {
+  color: var(--sc-gold);
+}
+
+.subtitle {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--sc-gold-light);
+  margin-top: 0.12rem;
+}
+
+.light .subtitle {
+  color: var(--sc-text-muted);
+}
+
+.dark.hero .subtitle {
+  color: var(--sc-gold);
+}

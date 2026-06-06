@@ -1,5 +1,68 @@
 {
   "title": "Dashboard",
   "welcome": "Welcome to StepCore.",
-  "platformConsole": "Platform Console"
+  "welcomeUser": "Hello, {{name}} — {{company}}",
+  "platformConsole": "Platform Console",
+  "platformSubtitle": "Manage tenants and the SaaS platform.",
+  "quickActions": "Quick actions",
+  "recentActivity": "Recent activity",
+  "announcements": {
+    "title": "Announcements",
+    "items": [
+      {
+        "id": "dian-update",
+        "title": "New: DIAN validation update",
+        "body": "Validation rules for payroll reports were updated. Review your period configuration.",
+        "dateLabel": "May 10, 2026"
+      },
+      {
+        "id": "maintenance",
+        "title": "Scheduled maintenance",
+        "body": "Maintenance window Sunday 02:00–04:00 COT. Service may be briefly unavailable.",
+        "dateLabel": "May 8, 2026"
+      },
+      {
+        "id": "welcome",
+        "title": "Welcome to StepCore",
+        "body": "Explore quick actions and the activity panel to get started with your team.",
+        "dateLabel": "May 1, 2026"
+      }
+    ]
+  },
+  "yourTeam": "Your team",
+  "viewAll": "View all",
+  "activityCol": "Activity",
+  "timeCol": "Time",
+  "actorCol": "User",
+  "noActivity": "No recent activity.",
+  "adminTips": "Administration",
+  "adminTipsBody": "Review incomplete records and resolve them from the time module.",
+  "goToTimeAdmin": "Go to time records",
+  "emptyModules": "Use the sidebar to access your available modules.",
+  "greeting": {
+    "morning": "Good morning, {{name}}",
+    "afternoon": "Good afternoon, {{name}}",
+    "evening": "Good evening, {{name}}"
+  },
+  "stats": {
+    "todayRecords": "Today's records",
+    "incomplete": "Incomplete",
+    "teamHours": "Team",
+    "todayStatus": "Today's status",
+    "noRecordToday": "No record",
+    "clockedInAt": "Clock-in: {{time}}",
+    "clockHint": "Clock in from My Time",
+    "myIncomplete": "My incomplete",
+    "incompleteHint": "Requires admin attention",
+    "allClear": "All clear",
+    "actionNeeded": "Review",
+    "active": "Active",
+    "pending": "Pending",
+    "teamIncomplete": "Team incomplete",
+    "teamIncompleteHint": "Pending resolution",
+    "employees": "Employees",
+    "employeesHint": "active employees",
+    "activeTenants": "Active tenants",
+    "tenantsHint": "{{total}} total"
+  }
 }

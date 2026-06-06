@@ -369,7 +369,7 @@ export function AdminTimeRecordsPage() {
                   </p>
                 )}
                 <Table striped hover responsive>
-                  <thead className="table-dark">
+                  <thead>
                     <tr>
                       <th>{t('common:labels.date')}</th>
                       <th>{t('time:admin.table.clockIn')}</th>
@@ -392,7 +392,7 @@ export function AdminTimeRecordsPage() {
             )}
             {!incompleteLoading && !incompleteError && (
               <Table striped hover responsive>
-                <thead className="table-dark">
+                <thead>
                   <tr>
                     <th>{t('common:labels.date')}</th>
                     <th>{t('time:admin.table.clockIn')}</th>

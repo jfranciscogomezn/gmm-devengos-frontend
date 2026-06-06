@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { Alert, Button, Card, Form, Spinner } from 'react-bootstrap';
+import { Alert, Button, Form, Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../../api/auth.service';
+import { LoginBrandHeader } from './LoginBrandHeader';
+import { LoginSkyline } from '../../components/brand/LoginSkyline';
 import { LanguageSwitcher } from '../../components/LanguageSwitcher/LanguageSwitcher';
 import { useAuth } from '../../context/AuthContext';
 import { consumeStaleSessionFlag } from '../../utils/jwt';
+import styles from './LoginPage.module.css';
 
 const LAST_TENANT_KEY = 'stepcore_last_tenant';
 
@@ -46,36 +49,54 @@ export function LoginPage() {
   };
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center bg-light"
-      style={{ minHeight: '100vh' }}
-    >
-      <Card style={{ width: 400 }} className="shadow-sm">
-        <Card.Body className="p-4">
-          <div className="d-flex justify-content-end mb-3">
-            <LanguageSwitcher id="login-language" />
-          </div>
-          <div className="text-center mb-4">
-            <h4 className="fw-bold text-primary">{t('common:appName')}</h4>
-            <p className="text-muted small">{t('auth:title')}</p>
+    <div className={styles.shell}>
+      <aside className={styles.brandPanel}>
+        <div className={styles.brandInner}>
+          <LoginBrandHeader
+            centered
+            productLine={t('auth:productLine')}
+            tagline={t('auth:brandTagline')}
+          />
+        </div>
+        <LoginSkyline />
+      </aside>
+
+      <main className={styles.formPanel}>
+        <div className={styles.langRow}>
+          <LanguageSwitcher id="login-language" appearance="compact" />
+        </div>
+
+        <div className={styles.formInner}>
+          <div className={styles.mobileBrand}>
+            <LoginBrandHeader
+              variant="light"
+              hideTagline
+              productLine={t('auth:productLine')}
+              tagline={t('auth:brandTagline')}
+            />
           </div>
 
+          <header className={styles.formHeader}>
+            <h1 className={styles.formTitle}>{t('auth:welcomeBack')}</h1>
+            <p className={styles.formSubtitle}>{t('auth:signInSubtitle')}</p>
+          </header>
+
           {staleSession && (
-            <Alert variant="warning" className="py-2">
+            <Alert variant="warning" className="py-2 mb-3">
               {t('auth:staleSession')}
             </Alert>
           )}
 
           {mutation.isError && (
-            <Alert variant="danger" className="py-2">
+            <Alert variant="danger" className="py-2 mb-3">
               {(mutation.error as { response?: { data?: { message?: string } } })?.response?.data?.message
                 ?? t('auth:invalidCredentials')}
             </Alert>
           )}
 
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} className={styles.form}>
             <Form.Group className="mb-3">
-              <Form.Label>{t('auth:company')}</Form.Label>
+              <Form.Label className={styles.label}>{t('auth:company')}</Form.Label>
               <Form.Control
                 type="text"
                 placeholder={t('auth:companyPlaceholder')}
@@ -85,12 +106,12 @@ export function LoginPage() {
                 autoCapitalize="none"
                 autoCorrect="off"
                 disabled={mutation.isPending}
+                className={styles.input}
               />
-              <Form.Text className="text-muted">{t('auth:companyHint')}</Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>{t('auth:email')}</Form.Label>
+              <Form.Label className={styles.label}>{t('auth:email')}</Form.Label>
               <Form.Control
                 type="email"
                 placeholder={t('auth:emailPlaceholder')}
@@ -98,11 +119,17 @@ export function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={mutation.isPending}
+                className={styles.input}
               />
             </Form.Group>
 
             <Form.Group className="mb-4">
-              <Form.Label>{t('auth:password')}</Form.Label>
+              <div className={styles.passwordRow}>
+                <Form.Label className={`${styles.label} mb-0`}>{t('auth:password')}</Form.Label>
+                <button type="button" className={styles.forgotLink} disabled title={t('auth:forgotPasswordSoon')}>
+                  {t('auth:forgotPassword')}
+                </button>
+              </div>
               <Form.Control
                 type="password"
                 placeholder={t('auth:passwordPlaceholder')}
@@ -110,10 +137,11 @@ export function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={mutation.isPending}
+                className={styles.input}
               />
             </Form.Group>
 
-            <Button type="submit" variant="primary" className="w-100" disabled={mutation.isPending}>
+            <Button type="submit" variant="primary" className={`w-100 ${styles.signInBtn}`} disabled={mutation.isPending}>
               {mutation.isPending ? (
                 <>
                   <Spinner as="span" animation="border" size="sm" className="me-2" />
@@ -124,8 +152,8 @@ export function LoginPage() {
               )}
             </Button>
           </Form>
-        </Card.Body>
-      </Card>
+        </div>
+      </main>
     </div>
   );
 }

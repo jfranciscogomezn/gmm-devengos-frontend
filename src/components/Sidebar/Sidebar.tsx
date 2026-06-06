@@ -1,6 +1,7 @@
-import { List } from 'react-bootstrap-icons';
+import { Link, NavLink } from 'react-router-dom';
+import { ChevronRight, List, Speedometer2 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from '../LanguageSwitcher/LanguageSwitcher';
+import { BrandMark } from '../brand/BrandMark';
 import { useAuth } from '../../context/AuthContext';
 import { CollapsibleSidebarNav } from './CollapsibleSidebarNav';
 import styles from './Sidebar.module.css';
@@ -10,34 +11,24 @@ interface SidebarProps {
   onToggle: () => void;
 }
 
-export function Sidebar({ open, onToggle }: SidebarProps) {
-  const { t } = useTranslation(['dashboard', 'common']);
-  const { menu, currentUser, tenant, isPlatformAdmin, logout } = useAuth();
+function userInitials(firstName: string, lastName: string): string {
+  return `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase() || '?';
+}
 
-  const initials = (tenant?.name ?? 'SC')
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? '')
-    .join('');
+export function Sidebar({ open, onToggle }: SidebarProps) {
+  const { t } = useTranslation(['dashboard', 'common', 'menu', 'auth']);
+  const { menu, currentUser, tenant, isPlatformAdmin, logout } = useAuth();
 
   return (
     <aside className={`${styles.sidebar} ${open ? '' : styles.sidebarClosed}`} aria-hidden={!open}>
       <div className={styles.brand}>
         <div className={styles.brandHeader}>
-          <div className={styles.brandContent}>
-            <div className={styles.brandLogo}>{initials || 'SC'}</div>
-            <div className={styles.brandTitle}>
-              {isPlatformAdmin ? t('dashboard:platformConsole') : tenant?.name ?? t('common:appName')}
-            </div>
-            {tenant && !isPlatformAdmin && (
-              <div className={styles.brandMeta}>{t('common:planSuffix', { plan: tenant.plan })}</div>
-            )}
-            {currentUser && (
-              <div className={styles.brandUser}>
-                {currentUser.firstName} {currentUser.lastName} · {currentUser.roleName}
-              </div>
-            )}
-          </div>
+          <BrandMark
+            variant="dark"
+            size="sidebar"
+            showSubtitle
+            subtitle={t('auth:productLine')}
+          />
           <button
             type="button"
             className={styles.menuToggle}
@@ -49,16 +40,40 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
         </div>
       </div>
 
-      <CollapsibleSidebarNav nodes={menu} />
+      <nav className={styles.nav}>
+        <NavLink
+          to="/dashboard"
+          end
+          className={({ isActive }) => `${styles.link} ${isActive ? styles.linkActive : ''}`}
+        >
+          <span className={styles.icon}><Speedometer2 size={18} /></span>
+          <span className={styles.linkLabel}>{t('menu:DASHBOARD')}</span>
+        </NavLink>
+        <CollapsibleSidebarNav nodes={menu} />
+      </nav>
 
-      <div className={styles.footer}>
-        <div className="mb-2">
-          <LanguageSwitcher id="sidebar-language" />
+      {currentUser && (
+        <div className={styles.userFooter}>
+          {tenant && !isPlatformAdmin && (
+            <p className={styles.tenantName}>{tenant.name}</p>
+          )}
+          <Link to="/my/profile" className={styles.userProfile}>
+            <span className={styles.avatar}>
+              {userInitials(currentUser.firstName, currentUser.lastName)}
+            </span>
+            <span className={styles.userMeta}>
+              <span className={styles.userName}>
+                {currentUser.firstName} {currentUser.lastName}
+              </span>
+              <span className={styles.userRole}>{currentUser.roleName}</span>
+            </span>
+            <ChevronRight size={14} className={styles.userChevron} />
+          </Link>
+          <button type="button" className={styles.signOutBtn} onClick={logout}>
+            {t('common:actions.signOut')}
+          </button>
         </div>
-        <button type="button" className="btn btn-outline-danger btn-sm w-100" onClick={logout}>
-          {t('common:actions.signOut')}
-        </button>
-      </div>
+      )}
     </aside>
   );
 }

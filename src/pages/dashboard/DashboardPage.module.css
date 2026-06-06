@@ -1,0 +1,235 @@
+.page {
+  max-width: 1280px;
+}
+
+.hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.greeting {
+  margin: 0;
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: var(--sc-navy-900);
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+
+.companyLine {
+  margin: 0.35rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--sc-text-muted);
+}
+
+.dateLine {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  color: var(--sc-text-muted);
+  padding-top: 0.35rem;
+}
+
+.panel {
+  background: var(--sc-bg-surface);
+  border: 1px solid var(--sc-border);
+  border-radius: var(--sc-radius-md);
+  padding: 1.25rem 1.35rem;
+  box-shadow: var(--sc-shadow-sm);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.panelTitle {
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--sc-navy-900);
+}
+
+.panelHeader .panelTitle {
+  margin-bottom: 0;
+}
+
+.panelLink {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--sc-navy-700);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.panelLink:hover {
+  color: var(--sc-gold);
+  text-decoration: underline;
+}
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.65rem;
+}
+
+.quickAction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 0.5rem;
+  background: var(--sc-bg-muted);
+  border: 1px solid transparent;
+  border-radius: var(--sc-radius-md);
+  text-decoration: none;
+  color: var(--sc-navy-900);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.25;
+  min-height: 5.5rem;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.quickAction:hover {
+  background: var(--sc-bg-surface);
+  border-color: var(--sc-gold);
+  color: var(--sc-navy-900);
+  transform: translateY(-1px);
+}
+
+.quickIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 10px;
+  background: var(--sc-bg-surface);
+  color: var(--sc-navy-700);
+  box-shadow: var(--sc-shadow-sm);
+}
+
+.quickLabel {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.feedItem {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--sc-border);
+}
+
+.feedItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.feedTitle {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sc-navy-900);
+}
+
+.feedMeta {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--sc-text-muted);
+  margin-top: 0.15rem;
+}
+
+.feedBody {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--sc-text-muted);
+  line-height: 1.45;
+}
+
+.teamList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.teamMember {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0;
+}
+
+.teamAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--sc-gold-muted);
+  color: var(--sc-navy-800);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.teamMeta {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.teamName {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--sc-navy-900);
+}
+
+.teamEmail {
+  font-size: 0.75rem;
+  color: var(--sc-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tipText {
+  font-size: 0.875rem;
+  color: var(--sc-text-muted);
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 991px) {
+  .quickGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .hero {
+    flex-direction: column;
+  }
+
+  .quickGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

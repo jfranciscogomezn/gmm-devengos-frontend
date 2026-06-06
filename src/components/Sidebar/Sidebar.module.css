@@ -1,12 +1,12 @@
 .sidebar {
-  width: 260px;
-  min-width: 260px;
+  width: 240px;
+  min-width: 240px;
   min-height: 100%;
-  background: #1e293b;
-  color: #e2e8f0;
+  background: linear-gradient(180deg, #0a1628 0%, var(--sc-navy-900) 100%);
+  color: var(--sc-text-inverse);
   display: flex;
   flex-direction: column;
-  padding: 1rem 0;
+  padding: 0.85rem 0;
   overflow: hidden;
   flex-shrink: 0;
   transition: width 0.2s ease, min-width 0.2s ease, opacity 0.2s ease;
@@ -21,9 +21,8 @@
 }
 
 .brand {
-  padding: 0 1.25rem 1.25rem;
-  border-bottom: 1px solid #334155;
-  margin-bottom: 0.75rem;
+  padding: 0 1rem 1rem;
+  margin-bottom: 0.25rem;
   flex-shrink: 0;
 }
 
@@ -31,12 +30,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.brandContent {
-  min-width: 0;
-  flex: 1;
+  gap: 0.35rem;
 }
 
 .menuToggle {
@@ -44,69 +38,65 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid #334155;
+  width: 1.85rem;
+  height: 1.85rem;
+  border: none;
   border-radius: 6px;
   background: transparent;
-  color: #94a3b8;
+  color: #64748b;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
+  margin-top: 0.15rem;
 }
 
 .menuToggle:hover {
-  background: #334155;
+  background: rgba(255, 255, 255, 0.08);
   color: #f8fafc;
-}
-
-.brandLogo {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: #3b82f6;
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.75rem;
-}
-
-.brandTitle {
-  font-weight: 600;
-  font-size: 1rem;
-  color: #f8fafc;
-  line-height: 1.3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.brandMeta {
-  font-size: 0.7rem;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-top: 0.25rem;
-}
-
-.brandUser {
-  font-size: 0.75rem;
-  color: #64748b;
-  margin-top: 0.35rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .nav {
   flex: 1;
   min-height: 0;
-  min-width: 0;
-  padding: 0 0.65rem;
   overflow-y: auto;
   overflow-x: hidden;
+  padding: 0 0.65rem;
+}
+
+.navSection {
+  min-width: 0;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease;
+  margin-bottom: 3px;
+  min-width: 0;
+  border-left: none;
+}
+
+.link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+}
+
+.linkActive {
+  background: linear-gradient(90deg, #e6a817 0%, #d4920a 100%) !important;
+  color: #0f172a !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(230, 168, 23, 0.25);
+}
+
+.linkActive .icon {
+  color: #0f172a;
+  opacity: 1;
 }
 
 .navNode {
@@ -115,30 +105,28 @@
 
 .parentButton {
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
   border: none;
   background: transparent;
-  color: #cbd5e1;
+  color: #94a3b8;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.65rem;
   padding: 0.55rem 0.75rem;
   border-radius: 8px;
   font-size: 0.875rem;
+  font-weight: 500;
   text-align: left;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
   min-width: 0;
 }
 
 .parentButton:hover {
-  background: #334155;
-  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
 }
 
 .parentLabel {
   flex: 1;
-  font-weight: 500;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -151,38 +139,10 @@
 }
 
 .children {
-  padding-left: 0.5rem;
-  margin-left: 0.75rem;
-  border-left: 1px solid #334155;
+  padding-left: 0.35rem;
+  margin-left: 1.35rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
   min-width: 0;
-  overflow: hidden;
-}
-
-.link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  color: #94a3b8;
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: background 0.15s ease, color 0.15s ease;
-  margin-bottom: 2px;
-  min-width: 0;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.link:hover {
-  background: #334155;
-  color: #f1f5f9;
-}
-
-.linkActive {
-  background: #334155;
-  color: #f8fafc;
-  font-weight: 500;
 }
 
 .linkLabel {
@@ -194,12 +154,102 @@
 
 .icon {
   flex-shrink: 0;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
-.footer {
-  padding: 1rem 1.25rem 0;
-  border-top: 1px solid #334155;
+.userFooter {
+  padding: 0.75rem 0.85rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   margin-top: auto;
   flex-shrink: 0;
+}
+
+.tenantName {
+  margin: 0 0 0.5rem 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.35rem;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.userProfile:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sc-gold) 0%, #a8841f 100%);
+  color: var(--sc-navy-900);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.userMeta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userRole {
+  font-size: 0.6875rem;
+  color: #64748b;
+  text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userChevron {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.signOutBtn {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  transition: color 0.15s ease;
+}
+
+.signOutBtn:hover {
+  color: #fca5a5;
 }

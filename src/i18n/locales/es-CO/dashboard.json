@@ -1,5 +1,68 @@
 {
   "title": "Panel",
   "welcome": "Bienvenido a StepCore.",
-  "platformConsole": "Consola de plataforma"
+  "welcomeUser": "Hola, {{name}} — {{company}}",
+  "platformConsole": "Consola de plataforma",
+  "platformSubtitle": "Administre inquilinos y la plataforma SaaS.",
+  "quickActions": "Accesos rápidos",
+  "recentActivity": "Actividad reciente",
+  "announcements": {
+    "title": "Anuncios",
+    "items": [
+      {
+        "id": "dian-update",
+        "title": "Nuevo: actualización de validación DIAN",
+        "body": "Se ajustaron reglas de validación para reportes de nómina. Revise la configuración del periodo.",
+        "dateLabel": "10 may 2026"
+      },
+      {
+        "id": "maintenance",
+        "title": "Mantenimiento programado",
+        "body": "Ventana de mantenimiento el domingo 02:00–04:00 COT. El servicio puede interrumpirse brevemente.",
+        "dateLabel": "8 may 2026"
+      },
+      {
+        "id": "welcome",
+        "title": "Bienvenido a StepCore",
+        "body": "Explore accesos rápidos y el panel de actividad para comenzar con su equipo.",
+        "dateLabel": "1 may 2026"
+      }
+    ]
+  },
+  "yourTeam": "Su equipo",
+  "viewAll": "Ver todo",
+  "activityCol": "Actividad",
+  "timeCol": "Hora",
+  "actorCol": "Usuario",
+  "noActivity": "Sin actividad reciente.",
+  "adminTips": "Administración",
+  "adminTipsBody": "Revise registros incompletos y resuélvalos desde el módulo de tiempo.",
+  "goToTimeAdmin": "Ir a registros de tiempo",
+  "emptyModules": "Use el menú lateral para acceder a los módulos disponibles.",
+  "greeting": {
+    "morning": "Buenos días, {{name}}",
+    "afternoon": "Buenas tardes, {{name}}",
+    "evening": "Buenas noches, {{name}}"
+  },
+  "stats": {
+    "todayRecords": "Registros de hoy",
+    "incomplete": "Incompletos",
+    "teamHours": "Equipo",
+    "todayStatus": "Estado de hoy",
+    "noRecordToday": "Sin registro",
+    "clockedInAt": "Entrada: {{time}}",
+    "clockHint": "Registre entrada desde Mi tiempo",
+    "myIncomplete": "Mis incompletos",
+    "incompleteHint": "Requiere atención del administrador",
+    "allClear": "Al día",
+    "actionNeeded": "Revisar",
+    "active": "Activo",
+    "pending": "Pendiente",
+    "teamIncomplete": "Incompletos del equipo",
+    "teamIncompleteHint": "Pendientes de resolución",
+    "employees": "Empleados",
+    "employeesHint": "empleados activos",
+    "activeTenants": "Inquilinos activos",
+    "tenantsHint": "{{total}} en total"
+  }
 }
