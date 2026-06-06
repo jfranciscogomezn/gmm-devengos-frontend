@@ -53,6 +53,7 @@ export function LoginPage() {
       <aside className={styles.brandPanel}>
         <div className={styles.brandInner}>
           <LoginBrandHeader
+            centered
             productLine={t('auth:productLine')}
             tagline={t('auth:brandTagline')}
           />

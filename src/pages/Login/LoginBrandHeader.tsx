@@ -6,35 +6,32 @@ interface LoginBrandHeaderProps {
   tagline: string;
   variant?: 'dark' | 'light';
   hideTagline?: boolean;
+  centered?: boolean;
 }
 
 function HexLogo({ gradientId }: { gradientId: string }) {
   return (
-    <svg viewBox="0 0 88 96" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.logo} aria-hidden>
-      <path d="M44 4L82 26v44L44 92 6 70V26L44 4z" fill={`url(#${gradientId})`} />
+    <svg viewBox="0 0 48 52" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.logo} aria-hidden>
+      <path d="M24 2 44 13v26L24 50 4 39V13L24 2z" fill={`url(#${gradientId})`} />
       <path
-        d="M44 4L82 26v44L44 92 6 70V26L44 4z"
-        stroke="rgba(255,255,255,0.12)"
-        strokeWidth="1"
+        d="M24 2 44 13v26L24 50 4 39V13L24 2z"
+        stroke="rgba(255,255,255,0.14)"
+        strokeWidth="0.75"
         fill="none"
       />
-      <path
-        d="M54 31C44 29 34 34 32 42C30 48 34 53 42 55C50 57 56 61 56 68C56 76 48 83 36 83C31 83 27 81 24 77"
-        stroke="#0f172a"
-        strokeWidth="4.5"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M34 31C44 29 54 34 56 42C58 48 54 53 46 55C38 57 32 61 32 68C32 76 40 83 52 83C57 83 61 81 64 77"
-        stroke="#0f172a"
-        strokeWidth="4.5"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.35"
-      />
+      <g fill="#0f172a">
+        <path d="M32.2 13.8 34.4 16 22.8 23.6 20.6 21.4Z" />
+        <path d="M20.6 21.4 22.8 23.6 32.2 31.2 30 29Z" />
+        <path d="M30 29 32.2 31.2 22.8 38.8 20.6 36.6Z" />
+        <path d="M30.6 15.6 32.8 17.8 21.2 25.4 19 23.2Z" />
+        <path d="M19 23.2 21.2 25.4 30.6 33 28.4 30.8Z" />
+        <path d="M28.4 30.8 30.6 33 21.2 40.6 19 38.4Z" />
+        <path d="M29 17.4 31.2 19.6 19.6 27.2 17.4 25Z" />
+        <path d="M17.4 25 19.6 27.2 29 34.8 26.8 32.6Z" />
+        <path d="M26.8 32.6 29 34.8 19.6 42.4 17.4 40.2Z" />
+      </g>
       <defs>
-        <linearGradient id={gradientId} x1="12" y1="8" x2="76" y2="88" gradientUnits="userSpaceOnUse">
+        <linearGradient id={gradientId} x1="6" y1="4" x2="42" y2="48" gradientUnits="userSpaceOnUse">
           <stop stopColor="#e8d48a" />
           <stop offset="1" stopColor="#c9a227" />
         </linearGradient>
@@ -48,11 +45,12 @@ export function LoginBrandHeader({
   tagline,
   variant = 'dark',
   hideTagline = false,
+  centered = false,
 }: LoginBrandHeaderProps) {
   const gradientId = useId().replace(/:/g, '');
 
   return (
-    <div className={`${styles.header} ${styles[variant]}`}>
+    <div className={`${styles.header} ${styles[variant]} ${centered ? styles.centered : ''}`}>
       <HexLogo gradientId={gradientId} />
       <div className={styles.textBlock}>
         <h1 className={styles.name}>

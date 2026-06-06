@@ -3,18 +3,20 @@ import styles from './LoginSkyline.module.css';
 export function LoginSkyline() {
   return (
     <div className={styles.skyline} aria-hidden>
-      <svg viewBox="0 0 400 120" preserveAspectRatio="xMidYMax meet" className={styles.svg}>
-        <rect x="0" y="80" width="400" height="40" fill="rgba(15, 23, 42, 0.4)" />
-        <rect x="20" y="55" width="28" height="65" fill="rgba(201, 162, 39, 0.35)" rx="2" />
-        <rect x="55" y="40" width="22" height="80" fill="rgba(255, 255, 255, 0.08)" rx="2" />
-        <rect x="85" y="62" width="35" height="58" fill="rgba(201, 162, 39, 0.2)" rx="2" />
-        <rect x="130" y="30" width="30" height="90" fill="rgba(255, 255, 255, 0.1)" rx="2" />
-        <rect x="170" y="50" width="25" height="70" fill="rgba(201, 162, 39, 0.28)" rx="2" />
-        <rect x="205" y="35" width="32" height="85" fill="rgba(255, 255, 255, 0.07)" rx="2" />
-        <rect x="250" y="58" width="28" height="62" fill="rgba(201, 162, 39, 0.22)" rx="2" />
-        <rect x="290" y="42" width="24" height="78" fill="rgba(255, 255, 255, 0.09)" rx="2" />
-        <rect x="325" y="52" width="30" height="68" fill="rgba(201, 162, 39, 0.3)" rx="2" />
-        <rect x="360" y="38" width="26" height="82" fill="rgba(255, 255, 255, 0.06)" rx="2" />
+      <svg viewBox="0 0 400 100" preserveAspectRatio="xMidYMax meet" className={styles.svg}>
+        <g fill="none" stroke="#c9a227" strokeLinecap="round" strokeLinejoin="round">
+          <path
+            d="M0 92V68h18V52l8-10v50M26 92V58h22v34M52 92V44h6l4-8 4 8h6v48M74 92V62h20l4 8v22M102 92V50h8l6-14 6 14h8v42M132 92V72h24v20M160 92V38h6l5-12 5 12h6v54M184 92V56h28v36M216 92V48h10l8-16 8 16h10v44M254 92V64h18v28M276 92V42h8l6-10 6 10h8v50M300 92V58h22v34M326 92V52h14l6-10 6 10h14v40M358 92V66h20v26M382 92V54h18v38"
+            strokeWidth="1.4"
+            opacity="0.9"
+          />
+          <path
+            d="M8 76h10M8 84h10M60 58h8M60 66h8M142 58h10M142 66h10M224 62h8M224 70h8M306 70h10M306 78h10"
+            strokeWidth="0.8"
+            opacity="0.45"
+          />
+          <path d="M0 92h400" strokeWidth="1" opacity="0.35" />
+        </g>
       </svg>
     </div>
   );
