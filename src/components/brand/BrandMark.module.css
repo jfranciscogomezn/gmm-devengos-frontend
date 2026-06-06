@@ -5,10 +5,30 @@
   min-width: 0;
 }
 
-.icon {
+.inline .icon {
   flex-shrink: 0;
   width: 36px;
-  height: 36px;
+  height: 39px;
+}
+
+.hero {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.hero .icon {
+  width: 88px;
+  height: 96px;
+}
+
+.hero .name {
+  font-size: 2rem;
+}
+
+.hero .subtitle {
+  font-size: 0.8125rem;
+  margin-top: 0.35rem;
 }
 
 .icon svg {
@@ -52,13 +72,17 @@
 
 .subtitle {
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   color: var(--sc-gold-light);
   margin-top: 0.15rem;
 }
 
 .light .subtitle {
   color: var(--sc-text-muted);
+}
+
+.dark.hero .subtitle {
+  color: var(--sc-gold);
 }

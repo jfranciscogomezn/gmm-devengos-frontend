@@ -5,11 +5,10 @@
 
 .brandPanel {
   display: none;
-  flex: 0 0 42%;
-  max-width: 520px;
+  flex: 1 1 54%;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2.5rem 2.75rem 0;
+  padding: 3rem 3.5rem 0;
   background: linear-gradient(165deg, #0a1628 0%, var(--sc-navy-900) 40%, #1a3352 100%);
   color: var(--sc-text-inverse);
   position: relative;
@@ -27,20 +26,20 @@
 .brandInner {
   position: relative;
   z-index: 1;
-  padding-top: 1rem;
+  padding-top: 1.5rem;
+  max-width: 22rem;
 }
 
 .brandTagline {
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   color: #94a3b8;
   line-height: 1.65;
-  max-width: 20rem;
-  margin: 2rem 0 0;
+  margin: 1.75rem 0 0;
   font-weight: 400;
 }
 
 .formPanel {
-  flex: 1;
+  flex: 1 1 46%;
   display: flex;
   flex-direction: column;
   background: #ffffff;
@@ -49,9 +48,10 @@
 }
 
 .langRow {
-  display: flex;
-  justify-content: flex-end;
-  padding: 1.25rem 2rem 0;
+  position: absolute;
+  top: 1.25rem;
+  right: 1.75rem;
+  z-index: 2;
 }
 
 .formInner {
@@ -62,7 +62,7 @@
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
-  padding: 1rem 2rem 3rem;
+  padding: 3.5rem 2rem 3rem;
 }
 
 .mobileBrand {
@@ -132,41 +132,6 @@
   border-radius: var(--sc-radius-sm);
 }
 
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  color: var(--sc-text-muted);
-  font-size: 0.8125rem;
-}
-
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--sc-border);
-}
-
-.googleBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.65rem;
-  padding: 0.6rem 1rem;
-  font-weight: 500;
-  font-size: 0.9375rem;
-  border-color: var(--sc-border-strong);
-  color: var(--sc-navy-900);
-  border-radius: var(--sc-radius-sm);
-}
-
-.googleBtn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
 @media (min-width: 992px) {
   .brandPanel {
     display: flex;
@@ -179,10 +144,22 @@
 
 @media (max-width: 991px) {
   .langRow {
-    padding: 1rem 1.25rem 0;
+    top: 1rem;
+    right: 1.25rem;
   }
 
   .formInner {
-    padding: 1rem 1.25rem 2rem;
+    padding: 3.25rem 1.25rem 2rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .brandPanel {
+    flex-basis: 56%;
+    padding: 3.5rem 4rem 0;
+  }
+
+  .formPanel {
+    flex-basis: 44%;
   }
 }

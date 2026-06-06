@@ -1,3 +1,53 @@
+.wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.compactWrap {
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem 0.2rem 0.45rem;
+  border: 1px solid var(--sc-border);
+  border-radius: 999px;
+  background: #fafaf9;
+}
+
+.globe {
+  color: var(--sc-text-muted);
+  flex-shrink: 0;
+}
+
+.light {
+  background: transparent;
+  border: none;
+  color: var(--sc-navy-800);
+}
+
+.compact {
+  width: auto;
+  min-width: 0;
+  max-width: 6.5rem;
+  padding: 0 1.25rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  height: auto;
+  box-shadow: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2378716c' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-size: 0.65rem;
+  background-position: right 0.1rem center;
+}
+
+.compact:focus {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.compactWrap:focus-within {
+  border-color: var(--sc-navy-600);
+  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.08);
+}
+
 .dark {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.14);

@@ -1,28 +1,59 @@
+import { useId } from 'react';
 import styles from './BrandMark.module.css';
 
 interface BrandMarkProps {
   variant?: 'light' | 'dark';
+  layout?: 'inline' | 'hero';
   showSubtitle?: boolean;
   subtitle?: string;
 }
 
-export function BrandMark({ variant = 'dark', showSubtitle = false, subtitle }: BrandMarkProps) {
+function BrandIcon({ className, gradientId }: { className?: string; gradientId: string }) {
   return (
-    <div className={`${styles.mark} ${styles[variant]}`}>
-      <div className={styles.icon} aria-hidden>
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="8" fill="url(#sc-gold)" />
-          <path
-            d="M9 22V10h3.2l3.4 7.2L19 10h3v12h-2.6v-7.1L16.2 22h-2.1l-3.2-7.1V22H9z"
-            fill="#0f172a"
-          />
-          <defs>
-            <linearGradient id="sc-gold" x1="4" y1="4" x2="28" y2="28">
-              <stop stopColor="#e8d48a" />
-              <stop offset="1" stopColor="#c9a227" />
-            </linearGradient>
-          </defs>
-        </svg>
+    <svg viewBox="0 0 88 96" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden>
+      <path
+        d="M44 4L82 26v44L44 92 6 70V26L44 4z"
+        fill={`url(#${gradientId})`}
+      />
+      <path
+        d="M44 4L82 26v44L44 92 6 70V26L44 4z"
+        stroke="rgba(255,255,255,0.15)"
+        strokeWidth="1"
+        fill="none"
+      />
+      <text
+        x="44"
+        y="58"
+        textAnchor="middle"
+        fill="#0f172a"
+        fontSize="38"
+        fontWeight="800"
+        fontFamily="Inter, system-ui, sans-serif"
+      >
+        S
+      </text>
+      <defs>
+        <linearGradient id={gradientId} x1="12" y1="8" x2="76" y2="88" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#e8d48a" />
+          <stop offset="1" stopColor="#c9a227" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
+export function BrandMark({
+  variant = 'dark',
+  layout = 'inline',
+  showSubtitle = false,
+  subtitle,
+}: BrandMarkProps) {
+  const gradientId = useId().replace(/:/g, '');
+
+  return (
+    <div className={`${styles.mark} ${styles[variant]} ${styles[layout]}`}>
+      <div className={styles.icon}>
+        <BrandIcon gradientId={gradientId} />
       </div>
       <div className={styles.text}>
         <span className={styles.name}>

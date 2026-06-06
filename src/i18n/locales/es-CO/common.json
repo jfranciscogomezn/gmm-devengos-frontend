@@ -79,7 +79,9 @@
   },
   "language": {
     "esCO": "Español (CO)",
-    "enUS": "English (US)"
+    "esCOShort": "ES",
+    "enUS": "English (US)",
+    "enUSShort": "EN"
   },
   "planSuffix": "plan {{plan}}"
 }
