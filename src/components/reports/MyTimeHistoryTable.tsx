@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import axios from 'axios';
-import { Alert, Table } from 'react-bootstrap';
+import { Alert, Badge, Button, Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import type { TimeReportRecord } from '../../api/reports.service';
 import type { TimeRecord } from '../../types';
 import { TimeRecordStatusBadge } from '../time/TimeRecordStatusBadge';
+import { CorrectionRequestModal } from '../time/CorrectionRequestModal';
 import {
   computeDurationMinutes,
   formatDuration,
@@ -17,6 +19,7 @@ interface MyTimeHistoryTableProps {
   reportByRecordId: Map<number, TimeReportRecord>;
   reportBlocked: boolean;
   incompleteDates: string[] | null;
+  pendingRequestIds?: Set<number>;
 }
 
 export function MyTimeHistoryTable({
@@ -24,8 +27,10 @@ export function MyTimeHistoryTable({
   reportByRecordId,
   reportBlocked,
   incompleteDates,
+  pendingRequestIds = new Set(),
 }: MyTimeHistoryTableProps) {
   const { t } = useTranslation(['time', 'common', 'reports']);
+  const [correctionTarget, setCorrectionTarget] = useState<{ id: number; workDate: string } | null>(null);
 
   return (
     <>
@@ -51,12 +56,13 @@ export function MyTimeHistoryTable({
                 <th>{t('common:labels.notes')}</th>
               </>
             )}
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {records.length === 0 ? (
             <tr>
-              <td colSpan={reportBlocked ? 5 : 9} className="text-center text-muted py-4">
+              <td colSpan={reportBlocked ? 6 : 10} className="text-center text-muted py-4">
                 {t('time:history.emptyRange')}
               </td>
             </tr>
@@ -65,6 +71,7 @@ export function MyTimeHistoryTable({
               const durationMinutes = computeDurationMinutes(record.clockIn, record.clockOut);
               const report = reportByRecordId.get(record.id);
               const rowClass = report ? highlightRowClass(report.highlightLevel) : '';
+              const hasPendingRequest = pendingRequestIds.has(record.id);
 
               return (
                 <tr key={record.id} className={rowClass}>
@@ -99,12 +106,38 @@ export function MyTimeHistoryTable({
                       </td>
                     </>
                   )}
+                  <td className="text-end">
+                    {record.status === 'CLOSED' && (
+                      hasPendingRequest ? (
+                        <Badge bg="warning" text="dark" className="small">
+                          {t('time:myTime.correctionPending')}
+                        </Badge>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline-secondary"
+                          onClick={() => setCorrectionTarget({ id: record.id, workDate: record.workDate })}
+                        >
+                          {t('time:myTime.requestCorrection')}
+                        </Button>
+                      )
+                    )}
+                  </td>
                 </tr>
               );
             })
           )}
         </tbody>
       </Table>
+
+      {correctionTarget && (
+        <CorrectionRequestModal
+          timeRecordId={correctionTarget.id}
+          workDate={correctionTarget.workDate}
+          show={correctionTarget !== null}
+          onHide={() => setCorrectionTarget(null)}
+        />
+      )}
     </>
   );
 }

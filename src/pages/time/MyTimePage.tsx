@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { correctionRequestsService } from '../../api/correctionRequests.service';
 import { reportsService, type TimeReportRecord } from '../../api/reports.service';
 import { timeService } from '../../api/time.service';
 import {
@@ -48,6 +49,12 @@ export function MyTimePage() {
     retry: (_, queryError) => parseIncompleteReportError(queryError) === null,
   });
 
+  const pendingRequestsQuery = useQuery({
+    queryKey: ['correction-requests', 'mine'],
+    queryFn: correctionRequestsService.listMine,
+    staleTime: 30_000,
+  });
+
   const todayRecord = useMemo(() => findTodayRecord(records, today), [records, today]);
 
   const reportByRecordId = useMemo(() => {
@@ -55,6 +62,12 @@ export function MyTimePage() {
     earningsQuery.data?.records.forEach((row) => map.set(row.timeRecordId, row));
     return map;
   }, [earningsQuery.data]);
+
+  const pendingRequestIds = useMemo(() => {
+    const ids = new Set<number>();
+    pendingRequestsQuery.data?.forEach((req) => ids.add(req.timeRecordId));
+    return ids;
+  }, [pendingRequestsQuery.data]);
 
   const incompleteDates = parseIncompleteReportError(earningsQuery.error);
   const reportBlocked = incompleteDates !== null;
@@ -239,6 +252,7 @@ export function MyTimePage() {
         reportByRecordId={reportByRecordId}
         reportBlocked={reportBlocked}
         incompleteDates={incompleteDates}
+        pendingRequestIds={pendingRequestIds}
       />
     </div>
   );
