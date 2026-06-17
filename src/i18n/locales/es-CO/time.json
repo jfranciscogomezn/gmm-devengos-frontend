@@ -17,7 +17,18 @@
     "clockInAction": "Registrar entrada",
     "clockOutAction": "Registrar salida",
     "clockingIn": "Registrando entrada…",
-    "clockingOut": "Registrando salida…"
+    "clockingOut": "Registrando salida…",
+    "requestCorrection": "Solicitar corrección",
+    "correctionPending": "Corrección pendiente",
+    "correctionRequestModal": {
+      "title": "Solicitar corrección — {{date}}",
+      "description": "Describa por qué este registro de tiempo necesita ser corregido. Su solicitud será enviada al administrador.",
+      "noteLabel": "Nota",
+      "notePlaceholder": "Ej.: La hora de salida fue incorrecta porque…",
+      "cancel": "Cancelar",
+      "submit": "Enviar solicitud",
+      "submitting": "Enviando…"
+    }
   },
   "admin": {
     "title": "Registros de tiempo",
@@ -25,12 +36,15 @@
     "createRecord": "Crear registro",
     "tabs": {
       "records": "Registros",
-      "incomplete": "Incompletos"
+      "incomplete": "Incompletos",
+      "correctionRequests": "Solicitudes de corrección"
     },
     "employeeOptionAll": "Todos los empleados (pestaña incompletos) / Seleccione para registros",
     "selectEmployeeHint": "Seleccione un empleado para ver sus registros de tiempo.",
     "showingRecords": "Mostrando registros de {{name}} del {{from}} al {{to}}.",
     "noRecords": "No se encontraron registros.",
+    "showEarnings": "Mostrar devengados",
+    "uncappedView": "Vista sin tope",
     "table": {
       "clockIn": "Entrada",
       "clockOut": "Salida"
@@ -39,6 +53,18 @@
       "reopen": "Reabrir",
       "resolve": "Resolver",
       "correct": "Corregir"
+    },
+    "correctionRequests": {
+      "empty": "No hay solicitudes de corrección pendientes.",
+      "note": "Nota",
+      "submitted": "Enviada",
+      "dismiss": "Desestimar",
+      "dismissModal": {
+        "title": "Desestimar solicitud de corrección",
+        "description": "Desestimando la solicitud de {{employee}} para el {{date}}. El registro no será modificado.",
+        "reasonLabel": "Motivo del rechazo",
+        "confirm": "Desestimar"
+      }
     },
     "modals": {
       "resolveTitle": "Resolver registro incompleto",
@@ -104,5 +130,11 @@
     "normalMin": "Normal (min)",
     "daytimeOtMin": "H.E. diurna (min)",
     "earnings": "Devengado"
+  },
+  "notifications": {
+    "TIME_RECORD_REOPENED": "Su registro de tiempo del {{date}} fue reabierto.",
+    "TIME_RECORD_CORRECTED": "Su registro de tiempo del {{date}} fue corregido.",
+    "TIME_RECORD_CREATED_BY_ADMIN": "Se creó un registro de tiempo para usted el {{date}}.",
+    "TIME_CORRECTION_REQUEST_SUBMITTED": "Se envió una solicitud de corrección."
   }
 }

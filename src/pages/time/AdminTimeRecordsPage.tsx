@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Alert,
+  Badge,
   Button,
   Col,
   Form,
@@ -14,7 +15,9 @@ import {
   Table,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { correctionRequestsService, type CorrectionRequest } from '../../api/correctionRequests.service';
 import { employeesService } from '../../api/employees.service';
+import { reportsService } from '../../api/reports.service';
 import {
   timeService,
   type CorrectTimeRecordRequest,
@@ -22,6 +25,7 @@ import {
   type ResolveIncompleteRequest,
 } from '../../api/time.service';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
+import { TimeReportTable } from '../../components/reports/TimeReportTable';
 import { TimeRecordStatusBadge } from '../../components/time/TimeRecordStatusBadge';
 import { useAuth } from '../../context/AuthContext';
 import type { TimeRecord } from '../../types';
@@ -48,10 +52,14 @@ export function AdminTimeRecordsPage() {
   const [employeeId, setEmployeeId] = useState<number | ''>('');
   const [fromDate, setFromDate] = useState(toIsoDateString(startOfMonth(new Date())));
   const [toDate, setToDate] = useState(today);
-  const [activeTab, setActiveTab] = useState<'records' | 'incomplete'>('records');
+  const [activeTab, setActiveTab] = useState<'records' | 'incomplete' | 'correctionRequests'>('records');
+  const [dismissTarget, setDismissTarget] = useState<CorrectionRequest | null>(null);
+  const [dismissReason, setDismissReason] = useState('');
   const [modalMode, setModalMode] = useState<AdminModalMode>(null);
   const [selectedRecord, setSelectedRecord] = useState<TimeRecord | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [showEarnings, setShowEarnings] = useState(false);
+  const [uncapped, setUncapped] = useState(false);
 
   const [resolveClockOut, setResolveClockOut] = useState('');
   const [resolveNote, setResolveNote] = useState('');
@@ -86,8 +94,44 @@ export function AdminTimeRecordsPage() {
     enabled: activeTab === 'incomplete',
   });
 
+  const { data: earningsData, isLoading: earningsLoading, isError: earningsError, error: earningsQueryError } = useQuery({
+    queryKey: ['reports', 'time', uncapped, selectedEmployeeId, fromDate, toDate],
+    queryFn: () =>
+      uncapped
+        ? reportsService.getUncappedReport({
+            employeeId: selectedEmployeeId as number,
+            startDate: fromDate,
+            endDate: toDate,
+          })
+        : reportsService.getCappedReport({
+            employeeId: selectedEmployeeId as number,
+            startDate: fromDate,
+            endDate: toDate,
+          }),
+    enabled: showEarnings && selectedEmployeeId !== null && activeTab === 'records',
+  });
+
+  const { data: pendingRequests = [], isLoading: requestsLoading } = useQuery({
+    queryKey: ['correction-requests', 'pending'],
+    queryFn: correctionRequestsService.getPending,
+    staleTime: 30_000,
+  });
+
+  const dismissMutation = useMutation({
+    mutationFn: ({ id, reason }: { id: number; reason: string }) =>
+      correctionRequestsService.dismiss(id, reason),
+    onSuccess: async () => {
+      setActionError(null);
+      setDismissTarget(null);
+      setDismissReason('');
+      await queryClient.invalidateQueries({ queryKey: ['correction-requests'] });
+    },
+    onError: (error) => setActionError(getApiErrorMessage(error, 'correction request')),
+  });
+
   const invalidateTimeQueries = async () => {
     await queryClient.invalidateQueries({ queryKey: ['time-records'] });
+    await queryClient.invalidateQueries({ queryKey: ['correction-requests'] });
   };
 
   const reopenMutation = useMutation({
@@ -336,13 +380,47 @@ export function AdminTimeRecordsPage() {
         )}
       </Row>
 
-      <Tab.Container activeKey={activeTab} onSelect={(key) => setActiveTab((key as 'records' | 'incomplete') ?? 'records')}>
+      {activeTab !== 'correctionRequests' && activeTab === 'records' && (
+        <div className="d-flex gap-4 mb-4">
+          <Form.Check
+            type="switch"
+            id="admin-time-show-earnings"
+            label={t('time:admin.showEarnings')}
+            checked={showEarnings}
+            disabled={selectedEmployeeId === null}
+            onChange={(e) => {
+              setShowEarnings(e.target.checked);
+              if (!e.target.checked) setUncapped(false);
+            }}
+          />
+          {showEarnings && (
+            <Form.Check
+              type="switch"
+              id="admin-time-uncapped"
+              label={t('time:admin.uncappedView')}
+              checked={uncapped}
+              disabled={selectedEmployeeId === null}
+              onChange={(e) => setUncapped(e.target.checked)}
+            />
+          )}
+        </div>
+      )}
+
+      <Tab.Container activeKey={activeTab} onSelect={(key) => setActiveTab((key as 'records' | 'incomplete' | 'correctionRequests') ?? 'records')}>
         <Nav variant="tabs" className="mb-3">
           <Nav.Item>
             <Nav.Link eventKey="records">{t('time:admin.tabs.records')}</Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link eventKey="incomplete">{t('time:admin.tabs.incomplete')}</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="correctionRequests">
+              {t('time:admin.tabs.correctionRequests')}
+              {pendingRequests.length > 0 && (
+                <Badge bg="danger" className="ms-1">{pendingRequests.length}</Badge>
+              )}
+            </Nav.Link>
           </Nav.Item>
         </Nav>
 
@@ -368,19 +446,35 @@ export function AdminTimeRecordsPage() {
                     })}
                   </p>
                 )}
-                <Table striped hover responsive>
-                  <thead>
-                    <tr>
-                      <th>{t('common:labels.date')}</th>
-                      <th>{t('time:admin.table.clockIn')}</th>
-                      <th>{t('time:admin.table.clockOut')}</th>
-                      <th>{t('common:labels.duration')}</th>
-                      <th>{t('common:labels.status')}</th>
-                      <th>{t('common:labels.actions')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderRecordRows(records, true)}</tbody>
-                </Table>
+                {showEarnings && earningsLoading && (
+                  <div className="d-flex align-items-center gap-2 text-muted small mb-2">
+                    <Spinner size="sm" />
+                  </div>
+                )}
+                {showEarnings && earningsError && (
+                  <ApiErrorAlert
+                    error={earningsQueryError}
+                    resourceLabel="earnings"
+                    roleName={currentUser?.roleName}
+                  />
+                )}
+                {showEarnings && earningsData ? (
+                  <TimeReportTable records={earningsData.records} uncapped={uncapped} />
+                ) : (
+                  <Table striped hover responsive>
+                    <thead>
+                      <tr>
+                        <th>{t('common:labels.date')}</th>
+                        <th>{t('time:admin.table.clockIn')}</th>
+                        <th>{t('time:admin.table.clockOut')}</th>
+                        <th>{t('common:labels.duration')}</th>
+                        <th>{t('common:labels.status')}</th>
+                        <th>{t('common:labels.actions')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>{renderRecordRows(records, true)}</tbody>
+                  </Table>
+                )}
               </>
             )}
           </Tab.Pane>
@@ -404,6 +498,62 @@ export function AdminTimeRecordsPage() {
                 </thead>
                 <tbody>{renderRecordRows(incompleteRecords, true)}</tbody>
               </Table>
+            )}
+          </Tab.Pane>
+
+          <Tab.Pane eventKey="correctionRequests">
+            {requestsLoading && <div className="text-center py-4"><Spinner /></div>}
+            {!requestsLoading && (
+              pendingRequests.length === 0 ? (
+                <p className="text-muted">{t('time:admin.correctionRequests.empty')}</p>
+              ) : (
+                <Table striped hover responsive>
+                  <thead>
+                    <tr>
+                      <th>{t('common:labels.employee')}</th>
+                      <th>{t('common:labels.date')}</th>
+                      <th>{t('time:admin.correctionRequests.note')}</th>
+                      <th>{t('time:admin.correctionRequests.submitted')}</th>
+                      <th>{t('common:labels.actions')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pendingRequests.map((req) => (
+                      <tr key={req.id}>
+                        <td>{req.employeeName}</td>
+                        <td>{req.recordDate ? formatWorkDate(req.recordDate) : '—'}</td>
+                        <td className="small">{req.note}</td>
+                        <td className="small text-muted">
+                          {new Date(req.createdAt).toLocaleDateString()}
+                        </td>
+                        <td>
+                          <div className="d-flex flex-wrap gap-1">
+                            <Button
+                              size="sm"
+                              variant="outline-warning"
+                              disabled={reopenMutation.isPending}
+                              onClick={() => {
+                                if (req.timeRecordId) {
+                                  reopenMutation.mutate(req.timeRecordId);
+                                }
+                              }}
+                            >
+                              {t('time:admin.actions.reopen')}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline-secondary"
+                              onClick={() => setDismissTarget(req)}
+                            >
+                              {t('time:admin.correctionRequests.dismiss')}
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              )
             )}
           </Tab.Pane>
         </Tab.Content>
@@ -571,6 +721,54 @@ export function AdminTimeRecordsPage() {
             }}
           >
             {t('time:admin.createRecord')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Dismiss correction request modal */}
+      <Modal show={dismissTarget !== null} onHide={() => { setDismissTarget(null); setDismissReason(''); }} centered>
+        <Modal.Header closeButton>
+          <Modal.Title className="h6">{t('time:admin.correctionRequests.dismissModal.title')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {dismissTarget && (
+            <p className="text-muted small mb-3">
+              {t('time:admin.correctionRequests.dismissModal.description', {
+                employee: dismissTarget.employeeName,
+                date: dismissTarget.recordDate ? formatWorkDate(dismissTarget.recordDate) : '—',
+              })}
+            </p>
+          )}
+          <Form.Group controlId="dismiss-reason">
+            <Form.Label>{t('time:admin.correctionRequests.dismissModal.reasonLabel')}</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={dismissReason}
+              onChange={(e) => setDismissReason(e.target.value)}
+              disabled={dismissMutation.isPending}
+              maxLength={1000}
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => { setDismissTarget(null); setDismissReason(''); }}>
+            {t('common:actions.cancel')}
+          </Button>
+          <Button
+            variant="danger"
+            disabled={dismissMutation.isPending || dismissReason.trim().length === 0}
+            onClick={() => {
+              if (dismissTarget) {
+                dismissMutation.mutate({ id: dismissTarget.id, reason: dismissReason.trim() });
+              }
+            }}
+          >
+            {dismissMutation.isPending ? (
+              <><Spinner size="sm" className="me-1" />{t('common:actions.saving')}</>
+            ) : (
+              t('time:admin.correctionRequests.dismissModal.confirm')
+            )}
           </Button>
         </Modal.Footer>
       </Modal>

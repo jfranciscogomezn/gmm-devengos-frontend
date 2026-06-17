@@ -17,7 +17,18 @@
     "clockInAction": "Clock in",
     "clockOutAction": "Clock out",
     "clockingIn": "Clocking in…",
-    "clockingOut": "Clocking out…"
+    "clockingOut": "Clocking out…",
+    "requestCorrection": "Request correction",
+    "correctionPending": "Correction pending",
+    "correctionRequestModal": {
+      "title": "Request correction — {{date}}",
+      "description": "Describe why this time record needs to be corrected. Your request will be sent to an administrator.",
+      "noteLabel": "Note",
+      "notePlaceholder": "E.g.: The clock-out time was incorrect because…",
+      "cancel": "Cancel",
+      "submit": "Send request",
+      "submitting": "Sending…"
+    }
   },
   "admin": {
     "title": "Time Records",
@@ -25,12 +36,15 @@
     "createRecord": "Create record",
     "tabs": {
       "records": "Records",
-      "incomplete": "Incomplete"
+      "incomplete": "Incomplete",
+      "correctionRequests": "Correction requests"
     },
     "employeeOptionAll": "All employees (incomplete tab) / Select for records",
     "selectEmployeeHint": "Select an employee to view their time records.",
     "showingRecords": "Showing records for {{name}} from {{from}} to {{to}}.",
     "noRecords": "No records found.",
+    "showEarnings": "Show earnings",
+    "uncappedView": "Uncapped view",
     "table": {
       "clockIn": "Clock in",
       "clockOut": "Clock out"
@@ -39,6 +53,18 @@
       "reopen": "Reopen",
       "resolve": "Resolve",
       "correct": "Correct"
+    },
+    "correctionRequests": {
+      "empty": "No pending correction requests.",
+      "note": "Note",
+      "submitted": "Submitted",
+      "dismiss": "Dismiss",
+      "dismissModal": {
+        "title": "Dismiss correction request",
+        "description": "Dismissing the request from {{employee}} for {{date}}. The record will not be modified.",
+        "reasonLabel": "Reason for dismissal",
+        "confirm": "Dismiss"
+      }
     },
     "modals": {
       "resolveTitle": "Resolve incomplete record",
@@ -104,5 +130,11 @@
     "normalMin": "Normal (min)",
     "daytimeOtMin": "Daytime OT (min)",
     "earnings": "Earnings"
+  },
+  "notifications": {
+    "TIME_RECORD_REOPENED": "Your time record for {{date}} has been reopened.",
+    "TIME_RECORD_CORRECTED": "Your time record for {{date}} was corrected.",
+    "TIME_RECORD_CREATED_BY_ADMIN": "A time record was created for you on {{date}}.",
+    "TIME_CORRECTION_REQUEST_SUBMITTED": "A correction request was submitted."
   }
 }
