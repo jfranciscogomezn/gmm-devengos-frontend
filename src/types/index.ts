@@ -252,3 +252,120 @@ export interface CreateHolidayRequest {
   date: string;
   description?: string;
 }
+
+// ─── Operations Domain ────────────────────────────────────────────────────────
+
+export type ClientStatus = 'ACTIVE' | 'INACTIVE';
+export interface Client {
+  id: number;
+  name: string;
+  taxId: string | null;
+  contactName: string | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  internalNotes: string | null;
+  status: ClientStatus;
+  createdAt: string;
+}
+
+export type VehicleStatus = 'ACTIVE' | 'MAINTENANCE' | 'RETIRED';
+export type VehicleType = 'CAMION' | 'TRACTOMULA' | 'FURGON' | 'VAN' | 'OTRO';
+export interface Vehicle {
+  id: number;
+  plate: string;
+  type: VehicleType;
+  brand: string | null;
+  model: string | null;
+  year: number | null;
+  status: VehicleStatus;
+  internalNotes: string | null;
+  createdAt: string;
+}
+
+export type OsiStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
+export interface OsiSummary {
+  id: number;
+  osiNumber: string;
+  clientId: number;
+  clientName: string;
+  origin: string;
+  destination: string;
+  status: OsiStatus;
+  createdAt: string;
+  vehicleCount: number;
+}
+
+export type OsiVehicleState = 'PLANNED' | 'EN_RUTA' | 'EN_DESTINO' | 'DESCARGANDO' | 'CERRADO_TRACKING' | 'INCIDENTE';
+export interface OsiVehicleAssignment {
+  id: number;
+  vehicleId: number;
+  vehiclePlate: string;
+  state: OsiVehicleState;
+  assignedUserIds: number[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Osi {
+  id: number;
+  osiNumber: string;
+  clientId: number;
+  clientName: string;
+  origin: string;
+  destination: string;
+  loadWindowStart: string | null;
+  loadWindowEnd: string | null;
+  deliveryWindowStart: string | null;
+  deliveryWindowEnd: string | null;
+  commercialReference: string | null;
+  internalNotes: string | null;
+  status: OsiStatus;
+  coordinatorUserId: number | null;
+  createdAt: string;
+  closedAt: string | null;
+  assignments: OsiVehicleAssignment[];
+}
+
+export type EventDefaultVisibility = 'INTERNO' | 'CLIENTE' | 'CLIENTE_CON_APROBACION';
+export type EventVisibility = EventDefaultVisibility | 'PENDIENTE_APROBACION';
+export interface EventType {
+  id: number;
+  name: string;
+  description: string | null;
+  defaultVisibility: EventDefaultVisibility;
+  minAttachments: number;
+  maxAttachments: number;
+  hasMeasurementForm: boolean;
+  active: boolean;
+  createdAt: string;
+}
+
+export interface OsiEventAttachment {
+  id: number;
+  filename: string;
+  uri: string;
+  mimeType: string | null;
+  fileSizeBytes: number | null;
+  createdAt: string;
+}
+
+export interface OsiEvent {
+  id: number;
+  osiId: number;
+  vehicleId: number;
+  eventTypeId: number;
+  eventTypeName: string;
+  authorUserId: number;
+  text: string;
+  capturedAtLocal: string | null;
+  receivedAt: string;
+  geoLat: number | null;
+  geoLng: number | null;
+  effectiveVisibility: EventVisibility;
+  parentEventId: number | null;
+  correctionReason: string | null;
+  idempotencyKey: string;
+  externalPartyName: string | null;
+  externalPartyDocument: string | null;
+  attachments: OsiEventAttachment[];
+}

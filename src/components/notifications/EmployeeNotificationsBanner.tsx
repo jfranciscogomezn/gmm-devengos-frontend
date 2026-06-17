@@ -8,12 +8,15 @@ const EMPLOYEE_NOTIFICATION_TYPES = new Set([
   'TIME_RECORD_REOPENED',
   'TIME_RECORD_CORRECTED',
   'TIME_RECORD_CREATED_BY_ADMIN',
+  'OSI_ASSIGNMENT',
+  'OSI_EVENT_PENDING_APPROVAL',
+  'OSI_OWNER_ASSIGNED',
 ]);
 
 export function EmployeeNotificationsBanner() {
   const { t } = useTranslation('time');
   const { hasPermission } = useAuth();
-  const isEmployee = hasPermission('MY_TIME');
+  const isEmployee = hasPermission('MY_TIME') || hasPermission('OPS_OSI');
 
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', 'mine'],
