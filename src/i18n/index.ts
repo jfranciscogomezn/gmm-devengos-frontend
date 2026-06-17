@@ -14,6 +14,7 @@ import esEmployees from './locales/es-CO/employees.json';
 import esAccess from './locales/es-CO/access.json';
 import esPlatform from './locales/es-CO/platform.json';
 import esProfile from './locales/es-CO/profile.json';
+import esOperations from './locales/es-CO/operations.json';
 
 import enCommon from './locales/en-US/common.json';
 import enAuth from './locales/en-US/auth.json';
@@ -27,6 +28,7 @@ import enEmployees from './locales/en-US/employees.json';
 import enAccess from './locales/en-US/access.json';
 import enPlatform from './locales/en-US/platform.json';
 import enProfile from './locales/en-US/profile.json';
+import enOperations from './locales/en-US/operations.json';
 
 void i18n.use(initReactI18next).init({
   resources: {
@@ -43,6 +45,7 @@ void i18n.use(initReactI18next).init({
       access: esAccess,
       platform: esPlatform,
       profile: esProfile,
+      operations: esOperations,
     },
     'en-US': {
       common: enCommon,
@@ -57,12 +60,13 @@ void i18n.use(initReactI18next).init({
       access: enAccess,
       platform: enPlatform,
       profile: enProfile,
+      operations: enOperations,
     },
   },
   lng: getStoredLocale(),
   fallbackLng: DEFAULT_LOCALE === 'es-CO' ? 'en-US' : 'es-CO',
   defaultNS: 'common',
-  ns: ['common', 'auth', 'menu', 'dashboard', 'errors', 'time', 'reports', 'payroll', 'employees', 'access', 'platform', 'profile'],
+  ns: ['common', 'auth', 'menu', 'dashboard', 'errors', 'time', 'reports', 'payroll', 'employees', 'access', 'platform', 'profile', 'operations'],
   interpolation: { escapeValue: false },
 });
 

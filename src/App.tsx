@@ -23,6 +23,11 @@ import { TimeRecordAuditPage } from './pages/time/TimeRecordAuditPage';
 import { ReportsPage } from './pages/reports/ReportsPage';
 import { PayrollConfigPage } from './pages/payroll/PayrollConfigPage';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
+import { ClientsPage } from './pages/operations/clients/ClientsPage';
+import { VehiclesPage } from './pages/operations/vehicles/VehiclesPage';
+import { OsiListPage } from './pages/operations/osi/OsiListPage';
+import { OsiDetailPage } from './pages/operations/osi/OsiDetailPage';
+import { EventTypesPage } from './pages/operations/event-types/EventTypesPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -231,6 +236,46 @@ export default function App() {
                 element={
                   <ProtectedRoute requirePermission="MY_TIME">
                     <ReportsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="operations/clients"
+                element={
+                  <ProtectedRoute requirePermission="OPS_CLIENTS">
+                    <ClientsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="operations/vehicles"
+                element={
+                  <ProtectedRoute requirePermission="OPS_VEHICLES">
+                    <VehiclesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="operations/osi"
+                element={
+                  <ProtectedRoute requirePermission="OPS_OSI">
+                    <OsiListPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="operations/osi/:id"
+                element={
+                  <ProtectedRoute requirePermission="OPS_OSI">
+                    <OsiDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="operations/event-types"
+                element={
+                  <ProtectedRoute requirePermission="OPS_EVENT_TYPES">
+                    <EventTypesPage />
                   </ProtectedRoute>
                 }
               />
