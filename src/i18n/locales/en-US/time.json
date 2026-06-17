@@ -31,6 +31,8 @@
     "selectEmployeeHint": "Select an employee to view their time records.",
     "showingRecords": "Showing records for {{name}} from {{from}} to {{to}}.",
     "noRecords": "No records found.",
+    "showEarnings": "Show earnings",
+    "uncappedView": "Uncapped view",
     "table": {
       "clockIn": "Clock in",
       "clockOut": "Clock out"
