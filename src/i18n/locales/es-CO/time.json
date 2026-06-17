@@ -31,6 +31,8 @@
     "selectEmployeeHint": "Seleccione un empleado para ver sus registros de tiempo.",
     "showingRecords": "Mostrando registros de {{name}} del {{from}} al {{to}}.",
     "noRecords": "No se encontraron registros.",
+    "showEarnings": "Mostrar devengados",
+    "uncappedView": "Vista sin tope",
     "table": {
       "clockIn": "Entrada",
       "clockOut": "Salida"

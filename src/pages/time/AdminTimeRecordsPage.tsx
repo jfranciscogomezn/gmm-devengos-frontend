@@ -15,6 +15,7 @@ import {
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { employeesService } from '../../api/employees.service';
+import { reportsService } from '../../api/reports.service';
 import {
   timeService,
   type CorrectTimeRecordRequest,
@@ -22,6 +23,7 @@ import {
   type ResolveIncompleteRequest,
 } from '../../api/time.service';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
+import { TimeReportTable } from '../../components/reports/TimeReportTable';
 import { TimeRecordStatusBadge } from '../../components/time/TimeRecordStatusBadge';
 import { useAuth } from '../../context/AuthContext';
 import type { TimeRecord } from '../../types';
@@ -52,6 +54,8 @@ export function AdminTimeRecordsPage() {
   const [modalMode, setModalMode] = useState<AdminModalMode>(null);
   const [selectedRecord, setSelectedRecord] = useState<TimeRecord | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [showEarnings, setShowEarnings] = useState(false);
+  const [uncapped, setUncapped] = useState(false);
 
   const [resolveClockOut, setResolveClockOut] = useState('');
   const [resolveNote, setResolveNote] = useState('');
@@ -84,6 +88,23 @@ export function AdminTimeRecordsPage() {
     queryKey: ['time-records', 'incomplete', selectedEmployeeId],
     queryFn: () => timeService.getIncomplete(selectedEmployeeId ?? undefined),
     enabled: activeTab === 'incomplete',
+  });
+
+  const { data: earningsData, isLoading: earningsLoading, isError: earningsError, error: earningsQueryError } = useQuery({
+    queryKey: ['reports', 'time', uncapped, selectedEmployeeId, fromDate, toDate],
+    queryFn: () =>
+      uncapped
+        ? reportsService.getUncappedReport({
+            employeeId: selectedEmployeeId as number,
+            startDate: fromDate,
+            endDate: toDate,
+          })
+        : reportsService.getCappedReport({
+            employeeId: selectedEmployeeId as number,
+            startDate: fromDate,
+            endDate: toDate,
+          }),
+    enabled: showEarnings && selectedEmployeeId !== null && activeTab === 'records',
   });
 
   const invalidateTimeQueries = async () => {
@@ -336,6 +357,32 @@ export function AdminTimeRecordsPage() {
         )}
       </Row>
 
+      {activeTab === 'records' && (
+        <div className="d-flex gap-4 mb-4">
+          <Form.Check
+            type="switch"
+            id="admin-time-show-earnings"
+            label={t('time:admin.showEarnings')}
+            checked={showEarnings}
+            disabled={selectedEmployeeId === null}
+            onChange={(e) => {
+              setShowEarnings(e.target.checked);
+              if (!e.target.checked) setUncapped(false);
+            }}
+          />
+          {showEarnings && (
+            <Form.Check
+              type="switch"
+              id="admin-time-uncapped"
+              label={t('time:admin.uncappedView')}
+              checked={uncapped}
+              disabled={selectedEmployeeId === null}
+              onChange={(e) => setUncapped(e.target.checked)}
+            />
+          )}
+        </div>
+      )}
+
       <Tab.Container activeKey={activeTab} onSelect={(key) => setActiveTab((key as 'records' | 'incomplete') ?? 'records')}>
         <Nav variant="tabs" className="mb-3">
           <Nav.Item>
@@ -368,19 +415,35 @@ export function AdminTimeRecordsPage() {
                     })}
                   </p>
                 )}
-                <Table striped hover responsive>
-                  <thead>
-                    <tr>
-                      <th>{t('common:labels.date')}</th>
-                      <th>{t('time:admin.table.clockIn')}</th>
-                      <th>{t('time:admin.table.clockOut')}</th>
-                      <th>{t('common:labels.duration')}</th>
-                      <th>{t('common:labels.status')}</th>
-                      <th>{t('common:labels.actions')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderRecordRows(records, true)}</tbody>
-                </Table>
+                {showEarnings && earningsLoading && (
+                  <div className="d-flex align-items-center gap-2 text-muted small mb-2">
+                    <Spinner size="sm" />
+                  </div>
+                )}
+                {showEarnings && earningsError && (
+                  <ApiErrorAlert
+                    error={earningsQueryError}
+                    resourceLabel="earnings"
+                    roleName={currentUser?.roleName}
+                  />
+                )}
+                {showEarnings && earningsData ? (
+                  <TimeReportTable records={earningsData.records} uncapped={uncapped} />
+                ) : (
+                  <Table striped hover responsive>
+                    <thead>
+                      <tr>
+                        <th>{t('common:labels.date')}</th>
+                        <th>{t('time:admin.table.clockIn')}</th>
+                        <th>{t('time:admin.table.clockOut')}</th>
+                        <th>{t('common:labels.duration')}</th>
+                        <th>{t('common:labels.status')}</th>
+                        <th>{t('common:labels.actions')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>{renderRecordRows(records, true)}</tbody>
+                  </Table>
+                )}
               </>
             )}
           </Tab.Pane>
