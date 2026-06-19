@@ -121,13 +121,47 @@
     "originalEvent": "Original Event"
   },
   "documents": {
-    "title": "Documents",
-    "new": "Add Document",
+    "title": "Transport Documents",
+    "add": "Add Document",
     "type": "Type",
-    "documentNumber": "Document Number",
-    "documentDate": "Date",
-    "adjunctUri": "Attachment URI",
-    "internalNotes": "Notes",
-    "noDocuments": "No documents."
+    "number": "Document Number",
+    "date": "Date",
+    "notes": "Notes",
+    "notesPlaceholder": "Optional notes",
+    "fileUri": "File URI",
+    "viewFile": "View file",
+    "empty": "No transport documents yet.",
+    "types": {
+      "PEDIDO": "Purchase Order",
+      "MANIFIESTO": "Manifest",
+      "REMISION": "Remission",
+      "OTRO": "Other"
+    }
+  },
+  "approval": {
+    "pending": "Pending Approval",
+    "approve": "Approve"
+  },
+  "eventForm": {
+    "title": "New Field Event",
+    "type": "Event Type",
+    "selectType": "Select type…",
+    "description": "Description",
+    "geoLat": "Latitude",
+    "geoLng": "Longitude",
+    "attachments": "Attachments",
+    "attachFilename": "Filename",
+    "attachmentsLimitReached": "Maximum {{max}} attachments reached."
+  },
+  "gps": {
+    "edit": "Edit GPS",
+    "viewTracking": "View tracking",
+    "noReference": "No GPS reference",
+    "provider": "GPS Provider",
+    "transitionError": "State transition failed"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel"
   }
 }

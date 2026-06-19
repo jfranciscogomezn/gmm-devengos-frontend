@@ -302,8 +302,23 @@ export interface OsiVehicleAssignment {
   vehiclePlate: string;
   state: OsiVehicleState;
   assignedUserIds: number[];
+  gpsProvider: string | null;
+  gpsReferenceUrl: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export type TransportDocumentType = 'PEDIDO' | 'MANIFIESTO' | 'REMISION' | 'OTRO';
+export interface OsiTransportDocument {
+  id: number;
+  osiId: number;
+  vehicleId: number;
+  type: TransportDocumentType;
+  documentNumber: string | null;
+  documentDate: string | null;
+  adjunctUri: string | null;
+  internalNotes: string | null;
+  createdAt: string;
 }
 
 export interface Osi {

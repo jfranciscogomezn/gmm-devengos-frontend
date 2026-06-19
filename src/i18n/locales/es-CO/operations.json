@@ -121,13 +121,47 @@
     "originalEvent": "Evento Original"
   },
   "documents": {
-    "title": "Documentos",
-    "new": "Agregar Documento",
+    "title": "Documentos de Transporte",
+    "add": "Agregar Documento",
     "type": "Tipo",
-    "documentNumber": "Número de Documento",
-    "documentDate": "Fecha",
-    "adjunctUri": "URI del Adjunto",
-    "internalNotes": "Notas",
-    "noDocuments": "No hay documentos."
+    "number": "Número de Documento",
+    "date": "Fecha",
+    "notes": "Notas",
+    "notesPlaceholder": "Notas opcionales",
+    "fileUri": "URI del Archivo",
+    "viewFile": "Ver archivo",
+    "empty": "Sin documentos de transporte aún.",
+    "types": {
+      "PEDIDO": "Pedido",
+      "MANIFIESTO": "Manifiesto",
+      "REMISION": "Remisión",
+      "OTRO": "Otro"
+    }
+  },
+  "approval": {
+    "pending": "Pendiente de Aprobación",
+    "approve": "Aprobar"
+  },
+  "eventForm": {
+    "title": "Nuevo Evento de Campo",
+    "type": "Tipo de Evento",
+    "selectType": "Seleccionar tipo…",
+    "description": "Descripción",
+    "geoLat": "Latitud",
+    "geoLng": "Longitud",
+    "attachments": "Adjuntos",
+    "attachFilename": "Nombre de archivo",
+    "attachmentsLimitReached": "Máximo de {{max}} adjuntos alcanzado."
+  },
+  "gps": {
+    "edit": "Editar GPS",
+    "viewTracking": "Ver rastreo",
+    "noReference": "Sin referencia GPS",
+    "provider": "Proveedor GPS",
+    "transitionError": "Error al cambiar estado"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar"
   }
 }
