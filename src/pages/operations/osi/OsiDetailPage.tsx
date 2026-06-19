@@ -6,6 +6,7 @@ import { osiService } from '../../../api/osi.service';
 import { OsiVehicleAssignmentPanel } from '../../../components/operations/OsiVehicleAssignmentPanel';
 import { EventLogPanel } from '../../../components/operations/EventLogPanel';
 import { OsiDocumentsPanel } from '../../../components/operations/OsiDocumentsPanel';
+import { TrackingTokenPanel } from '../../../components/operations/TrackingTokenPanel';
 import { ApiErrorAlert } from '../../../components/ApiErrorAlert/ApiErrorAlert';
 import type { OsiStatus } from '../../../types';
 
@@ -40,6 +41,12 @@ export function OsiDetailPage() {
           </Badge>
         </h4>
       </div>
+
+      <Card className="mb-3">
+        <Card.Body>
+          <TrackingTokenPanel osiId={osiId} />
+        </Card.Body>
+      </Card>
 
       <Row className="g-3 mb-3">
         <Col md={6}>

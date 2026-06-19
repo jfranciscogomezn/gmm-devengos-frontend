@@ -28,6 +28,7 @@ import { VehiclesPage } from './pages/operations/vehicles/VehiclesPage';
 import { OsiListPage } from './pages/operations/osi/OsiListPage';
 import { OsiDetailPage } from './pages/operations/osi/OsiDetailPage';
 import { EventTypesPage } from './pages/operations/event-types/EventTypesPage';
+import { ClientPortalPage } from './pages/portal/ClientPortalPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -57,6 +58,7 @@ export default function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/portal/:token" element={<ClientPortalPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route
               path="/"

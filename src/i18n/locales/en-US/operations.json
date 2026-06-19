@@ -160,6 +160,19 @@
     "provider": "GPS Provider",
     "transitionError": "State transition failed"
   },
+  "portal": {
+    "title": "Client Tracking Link",
+    "generate": "Generate tracking link",
+    "regenerate": "Regenerate",
+    "revoke": "Revoke",
+    "revokeTitle": "Revoke tracking link",
+    "revokeConfirm": "Are you sure? The client will no longer be able to access the portal with this link.",
+    "copy": "Copy link",
+    "copied": "Copied!",
+    "preview": "Preview",
+    "noToken": "No tracking link generated yet.",
+    "createdAt": "Generated at"
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel"

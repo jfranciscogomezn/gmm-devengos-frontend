@@ -160,6 +160,19 @@
     "provider": "Proveedor GPS",
     "transitionError": "Error al cambiar estado"
   },
+  "portal": {
+    "title": "Enlace de Seguimiento al Cliente",
+    "generate": "Generar enlace de seguimiento",
+    "regenerate": "Regenerar",
+    "revoke": "Revocar",
+    "revokeTitle": "Revocar enlace de seguimiento",
+    "revokeConfirm": "¿Está seguro? El cliente ya no podrá acceder al portal con este enlace.",
+    "copy": "Copiar enlace",
+    "copied": "¡Copiado!",
+    "preview": "Vista previa",
+    "noToken": "Aún no se ha generado un enlace de seguimiento.",
+    "createdAt": "Generado el"
+  },
   "common": {
     "save": "Guardar",
     "cancel": "Cancelar"
