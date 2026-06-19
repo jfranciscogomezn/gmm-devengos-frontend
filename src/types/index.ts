@@ -308,6 +308,46 @@ export interface OsiVehicleAssignment {
   updatedAt: string;
 }
 
+// ─── Client Portal ────────────────────────────────────────────────────────────
+
+export interface TrackingToken {
+  id: number;
+  osiId: number;
+  token: string;
+  createdByUserId: number | null;
+  createdAt: string;
+  revokedAt: string | null;
+}
+
+export interface PortalAttachment {
+  id: number;
+  filename: string;
+  uri: string;
+  mimeType: string | null;
+}
+
+export interface PortalEvent {
+  id: number;
+  eventTypeName: string;
+  text: string;
+  capturedAtLocal: string | null;
+  receivedAt: string;
+  geoLat: number | null;
+  geoLng: number | null;
+  attachments: PortalAttachment[];
+}
+
+export interface PortalOsiData {
+  osiNumber: string;
+  clientName: string;
+  origin: string;
+  destination: string;
+  aggregatedState: string;
+  events: PortalEvent[];
+}
+
+// ─── Transport Documents ─────────────────────────────────────────────────────
+
 export type TransportDocumentType = 'PEDIDO' | 'MANIFIESTO' | 'REMISION' | 'OTRO';
 export interface OsiTransportDocument {
   id: number;
