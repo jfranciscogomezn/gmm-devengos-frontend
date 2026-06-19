@@ -44,4 +44,17 @@ export const osiVehicleAssignmentsService = {
     );
     return data;
   },
+
+  updateGps: async (
+    osiId: number,
+    assignmentId: number,
+    gpsProvider: string | null,
+    gpsReferenceUrl: string | null,
+  ): Promise<OsiVehicleAssignment> => {
+    const { data } = await businessClient.patch<OsiVehicleAssignment>(
+      `/operations/osi/${osiId}/vehicles/${assignmentId}/gps`,
+      { gpsProvider, gpsReferenceUrl },
+    );
+    return data;
+  },
 };

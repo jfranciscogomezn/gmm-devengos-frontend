@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { osiService } from '../../../api/osi.service';
 import { OsiVehicleAssignmentPanel } from '../../../components/operations/OsiVehicleAssignmentPanel';
 import { EventLogPanel } from '../../../components/operations/EventLogPanel';
+import { OsiDocumentsPanel } from '../../../components/operations/OsiDocumentsPanel';
 import { ApiErrorAlert } from '../../../components/ApiErrorAlert/ApiErrorAlert';
 import type { OsiStatus } from '../../../types';
 
@@ -79,27 +80,50 @@ export function OsiDetailPage() {
       </Row>
 
       {osi.assignments.length > 0 && (
-        <Card>
-          <Card.Body>
-            <Card.Title as="h6">{t('events.title')}</Card.Title>
-            <Tabs defaultActiveKey={`vehicle-${osi.assignments[0].vehicleId}`} className="mb-3">
-              {osi.assignments.map(a => (
-                <Tab
-                  key={a.vehicleId}
-                  eventKey={`vehicle-${a.vehicleId}`}
-                  title={a.vehiclePlate}
-                >
-                  <EventLogPanel
-                    osiId={osiId}
-                    vehicleId={a.vehicleId}
-                    vehiclePlate={a.vehiclePlate}
-                    isOwner={true}
-                  />
-                </Tab>
-              ))}
-            </Tabs>
-          </Card.Body>
-        </Card>
+        <>
+          <Card className="mb-3">
+            <Card.Body>
+              <Card.Title as="h6">{t('documents.title')}</Card.Title>
+              <Tabs defaultActiveKey={`docs-${osi.assignments[0].vehicleId}`} className="mb-3">
+                {osi.assignments.map(a => (
+                  <Tab
+                    key={a.vehicleId}
+                    eventKey={`docs-${a.vehicleId}`}
+                    title={a.vehiclePlate}
+                  >
+                    <OsiDocumentsPanel
+                      osiId={osiId}
+                      vehicleId={a.vehicleId}
+                      vehiclePlate={a.vehiclePlate}
+                    />
+                  </Tab>
+                ))}
+              </Tabs>
+            </Card.Body>
+          </Card>
+
+          <Card>
+            <Card.Body>
+              <Card.Title as="h6">{t('events.title')}</Card.Title>
+              <Tabs defaultActiveKey={`vehicle-${osi.assignments[0].vehicleId}`} className="mb-3">
+                {osi.assignments.map(a => (
+                  <Tab
+                    key={a.vehicleId}
+                    eventKey={`vehicle-${a.vehicleId}`}
+                    title={a.vehiclePlate}
+                  >
+                    <EventLogPanel
+                      osiId={osiId}
+                      vehicleId={a.vehicleId}
+                      vehiclePlate={a.vehiclePlate}
+                      isOwner={true}
+                    />
+                  </Tab>
+                ))}
+              </Tabs>
+            </Card.Body>
+          </Card>
+        </>
       )}
     </div>
   );
