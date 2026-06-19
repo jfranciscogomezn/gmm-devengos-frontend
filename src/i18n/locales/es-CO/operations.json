@@ -173,6 +173,15 @@
     "noToken": "Aún no se ha generado un enlace de seguimiento.",
     "createdAt": "Generado el"
   },
+  "hc": {
+    "title": "Validación HC",
+    "PENDIENTE": "Pendiente",
+    "VALIDADO": "Validado",
+    "RECHAZADO": "Rechazado",
+    "update": "Actualizar",
+    "notes": "Notas (opcional)",
+    "save": "Guardar validación"
+  },
   "digest": {
     "title": "Digest / Comunicación al cliente",
     "hint": "El texto es editable antes de compartirlo.",
