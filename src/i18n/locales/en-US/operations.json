@@ -173,8 +173,18 @@
     "noToken": "No tracking link generated yet.",
     "createdAt": "Generated at"
   },
+  "digest": {
+    "title": "Digest / Client Communication",
+    "hint": "The text is editable before sharing.",
+    "regenerate": "Regenerate",
+    "copy": "Copy to clipboard",
+    "copied": "Copied!",
+    "confirmRegenerate": "Discard changes and regenerate?",
+    "noEvents": "No client-visible events yet."
+  },
   "common": {
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "loading": "Loading..."
   }
 }

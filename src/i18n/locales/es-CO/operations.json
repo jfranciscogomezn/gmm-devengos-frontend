@@ -173,8 +173,18 @@
     "noToken": "Aún no se ha generado un enlace de seguimiento.",
     "createdAt": "Generado el"
   },
+  "digest": {
+    "title": "Digest / Comunicación al cliente",
+    "hint": "El texto es editable antes de compartirlo.",
+    "regenerate": "Regenerar",
+    "copy": "Copiar al portapapeles",
+    "copied": "¡Copiado!",
+    "confirmRegenerate": "¿Descartar los cambios y regenerar el texto?",
+    "noEvents": "No hay eventos visibles al cliente todavía."
+  },
   "common": {
     "save": "Guardar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "loading": "Cargando..."
   }
 }

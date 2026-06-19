@@ -7,6 +7,7 @@ import { OsiVehicleAssignmentPanel } from '../../../components/operations/OsiVeh
 import { EventLogPanel } from '../../../components/operations/EventLogPanel';
 import { OsiDocumentsPanel } from '../../../components/operations/OsiDocumentsPanel';
 import { TrackingTokenPanel } from '../../../components/operations/TrackingTokenPanel';
+import { DigestPanel } from '../../../components/operations/DigestPanel';
 import { ApiErrorAlert } from '../../../components/ApiErrorAlert/ApiErrorAlert';
 import type { OsiStatus } from '../../../types';
 
@@ -128,6 +129,13 @@ export function OsiDetailPage() {
                   </Tab>
                 ))}
               </Tabs>
+            </Card.Body>
+          </Card>
+
+          <Card className="mt-3">
+            <Card.Body>
+              <Card.Title as="h6">{t('digest.title')}</Card.Title>
+              <DigestPanel osiId={osiId} />
             </Card.Body>
           </Card>
         </>
