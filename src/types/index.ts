@@ -298,6 +298,16 @@ export interface OsiSummary {
 export type OsiVehicleState = 'PLANNED' | 'EN_RUTA' | 'EN_DESTINO' | 'DESCARGANDO' | 'CERRADO_TRACKING' | 'INCIDENTE';
 export type HcValidationStatus = 'PENDIENTE' | 'VALIDADO' | 'RECHAZADO';
 
+export interface OsiNotificationItem {
+  id: number;
+  notificationType: 'OSI_APPROVAL_PENDING' | 'OSI_HC_REJECTED' | string;
+  title: string;
+  message: string;
+  osiId: number;
+  osiNumber: string;
+  createdAt: string;
+}
+
 export interface OsiVehicleAssignment {
   id: number;
   vehicleId: number;

@@ -8,6 +8,7 @@ import { clientsService } from '../../../api/clients.service';
 import type { OsiStatus } from '../../../types';
 import { PageHeader } from '../../../components/ui/PageHeader';
 import { ApiErrorAlert } from '../../../components/ApiErrorAlert/ApiErrorAlert';
+import { OsiNotificationsBanner } from '../../../components/operations/OsiNotificationsBanner';
 
 const STATUS_VARIANTS: Record<OsiStatus, string> = {
   DRAFT: 'secondary',
@@ -63,6 +64,7 @@ export function OsiListPage() {
 
   return (
     <div>
+      <OsiNotificationsBanner />
       <PageHeader
         title={t('osi.title')}
         actions={

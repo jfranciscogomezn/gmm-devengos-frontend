@@ -173,6 +173,12 @@
     "noToken": "No tracking link generated yet.",
     "createdAt": "Generated at"
   },
+  "notifications": {
+    "title": "Operations notifications",
+    "approvalPending": "Event pending approval",
+    "hcRejected": "HC validation rejected",
+    "viewOsi": "View OSI"
+  },
   "hc": {
     "title": "HC Validation",
     "PENDIENTE": "Pending",

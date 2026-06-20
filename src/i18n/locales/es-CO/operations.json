@@ -173,6 +173,12 @@
     "noToken": "Aún no se ha generado un enlace de seguimiento.",
     "createdAt": "Generado el"
   },
+  "notifications": {
+    "title": "Notificaciones operativas",
+    "approvalPending": "Evento pendiente de aprobación",
+    "hcRejected": "Validación HC rechazada",
+    "viewOsi": "Ver OSI"
+  },
   "hc": {
     "title": "Validación HC",
     "PENDIENTE": "Pendiente",
