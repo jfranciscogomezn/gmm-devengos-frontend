@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { osiVehicleAssignmentsService } from '../../api/osiVehicleAssignments.service';
 import { vehiclesService } from '../../api/vehicles.service';
+import { HcValidationBadge } from './HcValidationBadge';
 import type { OsiVehicleAssignment, OsiVehicleState } from '../../types';
 
 const STATE_VARIANTS: Record<OsiVehicleState, string> = {
@@ -181,6 +182,12 @@ export function OsiVehicleAssignmentPanel({ osiId }: Props) {
                 )}
               </div>
               <GpsEditor assignment={a} osiId={osiId} />
+              <HcValidationBadge
+                osiId={osiId}
+                assignmentId={a.id}
+                status={a.hcValidationStatus}
+                notes={a.hcValidationNotes}
+              />
             </li>
           ))}
         </ul>

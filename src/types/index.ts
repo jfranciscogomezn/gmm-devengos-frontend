@@ -296,6 +296,8 @@ export interface OsiSummary {
 }
 
 export type OsiVehicleState = 'PLANNED' | 'EN_RUTA' | 'EN_DESTINO' | 'DESCARGANDO' | 'CERRADO_TRACKING' | 'INCIDENTE';
+export type HcValidationStatus = 'PENDIENTE' | 'VALIDADO' | 'RECHAZADO';
+
 export interface OsiVehicleAssignment {
   id: number;
   vehicleId: number;
@@ -304,6 +306,10 @@ export interface OsiVehicleAssignment {
   assignedUserIds: number[];
   gpsProvider: string | null;
   gpsReferenceUrl: string | null;
+  hcValidationStatus: HcValidationStatus;
+  hcValidationNotes: string | null;
+  hcValidatedByUserId: number | null;
+  hcValidatedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }

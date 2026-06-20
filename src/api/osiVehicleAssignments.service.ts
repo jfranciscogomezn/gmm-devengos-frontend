@@ -57,4 +57,17 @@ export const osiVehicleAssignmentsService = {
     );
     return data;
   },
+
+  updateHcValidation: async (
+    osiId: number,
+    assignmentId: number,
+    status: 'VALIDADO' | 'RECHAZADO',
+    notes?: string,
+  ): Promise<OsiVehicleAssignment> => {
+    const { data } = await businessClient.patch<OsiVehicleAssignment>(
+      `/operations/osi/${osiId}/vehicles/${assignmentId}/hc-validation`,
+      { status, notes },
+    );
+    return data;
+  },
 };
