@@ -42,7 +42,11 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Only redirect to /login for 401s on authenticated endpoints.
+    // Login itself returns 401 on bad credentials — redirecting there would
+    // cause a full-page reload that swallows the error message (AUTH-002, AUTH-003).
+    const isAuthEndpoint = (error.config?.url as string | undefined)?.includes('/auth/login');
+    if (error.response?.status === 401 && !isAuthEndpoint) {
       clearToken();
       clearSession();
       window.location.href = '/login';
