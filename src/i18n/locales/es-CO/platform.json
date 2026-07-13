@@ -8,6 +8,13 @@
     "activate": "Activar",
     "suspend": "Suspender"
   },
+  "users": {
+    "title": "Usuarios del inquilino",
+    "backToTenants": "← Inquilinos",
+    "empty": "No se encontraron usuarios.",
+    "setStatusFailed": "Error al actualizar el estado del usuario.",
+    "viewUsers": "Usuarios"
+  },
   "form": {
     "editTitle": "Editar inquilino · {{name}}",
     "newTitle": "Nuevo inquilino",

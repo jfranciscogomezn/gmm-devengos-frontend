@@ -6,7 +6,7 @@
  *  - A 401 from any other endpoint DOES clear storage and redirect to /login.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 // ── helpers ─────────────────────────────────────────────────────────────────
 
@@ -28,9 +28,6 @@ vi.mock('../../i18n/locale', () => ({
 }));
 
 // We test the interceptor logic directly by re-importing after mocking localStorage.
-// The interceptor reads clearToken / clearSession from the same module.
-
-let locationHref = '';
 
 describe('apiClient — 401 interceptor', () => {
   const originalLocation = window.location;
@@ -41,7 +38,6 @@ describe('apiClient — 401 interceptor', () => {
       writable: true,
       value: { href: '' },
     });
-    locationHref = '';
     window.location.href = '';
 
     localStorage.setItem('stepcore_token', 'test-token');

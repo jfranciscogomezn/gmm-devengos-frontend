@@ -96,6 +96,14 @@ export function TenantListPage() {
                     >
                       {t('common:actions.edit')}
                     </Button>
+                    <Button
+                      size="sm"
+                      variant="outline-info"
+                      className="me-2"
+                      onClick={() => navigate(`/platform/tenants/${tenant.id}/users`)}
+                    >
+                      {t('platform:users.viewUsers')}
+                    </Button>
                     {!tenant.platform && (
                       <Button
                         size="sm"

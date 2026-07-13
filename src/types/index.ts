@@ -95,6 +95,15 @@ export interface ProvisionTenantResponse {
   temporaryPassword: string;
 }
 
+export interface PlatformUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  roleName: string;
+  enabled: boolean;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;

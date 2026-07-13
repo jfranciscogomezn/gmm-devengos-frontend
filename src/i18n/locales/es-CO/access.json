@@ -63,7 +63,9 @@
     "passwordMin": "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y un número.",
     "selectRole": "Seleccione un rol.",
     "userLimitReached": "Alcanzó el límite de usuarios de su plan. Contacte a su proveedor para ampliar el plan o libere un cupo desactivando un usuario existente.",
-    "resetPasswordShort": "Restablecer contraseña"
+    "resetPasswordShort": "Restablecer contraseña",
+    "adminSelfDisable": "Un administrador no puede deshabilitarse a sí mismo.",
+    "lastTenantAdmin": "No se puede deshabilitar al único administrador activo del inquilino."
   },
   "menuCatalogue": {
     "title": "Catálogo de menú",

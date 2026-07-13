@@ -63,7 +63,9 @@
     "passwordMin": "Password must have at least 8 characters, including uppercase, lowercase, and a number.",
     "selectRole": "Please select a role.",
     "userLimitReached": "You've reached your plan's user limit. Contact your provider to upgrade the plan or free up a seat by disabling an existing user.",
-    "resetPasswordShort": "Reset PW"
+    "resetPasswordShort": "Reset PW",
+    "adminSelfDisable": "An admin cannot disable their own account.",
+    "lastTenantAdmin": "Cannot disable the last active admin of a tenant."
   },
   "menuCatalogue": {
     "title": "Menu Catalogue",

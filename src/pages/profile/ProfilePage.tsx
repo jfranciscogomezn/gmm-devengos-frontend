@@ -10,7 +10,7 @@ const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
 export function ProfilePage() {
   const { t } = useTranslation(['profile', 'common']);
-  const { currentUser, mustChangePassword } = useAuth();
+  const { currentUser, mustChangePassword, clearMustChangePassword } = useAuth();
   const location = useLocation();
   const forceChange = (location.state as { forceChangePassword?: boolean })?.forceChangePassword ?? mustChangePassword;
 
@@ -32,7 +32,11 @@ export function ProfilePage() {
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
-      if (!forceChange) setShowForm(false);
+      if (forceChange) {
+        clearMustChangePassword();
+      } else {
+        setShowForm(false);
+      }
     },
   });
 

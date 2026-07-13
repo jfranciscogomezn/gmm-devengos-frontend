@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 interface ProtectedRouteProps {
@@ -14,10 +14,16 @@ export function ProtectedRoute({
   requirePlatformAdmin = false,
   requirePermission,
 }: ProtectedRouteProps) {
-  const { isAuthenticated, currentUser, hasPermission } = useAuth();
+  const { isAuthenticated, currentUser, hasPermission, mustChangePassword } = useAuth();
+  const location = useLocation();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Force the user to change their password before accessing any other route.
+  if (mustChangePassword && location.pathname !== '/my/profile') {
+    return <Navigate to="/my/profile" replace />;
   }
 
   if (requirePlatformAdmin && currentUser?.roleName !== 'PLATFORM_ADMIN') {
