@@ -13,7 +13,8 @@
     "backToTenants": "← Tenants",
     "empty": "No users found.",
     "setStatusFailed": "Failed to update user status.",
-    "viewUsers": "Users"
+    "viewUsers": "Users",
+    "cannotSelfDisable": "You cannot disable your own account."
   },
   "form": {
     "editTitle": "Edit tenant · {{name}}",

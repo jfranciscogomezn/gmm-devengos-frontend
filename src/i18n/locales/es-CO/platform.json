@@ -13,7 +13,8 @@
     "backToTenants": "← Inquilinos",
     "empty": "No se encontraron usuarios.",
     "setStatusFailed": "Error al actualizar el estado del usuario.",
-    "viewUsers": "Usuarios"
+    "viewUsers": "Usuarios",
+    "cannotSelfDisable": "No puede desactivar su propia cuenta."
   },
   "form": {
     "editTitle": "Editar inquilino · {{name}}",

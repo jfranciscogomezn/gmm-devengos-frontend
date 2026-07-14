@@ -65,7 +65,9 @@
     "userLimitReached": "Alcanzó el límite de usuarios de su plan. Contacte a su proveedor para ampliar el plan o libere un cupo desactivando un usuario existente.",
     "resetPasswordShort": "Restablecer contraseña",
     "adminSelfDisable": "Un administrador no puede deshabilitarse a sí mismo.",
-    "lastTenantAdmin": "No se puede deshabilitar al único administrador activo del inquilino."
+    "lastTenantAdmin": "No se puede deshabilitar al único administrador activo del inquilino.",
+    "cannotSelfDisable": "No puede desactivar su propia cuenta.",
+    "cannotSelfDelete": "No puede eliminar su propia cuenta."
   },
   "menuCatalogue": {
     "title": "Catálogo de menú",

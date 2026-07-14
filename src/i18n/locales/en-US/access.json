@@ -65,7 +65,9 @@
     "userLimitReached": "You've reached your plan's user limit. Contact your provider to upgrade the plan or free up a seat by disabling an existing user.",
     "resetPasswordShort": "Reset PW",
     "adminSelfDisable": "An admin cannot disable their own account.",
-    "lastTenantAdmin": "Cannot disable the last active admin of a tenant."
+    "lastTenantAdmin": "Cannot disable the last active admin of a tenant.",
+    "cannotSelfDisable": "You cannot disable your own account.",
+    "cannotSelfDelete": "You cannot delete your own account."
   },
   "menuCatalogue": {
     "title": "Menu Catalogue",

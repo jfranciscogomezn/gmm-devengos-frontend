@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Alert, Badge, Button, Card, Spinner, Table } from 'react-bootstrap';
+import { Alert, Badge, Button, Card, OverlayTrigger, Spinner, Table, Tooltip } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { platformUsersService } from '../../api/platformUsers.service';
+import { useAuth } from '../../context/AuthContext';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 
 export function TenantUsersPage() {
   const { id } = useParams<{ id: string }>();
   const tenantId = Number(id);
   const { t } = useTranslation(['platform', 'common']);
+  const { currentUser } = useAuth();
   const queryClient = useQueryClient();
   const [actionError, setActionError] = useState('');
 
@@ -65,28 +67,38 @@ export function TenantUsersPage() {
                 </td>
               </tr>
             ) : (
-              users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.firstName} {user.lastName}</td>
-                  <td>{user.email}</td>
-                  <td><code>{user.roleName}</code></td>
-                  <td>
-                    <Badge bg={user.enabled ? 'success' : 'danger'}>
-                      {user.enabled ? t('common:status.active') : t('common:status.disabled')}
-                    </Badge>
-                  </td>
-                  <td className="text-end">
-                    <Button
-                      size="sm"
-                      variant={user.enabled ? 'outline-warning' : 'outline-success'}
-                      disabled={statusMutation.isPending}
-                      onClick={() => statusMutation.mutate({ userId: user.id, enabled: !user.enabled })}
-                    >
-                      {user.enabled ? t('common:actions.disable') : t('common:actions.enable')}
-                    </Button>
-                  </td>
-                </tr>
-              ))
+              users.map((user) => {
+                const isSelf = user.email === currentUser?.email;
+                return (
+                  <tr key={user.id}>
+                    <td>{user.firstName} {user.lastName}</td>
+                    <td>{user.email}</td>
+                    <td><code>{user.roleName}</code></td>
+                    <td>
+                      <Badge bg={user.enabled ? 'success' : 'danger'}>
+                        {user.enabled ? t('common:status.active') : t('common:status.disabled')}
+                      </Badge>
+                    </td>
+                    <td className="text-end">
+                      <OverlayTrigger
+                        overlay={isSelf ? <Tooltip>{t('platform:users.cannotSelfDisable')}</Tooltip> : <></>}
+                      >
+                        <span>
+                          <Button
+                            size="sm"
+                            variant={user.enabled ? 'outline-warning' : 'outline-success'}
+                            disabled={statusMutation.isPending || isSelf}
+                            onClick={() => statusMutation.mutate({ userId: user.id, enabled: !user.enabled })}
+                            style={isSelf ? { pointerEvents: 'none' } : {}}
+                          >
+                            {user.enabled ? t('common:actions.disable') : t('common:actions.enable')}
+                          </Button>
+                        </span>
+                      </OverlayTrigger>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </Table>

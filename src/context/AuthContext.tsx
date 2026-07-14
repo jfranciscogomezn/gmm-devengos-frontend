@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { LoginResponse, MenuTreeNode, TenantSummary, UserProfile } from '../types';
 import {
   clearSession,
@@ -11,6 +11,10 @@ import {
 import { isSessionTokenValid, markStaleSession } from '../utils/jwt';
 
 const PLATFORM_ADMIN_ROLE = 'PLATFORM_ADMIN';
+
+/** Inactivity timeout: 30 minutes of no keyboard/mouse activity logs the user out. */
+const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000;
+const ACTIVITY_EVENTS = ['mousedown', 'keydown', 'touchstart', 'scroll'] as const;
 
 interface PersistedSession {
   currentUser: UserProfile;
@@ -59,6 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [permissions, setPermissions] = useState<string[]>(restored?.permissions ?? []);
   const [tenant, setTenant] = useState<TenantSummary | null>(restored?.tenant ?? null);
   const [mustChangePassword, setMustChangePassword] = useState(restored?.mustChangePassword ?? false);
+  const inactivityTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const login = useCallback((response: LoginResponse) => {
     const user: UserProfile = {
@@ -95,6 +100,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = useCallback(() => {
+    if (inactivityTimer.current) {
+      clearTimeout(inactivityTimer.current);
+      inactivityTimer.current = null;
+    }
     clearToken();
     clearSession();
     setTokenState(null);
@@ -112,6 +121,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession<PersistedSession>({ ...existing, mustChangePassword: false });
     }
   }, []);
+
+  // Reset the inactivity timer on any user activity while authenticated
+  useEffect(() => {
+    if (!token) return;
+
+    const resetTimer = () => {
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+      inactivityTimer.current = setTimeout(() => {
+        logout();
+        markStaleSession();
+        window.location.href = '/login';
+      }, INACTIVITY_TIMEOUT_MS);
+    };
+
+    resetTimer();
+    ACTIVITY_EVENTS.forEach((evt) => window.addEventListener(evt, resetTimer, { passive: true }));
+
+    return () => {
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+      ACTIVITY_EVENTS.forEach((evt) => window.removeEventListener(evt, resetTimer));
+    };
+  }, [token, logout]);
 
   const hasPermission = useCallback(
     (code: string) => permissions.includes(code),
