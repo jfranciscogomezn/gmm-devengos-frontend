@@ -8,6 +8,13 @@
     "activate": "Activate",
     "suspend": "Suspend"
   },
+  "users": {
+    "title": "Tenant users",
+    "backToTenants": "← Tenants",
+    "empty": "No users found.",
+    "setStatusFailed": "Failed to update user status.",
+    "viewUsers": "Users"
+  },
   "form": {
     "editTitle": "Edit tenant · {{name}}",
     "newTitle": "New tenant",

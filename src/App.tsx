@@ -11,6 +11,7 @@ import { UserListPage } from './pages/users/UserListPage';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { TenantListPage } from './pages/platform/TenantListPage';
 import { TenantFormPage } from './pages/platform/TenantFormPage';
+import { TenantUsersPage } from './pages/platform/TenantUsersPage';
 import { EmployeeListPage } from './pages/employees/EmployeeListPage';
 import { EmployeeFormPage } from './pages/employees/EmployeeFormPage';
 import { AccessControlHubPage } from './pages/access/AccessControlHubPage';
@@ -197,6 +198,14 @@ export default function App() {
                 element={
                   <ProtectedRoute requirePlatformAdmin>
                     <TenantFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="platform/tenants/:id/users"
+                element={
+                  <ProtectedRoute requirePlatformAdmin>
+                    <TenantUsersPage />
                   </ProtectedRoute>
                 }
               />

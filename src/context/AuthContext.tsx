@@ -32,6 +32,7 @@ interface AuthContextValue {
   login: (response: LoginResponse) => void;
   logout: () => void;
   hasPermission: (code: string) => boolean;
+  clearMustChangePassword: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -104,6 +105,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setMustChangePassword(false);
   }, []);
 
+  const clearMustChangePassword = useCallback(() => {
+    setMustChangePassword(false);
+    const existing = getSession<PersistedSession>();
+    if (existing) {
+      setSession<PersistedSession>({ ...existing, mustChangePassword: false });
+    }
+  }, []);
+
   const hasPermission = useCallback(
     (code: string) => permissions.includes(code),
     [permissions],
@@ -121,7 +130,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login,
     logout,
     hasPermission,
-  }), [token, currentUser, menu, permissions, tenant, mustChangePassword, login, logout, hasPermission]);
+    clearMustChangePassword,
+  }), [token, currentUser, menu, permissions, tenant, mustChangePassword, login, logout, hasPermission, clearMustChangePassword]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -34,6 +34,9 @@ export function UserListPage() {
     mutationFn: ({ id, enabled }: { id: number; enabled: boolean }) =>
       usersService.setStatus(id, enabled),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onError: (err: { response?: { data?: { message?: string } } }) => {
+      setActionError(err.response?.data?.message ?? t('access:users.saveFailed'));
+    },
   });
 
   const resetMutation = useMutation({
