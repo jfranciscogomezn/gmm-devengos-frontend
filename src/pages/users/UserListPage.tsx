@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Alert, Badge, Button, Modal, Spinner, Table } from 'react-bootstrap';
+import { Alert, Badge, Button, Modal, OverlayTrigger, Spinner, Table, Tooltip } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { usersService } from '../../api/users.service';
+import { useAuth } from '../../context/AuthContext';
 import { ApiErrorAlert } from '../../components/ApiErrorAlert/ApiErrorAlert';
 import type { UserProfile } from '../../types';
 
 export function UserListPage() {
   const { t } = useTranslation(['access', 'common']);
+  const { currentUser } = useAuth();
   const queryClient = useQueryClient();
   const [deleteTarget, setDeleteTarget] = useState<UserProfile | null>(null);
   const [actionError, setActionError] = useState('');
@@ -71,52 +73,69 @@ export function UserListPage() {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.firstName} {user.lastName}</td>
-              <td className="text-muted">{user.email}</td>
-              <td><Badge bg="secondary">{user.roleName}</Badge></td>
-              <td>
-                <Badge bg={user.enabled ? 'success' : 'danger'}>
-                  {user.enabled ? t('common:status.active') : t('common:status.disabled')}
-                </Badge>
-                {user.mustChangePassword && (
-                  <Badge bg="warning" text="dark" className="ms-1">{t('common:status.mustChangePassword')}</Badge>
-                )}
-              </td>
-              <td>
-                <Link to={`/admin/access/users/${user.id}`} className="btn btn-outline-primary btn-sm me-1">
-                  {t('common:actions.edit')}
-                </Link>
-                <Button
-                  size="sm"
-                  variant={user.enabled ? 'outline-warning' : 'outline-success'}
-                  className="me-1"
-                  disabled={statusMutation.isPending}
-                  onClick={() => statusMutation.mutate({ id: user.id, enabled: !user.enabled })}
-                >
-                  {user.enabled ? t('common:actions.disable') : t('common:actions.enable')}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline-secondary"
-                  className="me-1"
-                  disabled={resetMutation.isPending}
-                  onClick={() => resetMutation.mutate(user.id)}
-                >
-                  {t('access:users.resetPasswordShort')}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline-danger"
-                  onClick={() => { setDeleteTarget(user); setActionError(''); }}
-                >
-                  {t('common:actions.delete')}
-                </Button>
-              </td>
-            </tr>
-          ))}
+          {users.map((user) => {
+            const isSelf = user.email === currentUser?.email;
+            return (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.firstName} {user.lastName}</td>
+                <td className="text-muted">{user.email}</td>
+                <td><Badge bg="secondary">{user.roleName}</Badge></td>
+                <td>
+                  <Badge bg={user.enabled ? 'success' : 'danger'}>
+                    {user.enabled ? t('common:status.active') : t('common:status.disabled')}
+                  </Badge>
+                  {user.mustChangePassword && (
+                    <Badge bg="warning" text="dark" className="ms-1">{t('common:status.mustChangePassword')}</Badge>
+                  )}
+                </td>
+                <td>
+                  <Link to={`/admin/access/users/${user.id}`} className="btn btn-outline-primary btn-sm me-1">
+                    {t('common:actions.edit')}
+                  </Link>
+                  <OverlayTrigger
+                    overlay={isSelf ? <Tooltip>{t('access:users.cannotSelfDisable')}</Tooltip> : <></>}
+                  >
+                    <span className="me-1">
+                      <Button
+                        size="sm"
+                        variant={user.enabled ? 'outline-warning' : 'outline-success'}
+                        disabled={statusMutation.isPending || isSelf}
+                        onClick={() => statusMutation.mutate({ id: user.id, enabled: !user.enabled })}
+                        style={isSelf ? { pointerEvents: 'none' } : {}}
+                      >
+                        {user.enabled ? t('common:actions.disable') : t('common:actions.enable')}
+                      </Button>
+                    </span>
+                  </OverlayTrigger>
+                  <Button
+                    size="sm"
+                    variant="outline-secondary"
+                    className="me-1"
+                    disabled={resetMutation.isPending}
+                    onClick={() => resetMutation.mutate(user.id)}
+                  >
+                    {t('access:users.resetPasswordShort')}
+                  </Button>
+                  <OverlayTrigger
+                    overlay={isSelf ? <Tooltip>{t('access:users.cannotSelfDelete')}</Tooltip> : <></>}
+                  >
+                    <span>
+                      <Button
+                        size="sm"
+                        variant="outline-danger"
+                        disabled={isSelf}
+                        onClick={() => { if (!isSelf) { setDeleteTarget(user); setActionError(''); } }}
+                        style={isSelf ? { pointerEvents: 'none' } : {}}
+                      >
+                        {t('common:actions.delete')}
+                      </Button>
+                    </span>
+                  </OverlayTrigger>
+                </td>
+              </tr>
+            );
+          })}
           {users.length === 0 && (
             <tr><td colSpan={6} className="text-center text-muted py-4">{t('access:users.empty')}</td></tr>
           )}
